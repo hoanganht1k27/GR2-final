@@ -1,0 +1,222 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gOHfCTlVz"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 18,
+      "links": [],
+      "maxDataPoints": 3,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.back {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n}\n\n.button {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 98%;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  -ms-transform: translate(-50%, -50%);\n  transform: translate(-50%, -50%);\n  margin:2px\n}\n\n.clicked {\n  display: inline-block;\n  background-color: white;\n  border: none;\n  color: grey;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid grey;\n  font-weight: bold;\n  margin:2px;\n  float: right;\n}\n.button:hover {\n  background-color: #696969;\n  color: white;\n  border:1px solid #696969;\n}\n\n</style>\n</head>\n<body>\n\n<button class=\"button\" style=\"vertical-align:middle\" onclick=\"window.open('http://10.98.12.18:3000/d/wyXTOna4z/home?orgId=1', '_self')\"><span><b style=\"font-size:20px\">&#x2302;</b> HOME</span></button>\n\n</body>\n</html>",
+        "mode": "html"
+      },
+      "pluginVersion": "9.5.6",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 6,
+      "panels": [],
+      "title": "OS Performance Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gOHfCTlVz"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "maxItems": 5000,
+        "query": "",
+        "showHeadings": false,
+        "showRecentlyViewed": false,
+        "showSearch": true,
+        "showStarred": false,
+        "tags": [
+          "node_overview"
+        ]
+      },
+      "pluginVersion": "9.5.6",
+      "title": "Host overview",
+      "type": "dashlist"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Physical data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gOHfCTlVz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "maxItems": 5000,
+        "query": "",
+        "showHeadings": false,
+        "showRecentlyViewed": false,
+        "showSearch": true,
+        "showStarred": false,
+        "tags": [
+          "physical"
+        ]
+      },
+      "pluginVersion": "9.5.6",
+      "title": "Physical data",
+      "type": "dashlist"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 12,
+      "panels": [],
+      "title": "Hypervisors Data",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gOHfCTlVz"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 14,
+      "options": {
+        "maxItems": 4999,
+        "query": "",
+        "showHeadings": false,
+        "showRecentlyViewed": false,
+        "showSearch": true,
+        "showStarred": false,
+        "tags": [
+          "hypervisors"
+        ]
+      },
+      "pluginVersion": "9.5.6",
+      "title": "Hypervisors",
+      "type": "dashlist"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "gOHfCTlVz"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 16,
+      "options": {
+        "maxItems": 5000,
+        "query": "",
+        "showHeadings": false,
+        "showRecentlyViewed": false,
+        "showSearch": true,
+        "showStarred": false,
+        "tags": [
+          "vm"
+        ]
+      },
+      "pluginVersion": "9.5.6",
+      "title": "Virutal Machines",
+      "type": "dashlist"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Menu",
+  "uid": "wyXTOna4z",
+  "weekStart": ""
+}

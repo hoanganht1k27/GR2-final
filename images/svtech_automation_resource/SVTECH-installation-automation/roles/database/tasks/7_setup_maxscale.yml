@@ -1,0 +1,276 @@
+---
+- name: "[CHECKING] - Checking variables"
+  assert:
+    that:
+      - maxscale_user.name is defined and maxscale_user.host is defined and maxscale_user.password is defined and maxscale_user.priv is defined
+      - monitor_user.name is defined and monitor_user.host is defined and monitor_user.password is defined and monitor_user.priv is defined
+      - maxscale_admin_user is defined and maxscale_admin_password is defined
+    fail_msg: "[ERROR] - [Maxscale] - Required variables is not undefined! Please check it and try again"
+    success_msg: "[INFO] - [Maxscale] - Required variables is defined."
+  delegate_to: localhost
+  run_once: yes
+  when:
+    - inventory_hostname in groups['maxscale']
+
+- name: DATABASE [Step 01]-[Maxscale] Install Maxscale packages
+  yum:
+    name:
+      - maxscale
+    state: latest
+  when:
+    - inventory_hostname in groups['maxscale']
+    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 02]-[Maxscale] - FOR REPLICATION - Ensure Maxscale user are existed on master.
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ maxscale_user.name }}"
+    host: "{{ item | default('localhost') }}"
+    password: "{{ maxscale_user.password }}"
+    priv: "{{ maxscale_user.priv }}"
+    update_password: on_create
+    state: present
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  run_once: true
+  register: verify_maxscale_user
+  with_items:
+    - "{{ maxscale_user.host }}"
+    - "{% for host in groups['maxscale'] %}['{{ hostvars[host].IP }}']{% if not loop.last %}+{% endif %}{% endfor %}"
+  when:
+    - inventory_hostname in groups['maxscale']
+    - inventory_hostname in groups['replication'] 
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 03]-[Maxscale] - FOR REPLICATION - Ensure Monitor user are existed on master.
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ monitor_user.name }}"
+    host: "{{ item | default('localhost') }}"
+    password: "{{ monitor_user.password }}"
+    priv: "{{ monitor_user.priv }}"
+    update_password: on_create
+    state: present
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  run_once: true
+  register: verify_monitor_user
+  with_items:
+    - "{{ monitor_user.host }}"
+    - "{% for host in groups['maxscale'] %}['{{ hostvars[host].IP }}']{% if not loop.last %}+{% endif %}{% endfor %}"
+  when:
+    - inventory_hostname in groups['maxscale']
+    - inventory_hostname in groups['replication']
+    - (groups['replication_master'] | length) > 0
+#    - inventory_hostname in groups['maxscale'] and ('replication' in groups) and (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 04]-[Maxscale] - FOR REPLICATION - Configure Maxscale
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: true
+  with_items:
+    - { src: "{{ role_path }}/templates/mysql_replication/maxscale.cnf.j2", dest: "/etc/maxscale.cnf" }
+    - { src: "{{ role_path }}/templates/mysql_replication/encrypt_password.sh.j2", dest: "/tmp/encrypt_password.sh" }
+  when:
+    - inventory_hostname in groups['maxscale']
+    - inventory_hostname in groups['replication']
+    - (groups['replication_master'] | length) > 0
+#    - inventory_hostname in groups['maxscale'] and ('replication' in groups) and (groups['replication_master'] | length) > 0
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 05]-[Maxscale] - FOR GALERA CLUSTER - Ensure Maxscale user are existed on Galera Cluster.
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ maxscale_user.name }}"
+    host: "{{ item | default('localhost') }}"
+    password: "{{ maxscale_user.password }}"
+    priv: "{{ maxscale_user.priv }}"
+    update_password: on_create
+    state: present
+  delegate_to: "{{ groups['galera_cluster'][0] }}"
+  run_once: true
+    #register: verify_maxscale_user
+  with_items:
+    - "{{ maxscale_user.host }}"
+    - "{% for host in groups['maxscale'] %}['{{ hostvars[host].IP }}']{% if not loop.last %}+{% endif %}{% endfor %}"
+  when:
+    - groups['maxscale'][0] and ('galera_cluster' in groups) and (groups['galera_cluster'] | length) > 0
+
+- name: DATABASE [Step 06]-[Maxscale] - FOR GALERA CLUSTER - Ensure Monitor user are existed on Galera Cluster.
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ monitor_user.name }}"
+    host: "{{ item | default('localhost') }}"
+    password: "{{ monitor_user.password }}"
+    priv: "{{ monitor_user.priv }}"
+    update_password: on_create
+    state: present
+  delegate_to: "{{ groups['galera_cluster'][0] }}"
+  run_once: true
+    #register: verify_maxscale_user
+  with_items:
+    - "{{ monitor_user.host }}"
+    - "{% for host in groups['maxscale'] %}['{{ hostvars[host].IP }}']{% if not loop.last %}+{% endif %}{% endfor %}"
+  when:
+    - groups['maxscale'][0] and ('galera_cluster' in groups) and (groups['galera_cluster'] | length) > 0
+
+- name: DATABASE [Step 07]-[Maxscale] - FOR GALERA CLUSTER - Configure Maxscale
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: true
+  with_items:
+    - { src: "{{ role_path }}/templates/mysql_cluster/maxscale.cnf.j2", dest: "/etc/maxscale.cnf" }
+    - { src: "{{ role_path }}/templates/mysql_cluster/encrypt_password.sh.j2", dest: "/tmp/encrypt_password.sh" }
+  when:
+    - groups['maxscale'][0] and ('galera_cluster' in groups) and (groups['galera_cluster'] | length) > 0
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 08]-[Maxscale] - Create CA Key for MaxGui/API
+  openssl_privatekey:
+    path: "{{ maxscale_datadir }}/ca-key.pem"
+    owner: maxscale
+    group: maxscale
+  register: ca_key
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"
+
+- name: DATABASE [Step 09]-[Maxscale] - Generate a X509 Self Signed OpenSSL Cert for MaxGui/API
+  community.crypto.x509_certificate:
+    path: "{{ maxscale_datadir }}//{{ maxscale_ca_cert }}"
+    privatekey_path: "{{ ca_key.filename }}"
+    owner: maxscale
+    group: maxscale
+    provider: selfsigned
+  register: ca_cert
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"
+
+- name: DATABASE [Step 10]-[Maxscale] - Create Server Key for MaxGui/API
+  openssl_privatekey:
+    path: "{{ maxscale_datadir }}/{{ maxscale_key }}"
+    owner: maxscale
+    group: maxscale
+  register: key_result
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"
+
+- name: DATABASE [Step 11]-[Maxscale] - Sign the Server CSR
+  openssl_csr:
+    path: "{{ maxscale_datadir }}/{{ maxscale_csr }}"
+    privatekey_path: "{{ key_result.filename }}"
+    owner: maxscale
+    group: maxscale
+  register: csr_result
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"
+
+- name: DATABASE [Step 12]-[Maxscale] - Genegate Server Cert for MaxGui/API
+  community.crypto.x509_certificate:
+    path: "{{ maxscale_datadir }}/{{ maxscale_cert }}"
+    csr_path: "{{ csr_result.filename }}"
+    ownca_privatekey_path: "{{ ca_key.filename }}"
+    ownca_path: "{{ ca_cert.filename }}"
+    owner: maxscale
+    group: maxscale
+    provider: ownca
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"
+
+- name: DATABASE [Step 13]-[Maxscale] - Starting Maxscale Services
+  service:
+    name: maxscale
+    state: restarted
+    enabled: yes
+  when:
+    - inventory_hostname in groups['maxscale']
+
+- name: DATABASE [Step 14]-[Maxscale] - Verify Maxscale's default user (Non SSL)
+  shell: "maxctrl list servers"
+  failed_when: false
+  register: verify_default_user
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "false"
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 15]-[Maxscale] - Create new Maxscale's Admin user (Non SSL)
+  shell: "maxctrl create user {{ maxscale_admin_user }} {{ maxscale_admin_password }} --type=admin"
+  no_log: true
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "false"
+    - not verify_default_user.stdout_lines is search ("socket hang up")
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 16]-[Maxscale] - Delete default Maxscale's Admin user (Non SSL)
+  shell: "maxctrl destroy user admin"
+  no_log: true
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "false"
+    - not verify_default_user.stdout_lines is search ("socket hang up")
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 17]-[Maxscale] - MAXSCALE - Collect Maxscale List Server (Non SSL)
+  shell: "maxctrl -u {{ maxscale_admin_user }} -p {{ maxscale_admin_password }} list servers"
+  no_log: true
+  register: maxscale_status
+  ignore_errors: yes
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "false"
+
+- name: DATABASE [Step 18]-[Maxscale] - Verify Maxscale's default user (SSL)
+  shell: "maxctrl -s --tls-ca-cert={{ ca_cert.filename }} -n false list servers"
+  failed_when: false
+  register: verify_default_user_ssl
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true" 
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 19]-[Maxscale] - Create new Maxscale's Admin user (SSL)
+  shell: "maxctrl -s --tls-ca-cert={{ ca_cert.filename }} -n false create user {{ maxscale_admin_user }} {{ maxscale_admin_password }} --type=admin"
+  ignore_errors: yes
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true" 
+    - not verify_default_user_ssl.stdout_lines is search ("socket hang up")
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 20]-[Maxscale] - Delete default Maxscale's Admin user (SSL)
+  shell: "maxctrl -s --tls-ca-cert={{ ca_cert.filename }} -n false destroy user admin"
+  ignore_errors: yes
+  when:
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true" 
+    - not verify_default_user_ssl.stdout_lines is search ("socket hang up")
+      #    - mysql_state.ansible_facts.services['maxscale.service'] is not defined
+
+- name: DATABASE [Step 21]-[Maxscale] - MAXSCALE - Collect Maxscale List Server (SSL)
+  shell: "maxctrl -s --tls-ca-cert={{ ca_cert.filename }} -n false -u {{ maxscale_admin_user }} -p {{ maxscale_admin_password }} list servers"
+  no_log: true
+  register: maxscale_status_ssl
+  ignore_errors: yes
+  when:                                        
+    - inventory_hostname in groups['maxscale']
+    - admin_secure_gui == "true"

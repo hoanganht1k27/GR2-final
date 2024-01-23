@@ -1,0 +1,3 @@
+---
+tar_gz_folder: /opt
+node_exporter_port: 9100

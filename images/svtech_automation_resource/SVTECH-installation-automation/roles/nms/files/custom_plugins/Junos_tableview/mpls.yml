@@ -1,0 +1,21 @@
+---
+L3VPNRouteTable:
+  rpc: get-route-information
+  args_key: 
+    - detail
+    - table
+  args:
+    detail: True
+    table: VPRN-310764301.inet.0 
+  item: route-table/rt-entry/nh
+  key: 
+    - lsp-name
+    - ../../rt-destination
+    - ../gateway
+  view: L3VPNRouteView
+
+L3VPNRouteView:
+  fields:
+    interface: via
+    lsp: lsp-name
+    mpls_label_operation: mpls-label

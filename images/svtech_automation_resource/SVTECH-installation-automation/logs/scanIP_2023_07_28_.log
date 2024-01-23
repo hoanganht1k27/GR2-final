@@ -1,0 +1,36 @@
+2023-07-28 13:50:07,060 INFO main(40)     List of received arguments {'networkAddress': '10.98.0.12/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-07-28 13:50:07,060 INFO main(42)     Connecting to network: 10.98.0.12/32:
+2023-07-28 13:50:07,060 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.12/32 into list of host
+2023-07-28 13:50:09,089 INFO TEST_HOST_PING(74)     10.98.0.12 is UP!
+2023-07-28 13:50:09,090 INFO main(50)     Time to ping all host: 2.029402256011963
+2023-07-28 13:50:09,090 INFO main(51)     List of alive host:: ['10.98.0.12']
+2023-07-28 13:50:09,091 INFO main(55)     Collecting all hostname using snmp community public
+2023-07-28 13:50:09,092 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-07-28 13:50:09,093 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.12, using IP address as hostname
+2023-07-28 13:52:12,470 INFO main(40)     List of received arguments {'networkAddress': '10.98.0.12/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-07-28 13:52:12,471 INFO main(42)     Connecting to network: 10.98.0.12/32:
+2023-07-28 13:52:12,471 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.12/32 into list of host
+2023-07-28 13:52:14,490 INFO TEST_HOST_PING(74)     10.98.0.12 is UP!
+2023-07-28 13:52:14,490 INFO main(50)     Time to ping all host: 2.019359827041626
+2023-07-28 13:52:14,491 INFO main(51)     List of alive host:: ['10.98.0.12']
+2023-07-28 13:52:14,491 INFO main(55)     Collecting all hostname using snmp community public
+2023-07-28 13:52:14,492 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-07-28 13:52:14,493 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.12, using IP address as hostname
+2023-07-28 14:00:28,245 INFO main(40)     List of received arguments {'networkAddress': '10.98.0.12/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-07-28 14:00:28,246 INFO main(42)     Connecting to network: 10.98.0.12/32:
+2023-07-28 14:00:28,246 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.12/32 into list of host
+2023-07-28 14:00:30,267 INFO TEST_HOST_PING(74)     10.98.0.12 is UP!
+2023-07-28 14:00:30,268 INFO main(50)     Time to ping all host: 2.021953821182251
+2023-07-28 14:00:30,269 INFO main(51)     List of alive host:: ['10.98.0.12']
+2023-07-28 14:00:30,270 INFO main(55)     Collecting all hostname using snmp community public
+2023-07-28 14:00:30,271 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-07-28 14:00:30,271 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.12, using IP address as hostname
+2023-07-28 14:03:38,855 INFO main(40)     List of received arguments {'networkAddress': '10.98.0.5/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-07-28 14:03:38,856 INFO main(42)     Connecting to network: 10.98.0.5/32:
+2023-07-28 14:03:38,856 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.5/32 into list of host
+2023-07-28 14:03:40,883 INFO TEST_HOST_PING(74)     10.98.0.5 is UP!
+2023-07-28 14:03:40,884 INFO main(50)     Time to ping all host: 2.027287244796753
+2023-07-28 14:03:40,884 INFO main(51)     List of alive host:: ['10.98.0.5']
+2023-07-28 14:03:40,885 INFO main(55)     Collecting all hostname using snmp community public
+2023-07-28 14:03:40,886 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-07-28 14:03:40,886 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.5, using IP address as hostname

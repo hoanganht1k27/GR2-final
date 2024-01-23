@@ -1,0 +1,25 @@
+{
+  "uid": "U7ubAduMz",
+  "orgId": 1,
+  "name": "Elasticsearch-SQL",
+  "type": "elasticsearch",
+  "typeLogoUrl": "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg",
+  "access": "proxy",
+  "url": "https://localhost:{{ http_port }}",
+  "basicAuthUser": "elastic",
+  "secureJsonData": {
+    "basicAuthPassword": "{{ elastic_password }}"
+  },
+  "database": "sql-*",
+  "basicAuth": true,
+  "isDefault": false,
+  "jsonData": {
+    "esVersion": 70,
+    "logLevelField": "",
+    "logMessageField": "",
+    "maxConcurrentShardRequests": 5,
+    "timeField": "@timestamp",
+    "tlsSkipVerify": true
+  },
+  "readOnly": false
+}

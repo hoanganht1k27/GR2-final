@@ -1,0 +1,85 @@
+---
+BNG-COUNT-Table:
+# rpc  subscribers summary on Junos version 15.1
+    rpc: get-subscribers
+    item: //subscriber 
+    key: number-of-subscribers
+    view: _BNG-COUNT_view
+_BNG-COUNT_view:
+    fields:
+        total_subscriber: number-of-subscribers
+        active_subscriber: number-of-active-subscribers
+
+BNG-SUMMARY-Table:
+# rpc  subscribers summary port on Junos version 15.1
+    rpc: get-subscribers-summary
+    item: //counters 
+    key: port-name
+    view: _BNG-SUMMARY_view
+_BNG-SUMMARY_view:
+    fields:
+        port: port-name
+        subscriber: port-count
+
+BNG-Vlan-Table:
+# rpc  subscribers vlan count on Junos version 15.1
+    rpc: get-subscribers
+    args:
+      client-type: 'vlan'
+    item: subscriber
+    key: vlan-id
+    view: _BNG-Vlan_view
+_BNG-Vlan_view:
+    fields:
+        vlan_id: vlan-id
+        stacked_vlan_id: stacked-vlan-id
+        routing_instance: routing-instance
+        logical_system: logical-system
+        interface: interface
+# table view for Junos version 17.3R3
+BNG-SUMMARY-v17-Table:
+# rpc subscribers summary
+    rpc: get-subscribers-summary
+    item: //counters[@style="type-summary"]     
+#   item: //counters[last()] 
+    key: session-type-total
+    view: _BNG-SUMMARY-v17_view
+_BNG-SUMMARY-v17_view:
+    fields:
+        dhcp_subscriber: session-type-dhcp
+        vlan_subscriber: session-type-vlan
+        pppoe_subscriber: session-type-pppoe
+        total_subscriber: session-type-total
+
+
+BNG-POOL-STATISTIC-Table:
+    rpc: get-address-assignment-pool-statistics
+    item: //aaa-module-address-assignment-pool-statistics
+    key: pool-name
+    view: _BNG-SUMMARY_view
+_BNG-SUMMARY_view:
+    fields:
+        pool_usage_percent: pool-usage
+        pool_used_address: used-addresses
+
+BNG-COUNT-PORT-v17-Table:
+# rpc subscribers summary port on Junos version 17.3R3
+    rpc: get-subscribers-port-summary
+    item: //counters
+    key: port-name
+    view: _BNG-COUNT-PORT-v17_view
+_BNG-COUNT-PORT-v17_view:
+    fields:
+        port: port-name
+        subscriber: port-count
+
+
+BNG-POOLS-Table:
+    get: access/address-assignment/pool
+    key: name
+    view: _BNG-POOLS-Table
+    
+_BNG-POOLS-Table:
+    fields:
+        name: name
+        link_pool: link

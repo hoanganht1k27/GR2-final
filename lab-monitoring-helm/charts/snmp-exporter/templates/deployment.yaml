@@ -1,0 +1,150 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: snmp-cm
+data:
+  snmp.yml: |
+    auths:
+      public_v2:
+        community: {{ .Values.community }}
+        version: 2
+    modules:
+      hpe:
+        walk:
+          - 1.3.6.1.4.1.232.3.2.5.1.1
+        metrics:
+          - name: cpqDaPhyDrvSize
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.45.3
+            type: gauge
+            help: The size of the drives
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+              type: gauge
+          - name:  cpqDaPhyDrvLocationString
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.64.3
+            type: DisplayString
+            help: The position of drives
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+              type: gauge
+          - name: cpqDaPhyDrvType
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.60.3
+            type: DisplayString
+            help: The type of drives (3 - sata, 4 - sas)
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+              type: gauge
+          - name: cpqDaPhyDrvCurrentTemperature
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.70.3
+            type: gauge
+            help: Current temperature of drives
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+              type: gauge
+          - name: cpqDaPhyDrvPowerOnHours
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.74.3
+            type: counter
+            help: This is the total number of hours that the physical disk has been powered on
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+              type: gauge
+
+          - name: cpqDaPhyDrvStatus
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.6.3
+            type: gauge
+            help: Physical Drive Status. This shows the status of the physical drive. Other (1), Ok (2), Failed (3), Predictive Failure(4), Erasing(5), Erase Done(6), Erase Queued(7), SSD Wear Out(8), Not Authenticated(9).
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+          - name:  cpqDaPhyDrvCondition
+            oid: 1.3.6.1.4.1.232.3.2.5.1.1.37.3
+            type: gauge
+            help: The condition of the device. (2 - ok, 3 - degraded)
+            indexes:
+            - labelname: cpqDaPhyDrvIndex
+              type: gauge
+            lookups:
+            - labels:
+              - cpqDaPhyDrvIndex
+              labelname: cpqDaPhyDrvIndex
+              oid: 1.3.6.1.4.1.232.3.2.5.1.1.2.3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: snmp-deployment
+  name: exporter-snmp
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: snmp-deployment
+  template:
+    metadata:
+      labels:
+        app: snmp-deployment
+    spec:
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: snmp-exporter
+        volumeMounts:
+        - name: snmp-volume
+          mountPath: /etc/snmp_exporter/snmp.yml
+          subPath: snmp.yml
+      volumes:
+        - name: snmp-volume
+          configMap:
+            name: snmp-cm
+            items:
+              - key: snmp.yml
+                path: snmp.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: snmp
+spec:
+  selector:
+    app: snmp-deployment
+  ports:
+    - name: snmp-port
+      protocol: TCP
+      port: 9116
+      targetPort: 9116
+  type: ClusterIP

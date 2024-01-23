@@ -1,0 +1,111 @@
+# Wrote by Hoang Anh Tu
+---
+  - name: DEPENDENCIES [Step 01] - Update OS
+    command: yum -y update
+    args:
+      warn: false
+
+  - name: DEPENDENCIES [Step 02] - Install Additional OS Tools
+    yum:
+      name: ['yum-utils', 'bash-completion', 'bind-utils', 'net-tools', 'telnet', 'mailx', 'rsync', 'perl', 'setools-libs', 'libcgroup', 'expect', 'tmux', 'MySQL-python','psmisc', 'sshpass', 'unar']
+      state: latest
+
+  - name: DEPENDENCIES [Step 03] - Install SNMP Utilities
+    yum:
+     name: ['net-snmp', 'net-snmp-utils', 'net-snmp-devel', 'net-snmp-perl', 'snmpcheck', 'snmptt']
+     state: latest
+
+  - name: DEPENDENCIES [Step 04] - Install Perl & Python Module
+    yum:
+      name: ['perl-Net-SNMP', 'perl-Config-IniFiles', 'perl-Sys-Syslog', 'python-pip', 'python-devel', 'python-requests', 'pysnmp', 'audit-libs-python', 'python-IPy', 'libsemanage-python', 'policycoreutils-python', 'checkpolicy', 'readline-devel']
+      state: latest
+
+  - name: DEPENDENCIES [Step 05] - Install Mariadb Dependencies
+    yum:
+      name: ['mariadb-libs','mariadb-devel']
+      state: latest
+
+  - name: DEPENDENCIES [Step 06] - Install Juniper PyEZ Dependencies
+    yum:
+      name: ['libxml2-devel','libxslt-devel','libffi-devel']
+      state: latest
+
+  - name: DEPENDENCIES [Step 07] - Install NFS daemon & utilities
+    yum:
+      name: ['nfs-utils']
+      state: latest
+
+  - name: DEPENDENCIES [Step 08] - Install Package Downloader
+    yum:
+      name: ['curl','wget']
+      state: latest
+
+  - name: DEPENDENCIES [Step 09] - Install Other Development Package (required by custom plugins)
+    yum:
+      name: ['zlib-devel', 'bzip2-devel', 'openssl-devel', 'ncurses-devel', 'sqlite-devel', 'gcc', 'make', 'git', 'autoconf', 'autogen', 'pkgconfig', 'libuuid-devel']
+      state: latest
+
+  - name: DEPENDENCIES [Step 10] - Install PHP dependencies
+    yum:
+      name: ['php', 'php-cli', 'php-pear', 'php-xmlrpc', 'php-xsl', 'php-pdo', 'php-soap', 'php-gd', 'php-ldap', 'php-mbstring', 'graphviz']
+      state: latest
+
+  - name: DEPENDENCIES [Step 11] - Install Performance data dependencies
+    yum:
+      name: ['perl-Time-HiRes','rrdtool-perl']
+      state: latest
+
+  - name: DEPENDENCIES [Step 12] - Install Postfix relay dependencies
+    yum:
+      name: ['cyrus-sasl', 'cyrus-sasl-lib', 'cyrus-sasl-plain']
+      state: latest
+
+  - name: DEPENDENCIES [Step 13] - Install Development tools groups
+    yum:
+      name: "{{ item.package }}"
+      state: latest
+    with_items: "{{ icinga2_depencies_development_tools_groups }}"
+
+  - name: DEPENDENCIES [Step 14] - Upgrade pip and setuptools
+    shell: "{{ item }}"
+    with_items:
+      - "pip install pip==19.3.1"
+      - "pip install setuptools==40.8.0"
+      - "pip install wheel==0.36.2"
+    environment:
+      HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+
+  # - name: DEPENDENCIES [Step 15] - Install Ansible, Junos and Python' Library
+  #   pip:
+  #     name: ['ansible=={{ ansible_vers }}', 'pandas', 'junos-eznc', 'jsnapy==1.3.2', 'jxmlease', 'flask', 'xlrd', 'easysnmp', 'sqlalchemy', 'mysql-connector', 'networkx', 'tabulate', 'openpyxl']
+  #   environment:
+  #     HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+  #     LC_CTYPE: "en_US.UTF-8"
+  #     HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+
+  # - name: DEPENDENCIES [Step 16] - Install Juniper Junos for Ansible
+  #   shell: "ansible-galaxy install Juniper.junos -f"
+
+  - name: DEPENDENCIES [Step 15] - Add Docker Repository
+    yum_repository:
+      name: docker-ce
+      description: Docker-CE Repo
+      baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+      gpgkey: https://download.docker.com/linux/centos/gpg
+
+  - name: DEPENDENCIES [Step 15] - Install Docker Package
+    yum:
+      name: ['yum-utils','device-mapper-persistent-data','lvm2','docker-ce','docker-ce-cli','containerd.io']
+
+  - name: DEPENDENCIES [Step 15] - Enable Docker Service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+    failed_when: false
+
+  - name: DEPENDENCIES [Step 16] - Install Pyenv
+    include_role:
+      name: ansible-pyenv
+

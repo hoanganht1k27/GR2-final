@@ -1,0 +1,48 @@
+<Location "/report">
+        RequestHeader set Host "http://{{ hostvars[inventory_hostname].IP }}/report"
+        ProxyPass "http://127.0.0.1:8888" connectiontimeout=600 timeout=600 Keepalive=On
+</Location>
+
+<Location "/grafana">
+{% if htpasswd_auth is defined and htpasswd_auth == true %}
+        AuthType Basic
+        AuthName GrafanaAuthProxy
+        AuthBasicProvider file
+        AuthUserFile /etc/thruk/htpasswd
+        Require valid-user
+
+        RewriteEngine On
+        RewriteRule .* - [E=PROXY_USER:%{LA-U:REMOTE_USER},NS]
+        RequestHeader set X-WEBAUTH-USER "%{PROXY_USER}e"
+
+        RequestHeader unset Authorization
+
+        ProxyPass "http://127.0.0.1:3000" connectiontimeout=600 timeout=600 Keepalive=On
+{% else %}
+        ProxyPass "http://127.0.0.1:3000" connectiontimeout=600 timeout=600 Keepalive=On
+{% endif %}
+</Location>
+
+<Location "/grafana/send_request">
+        ProxyPass "http://127.0.0.1:8888"
+        ProxyPassReverse "http://127.0.0.1:8888"
+</Location>
+
+<Location "/rundeck">
+        ProxyPass http://localhost:4440/rundeck
+        ProxyPassReverse http://localhost:4440/rundeck
+</Location>
+
+#BEGIN Csv To HTML Table
+<Location "/csv">
+        RequestHeader set Host "http://{{ hostvars[inventory_hostname].IP }}/csv"
+        ProxyPass "http://127.0.0.1:8000"
+</Location>
+#END Csv To HTML Table
+
+#BEGIN Upgrade Switchover Confirmation
+<Location "/switchover_upgrade">
+        RequestHeader set Host "http://{{ hostvars[inventory_hostname].IP }}/switchover_upgrade"
+        ProxyPass "http://127.0.0.1:1111"
+</Location>
+#END Upgrade Switchover Confirmation

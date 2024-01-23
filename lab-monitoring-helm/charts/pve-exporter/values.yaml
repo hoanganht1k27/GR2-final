@@ -1,0 +1,6 @@
+user: prometheus@pve
+password: juniper@123
+replicaCount: 1
+image:
+  repository: prompve/prometheus-pve-exporter
+  tag: latest

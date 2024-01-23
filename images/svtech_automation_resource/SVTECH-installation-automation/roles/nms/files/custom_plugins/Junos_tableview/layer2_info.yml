@@ -1,0 +1,25 @@
+
+LLDPTable:
+    rpc: get-lldp-neighbors-information
+    item: //lldp-neighbor-information
+    key: lldp-local-port-id
+    view: _LLDP_view
+_LLDP_view:
+    fields:
+        port: lldp-local-port-id
+        remoteMAC: lldp-remote-chassis-id
+        remotePort: lldp-remote-port-id
+
+
+ARPTable:
+    rpc: get-arp-table-information
+    item: //arp-table-entry
+    key: ip-address
+    view: _ARP_view
+_ARP_view:
+    fields:
+        mac: mac-address
+        ipaddress: ip-address
+        hostname: hostname
+        interface: interface-name
+

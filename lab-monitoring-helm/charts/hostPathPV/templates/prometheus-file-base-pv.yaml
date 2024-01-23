@@ -1,0 +1,23 @@
+{{- $basePath := .Values.global.basePath }}
+{{- $namespace := .Release.Namespace }}
+
+{{- range .Values.global.sharedPersistenceVolume }}
+{{- if eq .storageClass "prometheus-file-base-hostpath" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $namespace }}-prometheus-file-base-pv
+spec:
+  storageClassName: {{ $namespace }}-prometheus-file-base-hostpath
+  capacity:
+    # storage: 2Gi
+    storage: {{ .storageSize }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: {{ $basePath }}{{ $namespace }}/prometheus-file-base
+    type: DirectoryOrCreate
+{{- end }}
+
+{{- end  }}

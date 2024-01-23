@@ -1,0 +1,10 @@
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_ICINGA /opt/shared/etc--icinga2 icinga2 -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_POSTFIX /opt/shared/etc--postfix postfix -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_HTTP /opt/shared/etc--httpd httpd -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_GRAFANA /opt/shared/etc--grafana grafana -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_THRUK /opt/shared/etc--thruk thruk -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_RUNDECK /opt/shared/etc--rundeck rundeck -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_NAGVIS /opt/shared/usr--share--nagvis nagvis -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_GITLIST /opt/shared/opt--gitlist gitlist -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_LIB_ICINGA /opt/shared/usr--share--icinga2 lib_icinga2 -r 3600
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder add --l NMS_LIB_RUNDECK /opt/shared/var--lib--rundeck lib_rundeck -r 3600

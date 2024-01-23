@@ -1,0 +1,28 @@
+---
+- name: REQUIRED REPO [Step 01] - yum-clean-metadata
+  command: yum clean metadata
+  args:
+    warn: no
+
+- name: REQUIRED REPO [Step 02] - Install yum-utils package
+  yum:
+    name: yum-utils
+    state: latest
+
+- name: REQUIRED REPO [Step 03] - Install Epel Repository
+  yum: 
+    name: epel-release
+    state: latest
+
+- name: REQUIRED REPO [Step 04] - Install Docker Repository
+  command: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+   creates: /etc/yum.repos.d/docker.repo
+
+
+- name: REQUIRED REPO [Step 05] - Install Kubernetes Repository
+  yum_repository:
+    name: kubernetes
+    description: kubernetes repo
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg

@@ -1,0 +1,74 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "init-repo"
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: init-repo
+        image: {{ .Values.initRepo.image.repository }}:{{ .Values.initRepo.image.tag }}
+        imagePullPolicy: {{ .Values.initRepo.image.pullPolicy | quote }}
+        env:
+          - name: GH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: gh-token
+                key: GH_TOKEN
+                optional: false
+          - name: GH_USERNAME
+            value: {{ .Values.initRepo.GH_USERNAME | quote }}
+          - name: REPO_LIST
+            value: {{ .Values.initRepo.repoList | quote }}
+        command:
+          - bash
+          - -ec
+          - |
+              eval "list_repo=(`echo $REPO_LIST | tr "," " "`)"
+              for item in "${list_repo[@]}"; do
+                  name=`echo $item | sed  "s/:.*//"`
+                  if [[ "$item" =~ .*":".* ]]; then
+                      tag=`echo $item | sed  "s/^.*://"`
+                  else
+                      tag=""
+                  fi
+                  mkdir -p /opt/$name
+                  status=`ls -A /opt/$name | grep -v 'lost+found' | grep -v '.stfolder' | grep -v 'addition_toolkit' | grep -v '.stversions' | wc -l`
+                  if [[ "$status" == "0" ]]; then
+                      echo "/opt/$name is Empty. Clone repo"
+                      cd /opt/$name && \
+                      git init
+                      git remote add origin https://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@github.com/hoanganht1k27/${name}.git
+                      git fetch
+                      git pull origin main
+                      if [ $? == 0 ]; then
+                          echo "Clone ${name} done !"
+                          echo "true" > /opt/${name}/completed
+                      fi
+                  else
+                      echo "/opt/$name is not Empty. Ignore"
+                  fi
+              done
+      {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+        volumeMounts:
+          {{- range .Values.global.sharedPersistenceVolume }}
+
+          {{- if has "preparation" .shareFor }}
+          - name: {{ .volumeName }}
+            mountPath: {{ .path.preparation }}
+          {{- end }}
+
+          {{- end }}    
+      volumes:
+        {{- range .Values.global.sharedPersistenceVolume }}
+
+        {{- if has "preparation" .shareFor }}
+        - name: {{ .volumeName }}
+          persistentVolumeClaim:
+            claimName: {{ .pvcName }}
+        {{- end }}
+
+        {{- end }}
+      {{- end }}

@@ -1,0 +1,24 @@
+---
+ChassisAlarmTable:
+    rpc: get-alarm-information
+    item: //alarm-information/alarm-detail
+    key: alarm-time
+    view: _ChassisAlarm_view
+_ChassisAlarm_view:
+    fields:
+        class: alarm-class
+        description: alarm-description
+        alarm_type: alarm-type
+        time: alarm-time
+
+SystemAlarmTable:
+    rpc: get-system-alarm-information
+    item: //alarm-information/alarm-detail
+    key: alarm-time
+    view: _SystemAlarm_view
+_SystemAlarm_view:
+    fields:
+        class: alarm-class
+        description: alarm-description
+        alarm_type: alarm-type
+        time: alarm-time

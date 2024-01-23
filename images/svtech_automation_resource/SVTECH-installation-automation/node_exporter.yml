@@ -1,0 +1,79 @@
+- hosts: all
+  gather_facts: false
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+    cli_vars_value:
+      ansible_user: juniper
+      ansible_ssh_pass: juniper@123
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"
+ 
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    job_options: 'install_exporter'
+    install_exporter_option: 'install_exporter'
+  tasks:
+    - name: NODE EXPORTER [Step 01] - Get and set current timestamp to a variable
+      set_fact:
+        timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d_%H:%M:%S') }}"
+      when: job_options is search(install_exporter_option)
+      delegate_to: localhost
+      run_once: true
+
+- hosts: all
+  become: true
+  serial: 10
+  gather_facts: false
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+      node_exporter_install_path: "{{ rundeck_node_exporter_install_path }}"
+      node_exporter_version: "{{ rundeck_node_exporter_version }}"
+      node_exporter_local_installation: "{{ rundeck_node_exporter_local_installation }}"
+      node_exporter_list_file_path: "{{ rundeck_node_exporter_list_file_path }}"
+      node_exporter_list_file_name: "{{ rundeck_node_exporter_list_file_name }}"
+      node_exporter_username: "{{ rundeck_node_exporter_username }}"
+      node_exporter_password: "{{ rundeck_node_exporter_password }}"
+      node_exporter_port: "{{ rundeck_node_exporter_port }}"
+    cli_vars_value:
+      ansible_user: root
+      ansible_ssh_pass: juniper@123
+      node_exporter_install_path: /opt/node_exporter
+      node_exporter_version: 1.5.0
+      node_exporter_local_installation: true
+      node_exporter_list_file_path: /tmp/list_node_exporter
+      node_exporter_list_file_name: /tmp/list_node_exporter_name
+      node_exporter_username: prometheus
+      node_exporter_password: juniper@123
+      node_exporter_port: 9100
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"    
+
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    ansible_become_pass: juniper@123
+    node_exporter_install_path: "{{ variable_list.node_exporter_install_path }}"
+    node_exporter_version: "{{ variable_list.node_exporter_version }}"
+    node_exporter_local_installation: "{{ variable_list.node_exporter_local_installation }}"
+    node_exporter_list_file_path: "{{ variable_list.node_exporter_list_file_path }}"
+    node_exporter_list_file_name: "{{ variable_list.node_exporter_list_file_name }}"
+    node_exporter_username: "{{ variable_list.node_exporter_username }}"
+    node_exporter_password: "{{ variable_list.node_exporter_password }}"
+    node_exporter_port: "{{ variable_list.node_exporter_port }}"
+    node_exporter_specific_path: "{{ node_exporter_install_path }}/node_exporter-{{ node_exporter_version }}"
+    node_exporter_installation_file_path: "{{ node_exporter_install_path }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    node_exporter_installation_filename: "node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    node_exporter_download_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    job_options: 'install_exporter'
+    install_exporter_option: 'install_exporter'
+  roles:
+    - role: node_exporter
+      when: job_options is search(install_exporter_option)
+

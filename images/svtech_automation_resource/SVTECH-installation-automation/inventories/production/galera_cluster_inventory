@@ -1,0 +1,26 @@
+[all]
+nms1 ansible_ssh_port=22 ansible_ssh_host=10.98.0.164 IP=10.98.0.164 hostname=nms1 server_id=1 bootstrap=enable
+nms2 ansible_ssh_port=22 ansible_ssh_host=10.98.0.165 IP=10.98.0.165 hostname=nms2 server_id=2 bootstrap=disable
+nms3 ansible_ssh_port=22 ansible_ssh_host=10.98.0.166 IP=10.98.0.166 hostname=nms3 server_id=3 bootstrap=disable
+
+[all:vars]
+# Variables for ansible config
+ansible_user=root
+ansible_port=22
+timezone = "Asia/Ho_Chi_Minh"
+
+# Admin User
+admin_user=admin
+admin_password=juniper@123
+
+# Prefix
+prefix=lab.svtech.com.vn
+
+# Galera Cluster Variables
+database_solution=cluster
+wsrep_cluster_name=ClusterDatabase
+wsrep_sst_auth_user=sstuser
+wsrep_sst_auth_password=123456
+
+auto_gen_password=false
+mariadb_root_password=juniper@123

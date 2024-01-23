@@ -1,0 +1,40 @@
+#{{- if .Values.persistence.enabled }}
+#{{- $namespace := .Release.Namespace }}
+
+#{{- range $index, $topping := until (int .Values.kafka.replicaCount) }}
+#---
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: "data-kafka-{{ $index }}-{{ $namespace }}"
+#spec:
+#  storageClassName: kafka-{{ $namespace }}
+#  capacity:
+#    storage: {{ $.Values.persistence.kafka.size | quote }}
+#  accessModes:
+#    - ReadWriteOnce
+#  persistentVolumeReclaimPolicy: Retain
+#  hostPath:
+#    path: {{ $.Values.persistence.kafka.hostPath }}/{{ $namespace }}/
+#    type: DirectoryOrCreate
+
+#{{- end }}
+
+#{{- range $index, $topping := until (int .Values.zookeeper.replicaCount) }}
+#---
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: "data-zookeeper-{{ $index }}-{{ $namespace }}"
+#spec:
+#  storageClassName: zookeeper-{{ $namespace }}
+#  capacity:
+#    storage: {{ $.Values.persistence.zookeeper.size | quote }}
+#  accessModes:
+#    - ReadWriteOnce
+#  persistentVolumeReclaimPolicy: Retain
+#  hostPath:
+#    path: {{ $.Values.persistence.zookeeper.hostPath }}/{{ $namespace }}/
+#    type: DirectoryOrCreate
+#{{- end }}
+#{{- end }}

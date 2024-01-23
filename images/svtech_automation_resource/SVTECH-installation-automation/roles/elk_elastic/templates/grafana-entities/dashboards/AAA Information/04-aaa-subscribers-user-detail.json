@@ -1,0 +1,379 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1627544187242,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Elasticsearch-Metric",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "content": "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.back {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n}\n\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n.button {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n  float: right;\n  margin:2px\n}\n\n.clicked {\n  display: inline-block;\n  background-color: white;\n  border: none;\n  color: grey;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid grey;\n  font-weight: bold;\n  margin:2px;\n  float: right;\n}\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n\n</style>\n</head>\n<body>\n\n<button class=\"button\" style=\"vertical-align:middle\" onclick=\"window.open('/grafana/d/menu/menu?orgId=1', '_self')\"><span>BACK TO MENU</span></button>\n\n</body>\n</html>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": " ",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "alignNumbersToRightEnabled": true,
+      "columnAliases": [],
+      "columnFiltersEnabled": true,
+      "columnWidthHints": [],
+      "columns": [],
+      "compactRowsEnabled": true,
+      "datasource": "MySQL_Viettel_User",
+      "datatablePagingType": "simple_numbers",
+      "datatableTheme": "basic_theme",
+      "emptyData": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 18,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "hoverEnabled": true,
+      "id": 2,
+      "infoEnabled": true,
+      "lengthChangeEnabled": true,
+      "orderColumnEnabled": true,
+      "pagingTypes": [
+        {
+          "$$hashKey": "object:2382",
+          "text": "Page number buttons only",
+          "value": "numbers"
+        },
+        {
+          "$$hashKey": "object:2383",
+          "text": "'Previous' and 'Next' buttons only",
+          "value": "simple"
+        },
+        {
+          "$$hashKey": "object:2384",
+          "text": "'Previous' and 'Next' buttons, plus page numbers",
+          "value": "simple_numbers"
+        },
+        {
+          "$$hashKey": "object:2385",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+          "value": "full"
+        },
+        {
+          "$$hashKey": "object:2386",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+          "value": "full_numbers"
+        },
+        {
+          "$$hashKey": "object:2387",
+          "text": "'First' and 'Last' buttons, plus page numbers",
+          "value": "first_last_numbers"
+        }
+      ],
+      "panelHeight": 630,
+      "pluginVersion": "7.4.3",
+      "rowNumbersEnabled": false,
+      "rowsPerPage": 10,
+      "scroll": false,
+      "scrollHeight": "default",
+      "searchEnabled": true,
+      "searchHighlightingEnabled": true,
+      "showCellBorders": true,
+      "showHeader": true,
+      "showRowBorders": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "sortByColumns": [
+        {
+          "$$hashKey": "object:2329",
+          "columnData": "ReactiveDate",
+          "sortMethod": "desc"
+        }
+      ],
+      "sortByColumnsData": [
+        [
+          7,
+          "desc"
+        ]
+      ],
+      "stripedRowsEnabled": true,
+      "styles": [
+        {
+          "$$hashKey": "object:2331",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "/.*Date.*/",
+          "type": "date"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  username as UserName,\n  mac as MAC,\n  port as Port,\n  status as Status,\n  activedate as ActiveDate,\n  canceldate as CancelDate,\n  suspenddate as SuspendDate,\n  reactivedate as ReactiveDate,\n  bras as BRAS,\n  portchangedate as PortChangeDate\n\n\nFROM usercheck \nWHERE username REGEXP '($filter_user)' and bras in ($bras)\nlimit $limit",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "id"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "redirect_group",
+          "timeColumn": "dateset",
+          "timeColumnType": "timestamp",
+          "timeField": "@timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "themeOptions": {
+        "dark": "./styles/dark.scss",
+        "light": "./styles/light.scss"
+      },
+      "themes": [
+        {
+          "$$hashKey": "object:2357",
+          "disabled": false,
+          "text": "Basic",
+          "value": "basic_theme"
+        },
+        {
+          "$$hashKey": "object:2358",
+          "disabled": true,
+          "text": "Bootstrap",
+          "value": "bootstrap_theme"
+        },
+        {
+          "$$hashKey": "object:2359",
+          "disabled": true,
+          "text": "Foundation",
+          "value": "foundation_theme"
+        },
+        {
+          "$$hashKey": "object:2360",
+          "disabled": true,
+          "text": "ThemeRoller",
+          "value": "themeroller_theme"
+        }
+      ],
+      "title": "User on BRAS",
+      "transform": "table",
+      "type": "briangann-datatable-panel"
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "AAA"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": "Filter User",
+        "name": "filter_user",
+        "options": [
+          {
+            "selected": false,
+            "text": "user",
+            "value": "user"
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "100",
+          "value": "100"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "limit",
+        "options": [
+          {
+            "selected": true,
+            "text": "100",
+            "value": "100"
+          },
+          {
+            "selected": false,
+            "text": "1000",
+            "value": "1000"
+          },
+          {
+            "selected": false,
+            "text": "10000",
+            "value": "10000"
+          },
+          {
+            "selected": false,
+            "text": "10000",
+            "value": "10000"
+          }
+        ],
+        "query": "100,1000,10000,10000",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "MySQL_Viettel_User",
+        "definition": "select distinct bras from logininfo where username REGEXP \"$filter_user\"",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "BRAS",
+        "multi": true,
+        "name": "bras",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "10.56.239.9",
+            "value": "10.56.239.9"
+          }
+        ],
+        "query": "select distinct bras from logininfo where username REGEXP \"$filter_user\"",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "04 - AAA - Subscriber's User Detail",
+  "uid": "aaa-subscriber-user-detail"
+}

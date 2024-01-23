@@ -1,0 +1,149 @@
+# Install MariaDB
+# Wrote by Hoang Anh Tu
+---
+- set_fact:
+    innodb_buffer_pool_size_mb: "{{ (ansible_memtotal_mb*(innodb_buffer_pool_size_percent|default(50, true))/100)|int|abs }}"
+
+- name: DATABASE [Step 01]-[Single] - Install Basic MariaDB packages
+  yum:
+    name:
+      - MariaDB-server
+      - MariaDB-client
+      - MariaDB-backup
+    update_cache: yes
+    state: latest
+
+- name: DATABASE [Step 02]-[Single] - Checking MySQL Log Directory
+  stat: path=/var/log/mysql
+  register: mysqllog_dir
+
+- name: DATABASE [Step 03]-[Single] - Create MariaDB log's directory
+  file: 
+    path: /var/log/mysql
+    state: directory
+    owner: mysql
+    group: mysql
+  when:
+    - mysqllog_dir.stat.exists == false
+
+- name: DATABASE [Step 04]-[Single] - Configure MariaDB
+  template:
+    src: "{{ role_path }}/templates/mysql_single/server.j2"
+    dest: "/etc/my.cnf.d/server.cnf"
+
+- name: DATABASE [Step 03]-[Single] - Create MariaDB log's directory
+  file:
+    path: "{{ data_dir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: "u=rwx,g=rw,o=r"
+    force: yes
+
+- name: DATABASE [Step 04-1]-[Single] - Copy default mysql to new directory
+  shell: "{{ item }}"
+  with_items:
+    - "cp -rf /var/lib/mysql/* {{ data_dir }}"
+    - "chown mysql:mysql {{ data_dir }} -R"
+  when:
+    - data_dir != "/var/lib/mysql"
+
+- name: DATABASE [Step 04-2]-[Single] - Edit clients connection socket
+  lineinfile:
+    dest: "/etc/my.cnf.d/mysql-clients.cnf"
+    insertafter: '^\[mysql\]'
+    line: "socket={{ data_dir}}/mysql.sock"
+  when:
+    - data_dir != "/var/lib/mysql"
+
+- name: DATABASE [Step 05]-[Single] - Start MariaDB
+  service:
+    name: mariadb
+    state: restarted
+    enabled: yes
+
+- name: DATABASE [Step 06]-[Single] - Check Database Root's password
+  command: mysqladmin -uroot status
+  ignore_errors: yes
+  register: mysql_root_password
+  failed_when: false
+  args:
+    warn: false
+
+- name: DATABASE [Step 07]-[Single] - Secure MySQL Installation
+  command: "{{ item }}"
+  with_items:
+    - mysql -uroot -e "DELETE FROM mysql.user WHERE User='';"
+    - mysql -uroot -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    - mysql -uroot -e "DROP DATABASE IF EXISTS test;"
+    - mysql -uroot -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
+  when: 
+    - mysql_root_password.rc == 0
+
+- name: DATABASE [Step 08]-[Single] - Generate random password for Root when auto_gen_password is true
+  shell: "{{ item }}"
+  with_items:
+    - rm -rf /tmp/temp
+    - echo "- Database" >> /tmp/temp
+    - echo "User:root" >> /tmp/temp
+    - echo "Password:" >> /tmp/temp
+    - echo $(openssl rand -hex 8)'D8' |tee -a /tmp/password | tee -a /tmp/temp
+    - mysqladmin -u root password `cat /tmp/password`
+    - sed '3N;s/\n/ /' /tmp/temp  >> ~/info
+    - rm -rf /tmp/temp
+  when:
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- name: DATABASE [Step 09]-[Single] - Collect random password for Root when auto_gen_password is true
+  command: "{{ item }}"
+  with_items:
+    - cat /tmp/password
+  register: autogen_mariadb_root_password
+  when:
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- set_fact:
+    mariadb_root_password: "{{ autogen_mariadb_root_password.results[0].stdout }}"
+  when:
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- name: DATABASE [Step 10]-[Single] - Set password for Root user
+  shell: "{{ item }}"
+  with_items:
+    - "mysqladmin -u root password {{ mariadb_root_password }}"
+  no_log: true
+  when:
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "false"
+
+- name: DATABASE [Step 11]-[Single] - Change DB's Limit Open file
+  replace:
+    dest: /usr/lib/systemd/system/mariadb.service
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  with_items:
+    - { old: "LimitNOFILE=.*", new: 'LimitNOFILE=infinity'}
+
+- name: DATABASE [Step 12]-[Single] - force systemd to reread DB configs
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: mariadb
+
+- name: DATABASE [Step 13]-[Single] - Altering the root@localhost Account to Revert to the Previous Authentication Method
+  command: "{{ item }}"
+  with_items:
+    - mysql -uroot -p{{mariadb_root_password}} -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('{{mariadb_root_password}}');"
+  no_log: true
+
+- name: DATABASE [Step 14]-[Single] - Getting Database information to Ansible Server
+  fetch:
+    src: ~/info
+    dest: "{{ playbook_dir }}/host_info/{{ hostvars[inventory_hostname].prefix }}-SingleDatabase-{{ inventory_hostname }}"
+    flat: yes
+  when:
+    - mysql_root_password.rc == 0

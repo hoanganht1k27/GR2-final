@@ -1,0 +1,410 @@
+2023-05-16 20:41:35,399 INFO main(40)     List of received arguments {'log_prefix': 'scanIP', 'community': 'public', 'collect_hostname': True, 'log_level': 'INFO', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'output_dir': '/tmp/exporter_inventory', 'list_full_oid': None, 'log_dir': './logs', 'ping_count': 3, 'networkAddress': '10.98.0.0/24', 'ping_interval': 0.1}
+2023-05-16 20:41:35,400 INFO main(42)     Connecting to network: 10.98.0.0/24:
+2023-05-16 20:41:35,402 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.0/24 into list of host
+2023-05-16 20:41:37,429 INFO TEST_HOST_PING(74)     10.98.0.1 is UP!
+2023-05-16 20:41:37,429 INFO TEST_HOST_PING(74)     10.98.0.3 is UP!
+2023-05-16 20:41:37,434 INFO TEST_HOST_PING(74)     10.98.0.2 is UP!
+2023-05-16 20:41:37,437 INFO TEST_HOST_PING(74)     10.98.0.4 is UP!
+2023-05-16 20:41:37,442 INFO TEST_HOST_PING(74)     10.98.0.6 is UP!
+2023-05-16 20:41:37,442 INFO TEST_HOST_PING(74)     10.98.0.5 is UP!
+2023-05-16 20:41:39,442 INFO TEST_HOST_PING(74)     10.98.0.7 is UP!
+2023-05-16 20:41:39,458 INFO TEST_HOST_PING(74)     10.98.0.9 is UP!
+2023-05-16 20:41:39,459 INFO TEST_HOST_PING(74)     10.98.0.10 is UP!
+2023-05-16 20:41:39,460 INFO TEST_HOST_PING(74)     10.98.0.11 is UP!
+2023-05-16 20:41:39,480 INFO TEST_HOST_PING(74)     10.98.0.12 is UP!
+2023-05-16 20:41:40,467 INFO TEST_HOST_PING(77)     10.98.0.8 is DOWN!
+2023-05-16 20:41:42,494 INFO TEST_HOST_PING(77)     10.98.0.16 is DOWN!
+2023-05-16 20:41:42,497 INFO TEST_HOST_PING(77)     10.98.0.15 is DOWN!
+2023-05-16 20:41:42,504 INFO TEST_HOST_PING(77)     10.98.0.14 is DOWN!
+2023-05-16 20:41:42,536 INFO TEST_HOST_PING(77)     10.98.0.13 is DOWN!
+2023-05-16 20:41:42,541 INFO TEST_HOST_PING(77)     10.98.0.17 is DOWN!
+2023-05-16 20:41:43,529 INFO TEST_HOST_PING(77)     10.98.0.18 is DOWN!
+2023-05-16 20:41:44,543 INFO TEST_HOST_PING(74)     10.98.0.21 is UP!
+2023-05-16 20:41:44,550 INFO TEST_HOST_PING(74)     10.98.0.22 is UP!
+2023-05-16 20:41:45,537 INFO TEST_HOST_PING(77)     10.98.0.20 is DOWN!
+2023-05-16 20:41:45,574 INFO TEST_HOST_PING(77)     10.98.0.19 is DOWN!
+2023-05-16 20:41:45,577 INFO TEST_HOST_PING(77)     10.98.0.23 is DOWN!
+2023-05-16 20:41:46,565 INFO TEST_HOST_PING(77)     10.98.0.24 is DOWN!
+2023-05-16 20:41:47,578 INFO TEST_HOST_PING(77)     10.98.0.25 is DOWN!
+2023-05-16 20:41:47,579 INFO TEST_HOST_PING(77)     10.98.0.26 is DOWN!
+2023-05-16 20:41:48,562 INFO TEST_HOST_PING(77)     10.98.0.27 is DOWN!
+2023-05-16 20:41:48,610 INFO TEST_HOST_PING(77)     10.98.0.29 is DOWN!
+2023-05-16 20:41:48,611 INFO TEST_HOST_PING(77)     10.98.0.28 is DOWN!
+2023-05-16 20:41:49,585 INFO TEST_HOST_PING(77)     10.98.0.30 is DOWN!
+2023-05-16 20:41:50,604 INFO TEST_HOST_PING(77)     10.98.0.32 is DOWN!
+2023-05-16 20:41:50,633 INFO TEST_HOST_PING(77)     10.98.0.31 is DOWN!
+2023-05-16 20:41:51,587 INFO TEST_HOST_PING(77)     10.98.0.33 is DOWN!
+2023-05-16 20:41:51,630 INFO TEST_HOST_PING(77)     10.98.0.35 is DOWN!
+2023-05-16 20:41:51,633 INFO TEST_HOST_PING(77)     10.98.0.34 is DOWN!
+2023-05-16 20:41:52,808 INFO TEST_HOST_PING(77)     10.98.0.36 is DOWN!
+2023-05-16 20:41:53,623 INFO TEST_HOST_PING(77)     10.98.0.37 is DOWN!
+2023-05-16 20:41:53,653 INFO TEST_HOST_PING(77)     10.98.0.38 is DOWN!
+2023-05-16 20:41:54,609 INFO TEST_HOST_PING(77)     10.98.0.39 is DOWN!
+2023-05-16 20:41:54,667 INFO TEST_HOST_PING(77)     10.98.0.40 is DOWN!
+2023-05-16 20:41:54,667 INFO TEST_HOST_PING(77)     10.98.0.41 is DOWN!
+2023-05-16 20:41:55,640 INFO TEST_HOST_PING(74)     10.98.0.43 is UP!
+2023-05-16 20:41:55,850 INFO TEST_HOST_PING(77)     10.98.0.42 is DOWN!
+2023-05-16 20:41:56,686 INFO TEST_HOST_PING(77)     10.98.0.44 is DOWN!
+2023-05-16 20:41:57,637 INFO TEST_HOST_PING(77)     10.98.0.45 is DOWN!
+2023-05-16 20:41:57,694 INFO TEST_HOST_PING(77)     10.98.0.46 is DOWN!
+2023-05-16 20:41:57,701 INFO TEST_HOST_PING(77)     10.98.0.47 is DOWN!
+2023-05-16 20:41:58,663 INFO TEST_HOST_PING(77)     10.98.0.48 is DOWN!
+2023-05-16 20:41:58,880 INFO TEST_HOST_PING(77)     10.98.0.49 is DOWN!
+2023-05-16 20:41:59,709 INFO TEST_HOST_PING(77)     10.98.0.50 is DOWN!
+2023-05-16 20:42:00,652 INFO TEST_HOST_PING(77)     10.98.0.51 is DOWN!
+2023-05-16 20:42:00,717 INFO TEST_HOST_PING(77)     10.98.0.53 is DOWN!
+2023-05-16 20:42:00,719 INFO TEST_HOST_PING(77)     10.98.0.52 is DOWN!
+2023-05-16 20:42:01,684 INFO TEST_HOST_PING(77)     10.98.0.54 is DOWN!
+2023-05-16 20:42:01,922 INFO TEST_HOST_PING(77)     10.98.0.55 is DOWN!
+2023-05-16 20:42:02,749 INFO TEST_HOST_PING(77)     10.98.0.56 is DOWN!
+2023-05-16 20:42:03,697 INFO TEST_HOST_PING(77)     10.98.0.57 is DOWN!
+2023-05-16 20:42:03,746 INFO TEST_HOST_PING(77)     10.98.0.58 is DOWN!
+2023-05-16 20:42:03,747 INFO TEST_HOST_PING(77)     10.98.0.59 is DOWN!
+2023-05-16 20:42:04,702 INFO TEST_HOST_PING(77)     10.98.0.60 is DOWN!
+2023-05-16 20:42:04,944 INFO TEST_HOST_PING(77)     10.98.0.61 is DOWN!
+2023-05-16 20:42:05,768 INFO TEST_HOST_PING(77)     10.98.0.62 is DOWN!
+2023-05-16 20:42:06,717 INFO TEST_HOST_PING(77)     10.98.0.63 is DOWN!
+2023-05-16 20:42:06,761 INFO TEST_HOST_PING(77)     10.98.0.65 is DOWN!
+2023-05-16 20:42:06,764 INFO TEST_HOST_PING(77)     10.98.0.64 is DOWN!
+2023-05-16 20:42:07,717 INFO TEST_HOST_PING(77)     10.98.0.66 is DOWN!
+2023-05-16 20:42:07,993 INFO TEST_HOST_PING(77)     10.98.0.67 is DOWN!
+2023-05-16 20:42:08,789 INFO TEST_HOST_PING(77)     10.98.0.68 is DOWN!
+2023-05-16 20:42:09,741 INFO TEST_HOST_PING(77)     10.98.0.69 is DOWN!
+2023-05-16 20:42:09,782 INFO TEST_HOST_PING(77)     10.98.0.70 is DOWN!
+2023-05-16 20:42:09,785 INFO TEST_HOST_PING(77)     10.98.0.71 is DOWN!
+2023-05-16 20:42:10,737 INFO TEST_HOST_PING(77)     10.98.0.72 is DOWN!
+2023-05-16 20:42:11,013 INFO TEST_HOST_PING(77)     10.98.0.73 is DOWN!
+2023-05-16 20:42:11,816 INFO TEST_HOST_PING(77)     10.98.0.74 is DOWN!
+2023-05-16 20:42:12,796 INFO TEST_HOST_PING(77)     10.98.0.75 is DOWN!
+2023-05-16 20:42:12,797 INFO TEST_HOST_PING(77)     10.98.0.76 is DOWN!
+2023-05-16 20:42:12,831 INFO TEST_HOST_PING(77)     10.98.0.77 is DOWN!
+2023-05-16 20:42:13,768 INFO TEST_HOST_PING(77)     10.98.0.78 is DOWN!
+2023-05-16 20:42:14,048 INFO TEST_HOST_PING(77)     10.98.0.79 is DOWN!
+2023-05-16 20:42:14,858 INFO TEST_HOST_PING(74)     10.98.0.82 is UP!
+2023-05-16 20:42:14,869 INFO TEST_HOST_PING(74)     10.98.0.81 is UP!
+2023-05-16 20:42:14,873 INFO TEST_HOST_PING(74)     10.98.0.83 is UP!
+2023-05-16 20:42:14,875 INFO TEST_HOST_PING(77)     10.98.0.80 is DOWN!
+2023-05-16 20:42:15,777 INFO TEST_HOST_PING(74)     10.98.0.84 is UP!
+2023-05-16 20:42:16,119 INFO TEST_HOST_PING(74)     10.98.0.85 is UP!
+2023-05-16 20:42:17,905 INFO TEST_HOST_PING(77)     10.98.0.87 is DOWN!
+2023-05-16 20:42:17,905 INFO TEST_HOST_PING(77)     10.98.0.86 is DOWN!
+2023-05-16 20:42:17,911 INFO TEST_HOST_PING(77)     10.98.0.89 is DOWN!
+2023-05-16 20:42:17,912 INFO TEST_HOST_PING(77)     10.98.0.88 is DOWN!
+2023-05-16 20:42:18,860 INFO TEST_HOST_PING(77)     10.98.0.90 is DOWN!
+2023-05-16 20:42:19,210 INFO TEST_HOST_PING(77)     10.98.0.91 is DOWN!
+2023-05-16 20:42:20,927 INFO TEST_HOST_PING(77)     10.98.0.92 is DOWN!
+2023-05-16 20:42:20,936 INFO TEST_HOST_PING(77)     10.98.0.93 is DOWN!
+2023-05-16 20:42:20,948 INFO TEST_HOST_PING(77)     10.98.0.94 is DOWN!
+2023-05-16 20:42:20,954 INFO TEST_HOST_PING(77)     10.98.0.95 is DOWN!
+2023-05-16 20:42:21,911 INFO TEST_HOST_PING(77)     10.98.0.96 is DOWN!
+2023-05-16 20:42:22,233 INFO TEST_HOST_PING(77)     10.98.0.97 is DOWN!
+2023-05-16 20:42:23,024 INFO TEST_HOST_PING(74)     10.98.0.101 is UP!
+2023-05-16 20:42:23,964 INFO TEST_HOST_PING(77)     10.98.0.98 is DOWN!
+2023-05-16 20:42:23,977 INFO TEST_HOST_PING(77)     10.98.0.100 is DOWN!
+2023-05-16 20:42:23,984 INFO TEST_HOST_PING(77)     10.98.0.99 is DOWN!
+2023-05-16 20:42:24,962 INFO TEST_HOST_PING(77)     10.98.0.102 is DOWN!
+2023-05-16 20:42:25,254 INFO TEST_HOST_PING(77)     10.98.0.103 is DOWN!
+2023-05-16 20:42:26,088 INFO TEST_HOST_PING(77)     10.98.0.104 is DOWN!
+2023-05-16 20:42:26,983 INFO TEST_HOST_PING(77)     10.98.0.105 is DOWN!
+2023-05-16 20:42:26,996 INFO TEST_HOST_PING(77)     10.98.0.106 is DOWN!
+2023-05-16 20:42:27,009 INFO TEST_HOST_PING(77)     10.98.0.107 is DOWN!
+2023-05-16 20:42:27,983 INFO TEST_HOST_PING(77)     10.98.0.108 is DOWN!
+2023-05-16 20:42:28,108 INFO TEST_HOST_PING(74)     10.98.0.110 is UP!
+2023-05-16 20:42:28,277 INFO TEST_HOST_PING(77)     10.98.0.109 is DOWN!
+2023-05-16 20:42:29,001 INFO TEST_HOST_PING(74)     10.98.0.111 is UP!
+2023-05-16 20:42:29,026 INFO TEST_HOST_PING(74)     10.98.0.113 is UP!
+2023-05-16 20:42:30,019 INFO TEST_HOST_PING(77)     10.98.0.112 is DOWN!
+2023-05-16 20:42:30,998 INFO TEST_HOST_PING(77)     10.98.0.114 is DOWN!
+2023-05-16 20:42:31,017 INFO TEST_HOST_PING(74)     10.98.0.117 is UP!
+2023-05-16 20:42:31,126 INFO TEST_HOST_PING(77)     10.98.0.115 is DOWN!
+2023-05-16 20:42:31,297 INFO TEST_HOST_PING(77)     10.98.0.116 is DOWN!
+2023-05-16 20:42:33,037 INFO TEST_HOST_PING(74)     10.98.0.121 is UP!
+2023-05-16 20:42:33,055 INFO TEST_HOST_PING(77)     10.98.0.119 is DOWN!
+2023-05-16 20:42:33,142 INFO TEST_HOST_PING(74)     10.98.0.122 is UP!
+2023-05-16 20:42:33,966 INFO TEST_HOST_PING(77)     10.98.0.118 is DOWN!
+2023-05-16 20:42:34,017 INFO TEST_HOST_PING(77)     10.98.0.120 is DOWN!
+2023-05-16 20:42:34,339 INFO TEST_HOST_PING(77)     10.98.0.123 is DOWN!
+2023-05-16 20:42:35,198 INFO TEST_HOST_PING(74)     10.98.0.126 is UP!
+2023-05-16 20:42:36,063 INFO TEST_HOST_PING(77)     10.98.0.124 is DOWN!
+2023-05-16 20:42:36,076 INFO TEST_HOST_PING(77)     10.98.0.125 is DOWN!
+2023-05-16 20:42:36,980 INFO TEST_HOST_PING(77)     10.98.0.127 is DOWN!
+2023-05-16 20:42:37,039 INFO TEST_HOST_PING(77)     10.98.0.128 is DOWN!
+2023-05-16 20:42:37,386 INFO TEST_HOST_PING(77)     10.98.0.129 is DOWN!
+2023-05-16 20:42:38,099 INFO TEST_HOST_PING(74)     10.98.0.132 is UP!
+2023-05-16 20:42:38,227 INFO TEST_HOST_PING(77)     10.98.0.130 is DOWN!
+2023-05-16 20:42:39,007 INFO TEST_HOST_PING(74)     10.98.0.133 is UP!
+2023-05-16 20:42:39,091 INFO TEST_HOST_PING(77)     10.98.0.131 is DOWN!
+2023-05-16 20:42:39,102 INFO TEST_HOST_PING(74)     10.98.0.134 is UP!
+2023-05-16 20:42:40,249 INFO TEST_HOST_PING(74)     10.98.0.137 is UP!
+2023-05-16 20:42:40,410 INFO TEST_HOST_PING(77)     10.98.0.135 is DOWN!
+2023-05-16 20:42:41,037 INFO TEST_HOST_PING(74)     10.98.0.138 is UP!
+2023-05-16 20:42:41,118 INFO TEST_HOST_PING(77)     10.98.0.136 is DOWN!
+2023-05-16 20:42:42,148 INFO TEST_HOST_PING(77)     10.98.0.139 is DOWN!
+2023-05-16 20:42:42,149 INFO TEST_HOST_PING(77)     10.98.0.140 is DOWN!
+2023-05-16 20:42:43,297 INFO TEST_HOST_PING(77)     10.98.0.141 is DOWN!
+2023-05-16 20:42:43,659 INFO TEST_HOST_PING(77)     10.98.0.142 is DOWN!
+2023-05-16 20:42:44,065 INFO TEST_HOST_PING(77)     10.98.0.143 is DOWN!
+2023-05-16 20:42:44,139 INFO TEST_HOST_PING(77)     10.98.0.144 is DOWN!
+2023-05-16 20:42:45,198 INFO TEST_HOST_PING(77)     10.98.0.145 is DOWN!
+2023-05-16 20:42:45,203 INFO TEST_HOST_PING(77)     10.98.0.146 is DOWN!
+2023-05-16 20:42:46,439 INFO TEST_HOST_PING(77)     10.98.0.147 is DOWN!
+2023-05-16 20:42:46,759 INFO TEST_HOST_PING(77)     10.98.0.148 is DOWN!
+2023-05-16 20:42:47,094 INFO TEST_HOST_PING(77)     10.98.0.149 is DOWN!
+2023-05-16 20:42:47,177 INFO TEST_HOST_PING(77)     10.98.0.150 is DOWN!
+2023-05-16 20:42:47,210 INFO TEST_HOST_PING(74)     10.98.0.151 is UP!
+2023-05-16 20:42:47,218 INFO TEST_HOST_PING(74)     10.98.0.152 is UP!
+2023-05-16 20:42:48,510 INFO TEST_HOST_PING(74)     10.98.0.153 is UP!
+2023-05-16 20:42:48,773 INFO TEST_HOST_PING(74)     10.98.0.154 is UP!
+2023-05-16 20:42:49,109 INFO TEST_HOST_PING(74)     10.98.0.155 is UP!
+2023-05-16 20:42:50,202 INFO TEST_HOST_PING(77)     10.98.0.156 is DOWN!
+2023-05-16 20:42:50,250 INFO TEST_HOST_PING(77)     10.98.0.158 is DOWN!
+2023-05-16 20:42:50,267 INFO TEST_HOST_PING(77)     10.98.0.157 is DOWN!
+2023-05-16 20:42:50,784 INFO TEST_HOST_PING(74)     10.98.0.160 is UP!
+2023-05-16 20:42:51,125 INFO TEST_HOST_PING(74)     10.98.0.161 is UP!
+2023-05-16 20:42:51,533 INFO TEST_HOST_PING(77)     10.98.0.159 is DOWN!
+2023-05-16 20:42:52,797 INFO TEST_HOST_PING(74)     10.98.0.165 is UP!
+2023-05-16 20:42:53,150 INFO TEST_HOST_PING(74)     10.98.0.166 is UP!
+2023-05-16 20:42:53,224 INFO TEST_HOST_PING(77)     10.98.0.162 is DOWN!
+2023-05-16 20:42:53,297 INFO TEST_HOST_PING(77)     10.98.0.163 is DOWN!
+2023-05-16 20:42:53,321 INFO TEST_HOST_PING(77)     10.98.0.164 is DOWN!
+2023-05-16 20:42:54,561 INFO TEST_HOST_PING(77)     10.98.0.167 is DOWN!
+2023-05-16 20:42:54,865 INFO TEST_HOST_PING(74)     10.98.0.168 is UP!
+2023-05-16 20:42:56,190 INFO TEST_HOST_PING(77)     10.98.0.169 is DOWN!
+2023-05-16 20:42:56,374 INFO TEST_HOST_PING(77)     10.98.0.170 is DOWN!
+2023-05-16 20:42:56,375 INFO TEST_HOST_PING(77)     10.98.0.172 is DOWN!
+2023-05-16 20:42:56,386 INFO TEST_HOST_PING(77)     10.98.0.171 is DOWN!
+2023-05-16 20:42:56,576 INFO TEST_HOST_PING(74)     10.98.0.173 is UP!
+2023-05-16 20:42:56,885 INFO TEST_HOST_PING(74)     10.98.0.174 is UP!
+2023-05-16 20:42:58,225 INFO TEST_HOST_PING(74)     10.98.0.175 is UP!
+2023-05-16 20:42:58,400 INFO TEST_HOST_PING(74)     10.98.0.176 is UP!
+2023-05-16 20:42:59,401 INFO TEST_HOST_PING(77)     10.98.0.177 is DOWN!
+2023-05-16 20:42:59,409 INFO TEST_HOST_PING(77)     10.98.0.178 is DOWN!
+2023-05-16 20:42:59,591 INFO TEST_HOST_PING(77)     10.98.0.179 is DOWN!
+2023-05-16 20:42:59,933 INFO TEST_HOST_PING(77)     10.98.0.180 is DOWN!
+2023-05-16 20:43:00,236 INFO TEST_HOST_PING(74)     10.98.0.181 is UP!
+2023-05-16 20:43:00,418 INFO TEST_HOST_PING(74)     10.98.0.182 is UP!
+2023-05-16 20:43:01,420 INFO TEST_HOST_PING(74)     10.98.0.183 is UP!
+2023-05-16 20:43:01,422 INFO TEST_HOST_PING(74)     10.98.0.184 is UP!
+2023-05-16 20:43:01,602 INFO TEST_HOST_PING(74)     10.98.0.185 is UP!
+2023-05-16 20:43:01,950 INFO TEST_HOST_PING(74)     10.98.0.186 is UP!
+2023-05-16 20:43:02,260 INFO TEST_HOST_PING(74)     10.98.0.187 is UP!
+2023-05-16 20:43:02,435 INFO TEST_HOST_PING(74)     10.98.0.188 is UP!
+2023-05-16 20:43:03,434 INFO TEST_HOST_PING(74)     10.98.0.189 is UP!
+2023-05-16 20:43:03,439 INFO TEST_HOST_PING(74)     10.98.0.190 is UP!
+2023-05-16 20:43:03,617 INFO TEST_HOST_PING(74)     10.98.0.191 is UP!
+2023-05-16 20:43:03,980 INFO TEST_HOST_PING(74)     10.98.0.192 is UP!
+2023-05-16 20:43:05,294 INFO TEST_HOST_PING(77)     10.98.0.193 is DOWN!
+2023-05-16 20:43:05,449 INFO TEST_HOST_PING(77)     10.98.0.194 is DOWN!
+2023-05-16 20:43:06,459 INFO TEST_HOST_PING(77)     10.98.0.195 is DOWN!
+2023-05-16 20:43:06,459 INFO TEST_HOST_PING(77)     10.98.0.196 is DOWN!
+2023-05-16 20:43:06,633 INFO TEST_HOST_PING(77)     10.98.0.197 is DOWN!
+2023-05-16 20:43:07,014 INFO TEST_HOST_PING(77)     10.98.0.198 is DOWN!
+2023-05-16 20:43:07,302 INFO TEST_HOST_PING(74)     10.98.0.199 is UP!
+2023-05-16 20:43:07,468 INFO TEST_HOST_PING(74)     10.98.0.200 is UP!
+2023-05-16 20:43:08,482 INFO TEST_HOST_PING(74)     10.98.0.201 is UP!
+2023-05-16 20:43:08,644 INFO TEST_HOST_PING(74)     10.98.0.203 is UP!
+2023-05-16 20:43:09,025 INFO TEST_HOST_PING(74)     10.98.0.204 is UP!
+2023-05-16 20:43:09,336 INFO TEST_HOST_PING(74)     10.98.0.205 is UP!
+2023-05-16 20:43:09,486 INFO TEST_HOST_PING(77)     10.98.0.202 is DOWN!
+2023-05-16 20:43:11,038 INFO TEST_HOST_PING(74)     10.98.0.209 is UP!
+2023-05-16 20:43:11,496 INFO TEST_HOST_PING(74)     10.98.0.211 is UP!
+2023-05-16 20:43:11,659 INFO TEST_HOST_PING(77)     10.98.0.208 is DOWN!
+2023-05-16 20:43:12,359 INFO TEST_HOST_PING(77)     10.98.0.210 is DOWN!
+2023-05-16 20:43:13,057 INFO TEST_HOST_PING(74)     10.98.0.212 is UP!
+2023-05-16 20:43:14,525 INFO TEST_HOST_PING(77)     10.98.0.213 is DOWN!
+2023-05-16 20:43:14,686 INFO TEST_HOST_PING(77)     10.98.0.214 is DOWN!
+2023-05-16 20:43:15,397 INFO TEST_HOST_PING(77)     10.98.0.215 is DOWN!
+2023-05-16 20:43:16,074 INFO TEST_HOST_PING(77)     10.98.0.216 is DOWN!
+2023-05-16 20:43:16,718 INFO TEST_HOST_PING(74)     10.98.0.218 is UP!
+2023-05-16 20:43:17,423 INFO TEST_HOST_PING(74)     10.98.0.219 is UP!
+2023-05-16 20:43:17,557 INFO TEST_HOST_PING(77)     10.98.0.217 is DOWN!
+2023-05-16 20:43:18,089 INFO TEST_HOST_PING(74)     10.98.0.220 is UP!
+2023-05-16 20:43:18,736 INFO TEST_HOST_PING(74)     10.98.0.221 is UP!
+2023-05-16 20:43:19,441 INFO TEST_HOST_PING(74)     10.98.0.222 is UP!
+2023-05-16 20:43:19,490 INFO TEST_HOST_PING(77)     10.98.0.206 is DOWN!
+2023-05-16 20:43:20,496 INFO TEST_HOST_PING(77)     10.98.0.207 is DOWN!
+2023-05-16 20:43:21,458 INFO TEST_HOST_PING(74)     10.98.0.226 is UP!
+2023-05-16 20:43:21,531 INFO TEST_HOST_PING(74)     10.98.0.227 is UP!
+2023-05-16 20:43:21,754 INFO TEST_HOST_PING(77)     10.98.0.225 is DOWN!
+2023-05-16 20:43:23,521 INFO TEST_HOST_PING(77)     10.98.0.228 is DOWN!
+2023-05-16 20:43:24,485 INFO TEST_HOST_PING(77)     10.98.0.229 is DOWN!
+2023-05-16 20:43:24,557 INFO TEST_HOST_PING(77)     10.98.0.230 is DOWN!
+2023-05-16 20:43:24,820 INFO TEST_HOST_PING(77)     10.98.0.231 is DOWN!
+2023-05-16 20:43:26,553 INFO TEST_HOST_PING(77)     10.98.0.232 is DOWN!
+2023-05-16 20:43:27,502 INFO TEST_HOST_PING(77)     10.98.0.233 is DOWN!
+2023-05-16 20:43:27,572 INFO TEST_HOST_PING(77)     10.98.0.234 is DOWN!
+2023-05-16 20:43:27,838 INFO TEST_HOST_PING(77)     10.98.0.235 is DOWN!
+2023-05-16 20:43:29,567 INFO TEST_HOST_PING(77)     10.98.0.236 is DOWN!
+2023-05-16 20:43:29,570 INFO TEST_HOST_PING(77)     10.98.0.223 is DOWN!
+2023-05-16 20:43:30,133 INFO TEST_HOST_PING(77)     10.98.0.224 is DOWN!
+2023-05-16 20:43:30,530 INFO TEST_HOST_PING(77)     10.98.0.237 is DOWN!
+2023-05-16 20:43:30,590 INFO TEST_HOST_PING(77)     10.98.0.238 is DOWN!
+2023-05-16 20:43:30,865 INFO TEST_HOST_PING(77)     10.98.0.239 is DOWN!
+2023-05-16 20:43:31,581 INFO TEST_HOST_PING(74)     10.98.0.240 is UP!
+2023-05-16 20:43:31,585 INFO TEST_HOST_PING(74)     10.98.0.241 is UP!
+2023-05-16 20:43:33,163 INFO TEST_HOST_PING(77)     10.98.0.242 is DOWN!
+2023-05-16 20:43:33,553 INFO TEST_HOST_PING(77)     10.98.0.243 is DOWN!
+2023-05-16 20:43:33,606 INFO TEST_HOST_PING(77)     10.98.0.244 is DOWN!
+2023-05-16 20:43:33,909 INFO TEST_HOST_PING(77)     10.98.0.245 is DOWN!
+2023-05-16 20:43:34,619 INFO TEST_HOST_PING(77)     10.98.0.247 is DOWN!
+2023-05-16 20:43:34,620 INFO TEST_HOST_PING(77)     10.98.0.246 is DOWN!
+2023-05-16 20:43:36,206 INFO TEST_HOST_PING(77)     10.98.0.248 is DOWN!
+2023-05-16 20:43:36,575 INFO TEST_HOST_PING(77)     10.98.0.249 is DOWN!
+2023-05-16 20:43:36,624 INFO TEST_HOST_PING(77)     10.98.0.250 is DOWN!
+2023-05-16 20:43:36,642 INFO TEST_HOST_PING(74)     10.98.0.253 is UP!
+2023-05-16 20:43:36,943 INFO TEST_HOST_PING(77)     10.98.0.251 is DOWN!
+2023-05-16 20:43:37,641 INFO TEST_HOST_PING(77)     10.98.0.252 is DOWN!
+2023-05-16 20:43:39,233 INFO TEST_HOST_PING(77)     10.98.0.254 is DOWN!
+2023-05-16 20:43:39,234 INFO main(50)     Time to ping all host: 123.834493876
+2023-05-16 20:43:39,236 INFO main(51)     List of alive host:: ['10.98.0.1', '10.98.0.3', '10.98.0.2', '10.98.0.4', '10.98.0.6', '10.98.0.5', '10.98.0.7', '10.98.0.9', '10.98.0.10', '10.98.0.11', '10.98.0.12', '10.98.0.21', '10.98.0.22', '10.98.0.43', '10.98.0.82', '10.98.0.81', '10.98.0.83', '10.98.0.84', '10.98.0.85', '10.98.0.101', '10.98.0.110', '10.98.0.111', '10.98.0.113', '10.98.0.117', '10.98.0.121', '10.98.0.122', '10.98.0.126', '10.98.0.132', '10.98.0.133', '10.98.0.134', '10.98.0.137', '10.98.0.138', '10.98.0.151', '10.98.0.152', '10.98.0.153', '10.98.0.154', '10.98.0.155', '10.98.0.160', '10.98.0.161', '10.98.0.165', '10.98.0.166', '10.98.0.168', '10.98.0.173', '10.98.0.174', '10.98.0.175', '10.98.0.176', '10.98.0.181', '10.98.0.182', '10.98.0.183', '10.98.0.184', '10.98.0.185', '10.98.0.186', '10.98.0.187', '10.98.0.188', '10.98.0.189', '10.98.0.190', '10.98.0.191', '10.98.0.192', '10.98.0.199', '10.98.0.200', '10.98.0.201', '10.98.0.203', '10.98.0.204', '10.98.0.205', '10.98.0.209', '10.98.0.211', '10.98.0.212', '10.98.0.218', '10.98.0.219', '10.98.0.220', '10.98.0.221', '10.98.0.222', '10.98.0.226', '10.98.0.227', '10.98.0.240', '10.98.0.241', '10.98.0.253']
+2023-05-16 20:43:39,237 INFO main(55)     Collecting all hostname using snmp community public
+2023-05-16 20:43:41,321 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:41,322 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.1, using IP address as hostname
+2023-05-16 20:43:43,325 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:43,326 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.3, using IP address as hostname
+2023-05-16 20:43:45,341 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:45,341 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.2, using IP address as hostname
+2023-05-16 20:43:47,356 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:47,357 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.4, using IP address as hostname
+2023-05-16 20:43:49,359 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:49,360 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.6, using IP address as hostname
+2023-05-16 20:43:51,364 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:51,366 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.5, using IP address as hostname
+2023-05-16 20:43:53,369 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:53,370 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.7, using IP address as hostname
+2023-05-16 20:43:55,373 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:55,374 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.9, using IP address as hostname
+2023-05-16 20:43:57,377 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:57,378 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.10, using IP address as hostname
+2023-05-16 20:43:59,385 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:43:59,386 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.11, using IP address as hostname
+2023-05-16 20:44:01,391 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:01,391 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.12, using IP address as hostname
+2023-05-16 20:44:03,397 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:03,399 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.21, using IP address as hostname
+2023-05-16 20:44:05,402 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:05,402 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.22, using IP address as hostname
+2023-05-16 20:44:07,408 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:07,413 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.43, using IP address as hostname
+2023-05-16 20:44:09,418 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:09,420 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.82, using IP address as hostname
+2023-05-16 20:44:11,424 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:11,424 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.81, using IP address as hostname
+2023-05-16 20:44:13,428 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:13,429 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.83, using IP address as hostname
+2023-05-16 20:44:15,445 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:15,445 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.84, using IP address as hostname
+2023-05-16 20:44:17,456 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:17,457 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.85, using IP address as hostname
+2023-05-16 20:44:19,458 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:19,458 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.101, using IP address as hostname
+2023-05-16 20:44:21,460 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:21,461 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.110, using IP address as hostname
+2023-05-16 20:44:23,477 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:23,478 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.111, using IP address as hostname
+2023-05-16 20:44:25,484 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:25,485 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.113, using IP address as hostname
+2023-05-16 20:44:25,603 INFO main(62)     Appending IP 10.98.0.117 and hostname NMS01
+2023-05-16 20:44:27,608 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:27,608 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.121, using IP address as hostname
+2023-05-16 20:44:29,612 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:29,615 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.122, using IP address as hostname
+2023-05-16 20:44:31,619 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:31,619 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.126, using IP address as hostname
+2023-05-16 20:44:33,621 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:33,622 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.132, using IP address as hostname
+2023-05-16 20:44:35,627 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:35,627 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.133, using IP address as hostname
+2023-05-16 20:44:37,632 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:37,633 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.134, using IP address as hostname
+2023-05-16 20:44:37,635 INFO main(62)     Appending IP 10.98.0.137 and hostname MX240-PE01
+2023-05-16 20:44:37,640 INFO main(62)     Appending IP 10.98.0.138 and hostname HNI001ILL03
+2023-05-16 20:44:39,643 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:39,643 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.151, using IP address as hostname
+2023-05-16 20:44:41,647 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:41,649 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.152, using IP address as hostname
+2023-05-16 20:44:43,653 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:43,653 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.153, using IP address as hostname
+2023-05-16 20:44:45,656 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:45,656 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.154, using IP address as hostname
+2023-05-16 20:44:47,658 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:47,659 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.155, using IP address as hostname
+2023-05-16 20:44:49,666 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:49,666 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.160, using IP address as hostname
+2023-05-16 20:44:51,670 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:51,670 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.161, using IP address as hostname
+2023-05-16 20:44:53,676 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:53,677 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.165, using IP address as hostname
+2023-05-16 20:44:55,680 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:55,681 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.166, using IP address as hostname
+2023-05-16 20:44:57,684 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:57,684 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.168, using IP address as hostname
+2023-05-16 20:44:59,688 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:44:59,689 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.173, using IP address as hostname
+2023-05-16 20:45:01,693 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:01,694 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.174, using IP address as hostname
+2023-05-16 20:45:03,697 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:03,698 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.175, using IP address as hostname
+2023-05-16 20:45:05,748 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:05,748 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.176, using IP address as hostname
+2023-05-16 20:45:07,750 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:07,751 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.181, using IP address as hostname
+2023-05-16 20:45:09,753 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:09,754 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.182, using IP address as hostname
+2023-05-16 20:45:11,757 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:11,758 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.183, using IP address as hostname
+2023-05-16 20:45:13,771 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:13,771 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.184, using IP address as hostname
+2023-05-16 20:45:15,775 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:15,775 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.185, using IP address as hostname
+2023-05-16 20:45:17,798 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:17,800 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.186, using IP address as hostname
+2023-05-16 20:45:19,805 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:19,806 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.187, using IP address as hostname
+2023-05-16 20:45:21,807 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:21,808 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.188, using IP address as hostname
+2023-05-16 20:45:23,821 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:23,822 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.189, using IP address as hostname
+2023-05-16 20:45:25,832 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:25,832 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.190, using IP address as hostname
+2023-05-16 20:45:27,835 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:27,836 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.191, using IP address as hostname
+2023-05-16 20:45:29,843 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:29,844 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.192, using IP address as hostname
+2023-05-16 20:45:29,845 INFO main(62)     Appending IP 10.98.0.199 and hostname NMS01
+2023-05-16 20:45:31,847 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:31,847 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.200, using IP address as hostname
+2023-05-16 20:45:33,878 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:33,886 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.201, using IP address as hostname
+2023-05-16 20:45:35,889 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:35,889 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.203, using IP address as hostname
+2023-05-16 20:45:37,896 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:37,898 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.204, using IP address as hostname
+2023-05-16 20:45:39,901 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:39,902 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.205, using IP address as hostname
+2023-05-16 20:45:41,915 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:41,916 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.209, using IP address as hostname
+2023-05-16 20:45:43,927 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:43,927 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.211, using IP address as hostname
+2023-05-16 20:45:45,982 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:45,982 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.212, using IP address as hostname
+2023-05-16 20:45:47,992 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:47,993 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.218, using IP address as hostname
+2023-05-16 20:45:49,995 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:49,996 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.219, using IP address as hostname
+2023-05-16 20:45:52,001 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:52,001 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.220, using IP address as hostname
+2023-05-16 20:45:54,006 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:54,007 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.221, using IP address as hostname
+2023-05-16 20:45:56,010 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:56,011 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.222, using IP address as hostname
+2023-05-16 20:45:58,014 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:45:58,015 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.226, using IP address as hostname
+2023-05-16 20:46:00,018 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:46:00,019 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.227, using IP address as hostname
+2023-05-16 20:46:02,022 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:46:02,023 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.240, using IP address as hostname
+2023-05-16 20:46:04,031 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:46:04,031 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.241, using IP address as hostname
+2023-05-16 20:46:06,043 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-16 20:46:06,044 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.253, using IP address as hostname

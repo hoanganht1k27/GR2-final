@@ -1,0 +1,318 @@
+---
+# Wrote by Hoang Anh Tu
+  - stat: path=/var/tmp/monitoring-plugins-2.2
+    register: monitoring_plugins
+
+  - name: Register Automation Repo Path
+    set_fact:
+      junos_automation_repo: "/opt/SVTECH-Junos-Automation"
+
+  - name: Register Juniper-Icinga Repo Path
+    set_fact:
+      juniper_icinga_repo: "/opt/SVTECH-Junos-Monitoring"
+
+  - name: POSTFIX - INSTALLATION [Step 01] - Install Postfix
+    yum:
+      name: postfix
+      state: latest
+
+  - name: POSTFIX - INSTALLATION [Step 02] - Start Postfix
+    service:
+      name: postfix
+      state: started
+      enabled: yes
+
+  - name: ICINGA2 - INSTALLATION [STEP 03] - Install Icinga2
+    yum: name={{ item.package }}
+         state=latest
+    with_items: "{{ icinga2_yum }}"
+
+  - name: ICINGA2 - INSTALLATION [STEP 04] - Start Icinga2
+    service: name=icinga2
+             state=started
+             enabled=yes
+
+  - name: ICINGA2 - INSTALLATION [STEP 05] - Download and Extract Monitoring Plugins
+    command: chdir=/var/tmp/ {{ item }}
+    with_items:
+      - wget https://www.monitoring-plugins.org/download/monitoring-plugins-2.2.tar.gz
+      - tar -xvf monitoring-plugins-2.2.tar.gz
+      - chmod -R 775 monitoring-plugins-2.2
+    args:
+      warn: False
+    when: monitoring_plugins.stat.exists == false
+
+  - name: ICINGA2 - INSTALLATION [STEP 06] - Creates Icinga2's Plugin directory
+    file: path=/usr/share/icinga2/plugins
+          state=directory
+
+  - name: ICINGA2 - INSTALLATION [STEP 07] - Install Monitoring Plugins
+    command: chdir=/var/tmp/monitoring-plugins-2.2 {{ item }}
+    with_items:
+      - ./configure --with-cgiurl=/thruk/cgi-bin --prefix=/usr/share/icinga2/plugins
+      - make install
+      - make installcheck
+
+  - name: ICINGA2 - INSTALLATION [STEP 08] - Change owner and permission /usr/share/icinga2/plugins
+    command: "{{ item }}"
+    with_items:
+      - chmod 775 /usr/share/icinga2/plugins
+      - chown icinga:icinga /usr/share/icinga2/plugins
+    args:
+      warn: False
+
+  - name: ICINGA2 - INSTALLATION [STEP 09] - Creates /usr/share/icinga2/plugins/libexec/NETCONF directory
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: icinga
+      group: icinga
+      mode: 0775
+    with_items:
+      - /usr/share/icinga2/plugins/libexec/NETCONF
+
+  - name: ICINGA2 - INSTALLATION [STEP 10-1] - Copy SVTECH's custom plugin
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: icinga
+      group: icinga
+      mode: 0775
+    with_items:
+      # - { src: "{{ role_path }}/files/custom_plugins/", dest: "/usr/share/icinga2/plugins/libexec/" }
+     - { src: "{{ role_path }}/files/custom_plugins/dist", dest: "/usr/share/icinga2/plugins/libexec/" }
+#      - { src: "{{ role_path }}/files/custom_plugins/check_snmp_text_oid_wrapper", dest: "/usr/share/icinga2/plugins/libexec/" }
+#      - { src: "{{ role_path }}/files/custom_plugins/check_mem.pl", dest: "/usr/share/icinga2/plugins/libexec/" }
+#      - { src: "{{ role_path }}/files/custom_plugins/check_snmp_environment.pl", dest: "/usr/share/icinga2/plugins/libexec/" }
+
+  - name: ICINGA2 - INSTALLATION [STEP 10-2] - Copy SVTECH's custom plugin - Junos_tableview
+    command: "cp -r {{ item.src }} {{ item.dest }}"
+    with_items:
+     - { src: "{{ junos_automation_repo }}/Junos_tableview", dest: "/usr/share/icinga2/plugins/libexec/" }
+
+  - name: ICINGA2 - INSTALLATION [STEP 10-3] - Copy SVTECH's custom plugin - module_utils
+    command: "cp -r {{ item.src }} {{ item.dest }}"
+    with_items:
+     - { src: "{{ junos_automation_repo }}/module_utils", dest: "/usr/share/icinga2/plugins/libexec/" }
+
+  - name: ICINGA2 - INSTALLATION [STEP 10-4] - Copy SVTECH's custom plugin - collect_junos_tableview_data
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: icinga
+      group: icinga
+      mode: 0775
+      remote_src: yes
+    with_items:
+     - { src: "{{ junos_automation_repo }}/Python-Development/__init__.py", dest: "/usr/share/icinga2/plugins/libexec/NETCONF" }
+     - { src: "{{ junos_automation_repo }}/Python-Development/collect_junos_tableview_data.py", dest: "/usr/share/icinga2/plugins/libexec/NETCONF" }
+     - { src: "{{ junos_automation_repo }}/Python-Development/collect_junos_tableview_data_setting.py", dest: "/usr/share/icinga2/plugins/libexec/NETCONF" }
+
+  - name: ICINGA2 - INSTALLATION [STEP 11] - Install Pyinstaller
+    command: "/usr/bin/pip install pyinstaller==3.6"
+    environment:
+      HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+
+  - name: Register icinga_check_plugins temp directory
+    set_fact:
+      icinga_check_plugins: "/tmp/icinga_check_plugins"
+
+  - name: ICINGA2 - INSTALLATION [STEP 12] - Create temp folder
+    file:
+      path: "{{ icinga_check_plugins }}"
+      state: directory
+      mode: 0777
+
+  - name: ICINGA2 - INSTALLATION [STEP 13] - Build Binary
+    command: "chdir={{ icinga_check_plugins }}  /usr/bin/pyinstaller --onefile {{ item }}"
+    with_items:
+     - "{{ juniper_icinga_repo }}/Icinga_check_plugin/CONFIG_CHECKER.py"
+     - "{{ juniper_icinga_repo }}/Icinga_check_plugin/OUTPUT_CHECKER.py"
+     - "{{ juniper_icinga_repo }}/Icinga_check_plugin/check_snmp_text_oid_wrapper.py"
+
+
+  - name: ICINGA2 - INSTALLATION [STEP 14] - Copy Copy SVTECH's custom check plugin
+    copy:
+      src: "{{ item }}"
+      dest: /usr/share/icinga2/plugins/libexec/
+      owner: icinga
+      group: icinga
+      mode: 0775
+      remote_src: yes
+    with_items:
+     - "{{ icinga_check_plugins }}/dist/CONFIG_CHECKER"
+     - "{{ icinga_check_plugins }}/dist/OUTPUT_CHECKER"
+     - "{{ icinga_check_plugins }}/dist/check_snmp_text_oid_wrapper"
+     - "{{ juniper_icinga_repo }}/Icinga_check_plugin/check_snmp_environment.pl"
+     - "{{ juniper_icinga_repo }}/Icinga_check_plugin/check_mem.pl"
+     - "{{ junos_automation_repo }}/module_utils/BASE_FUNC.py"
+
+
+  - name: ICINGA2 - INSTALLATION [STEP 15] - Create temp folder
+    file:
+      path: /mnt/tmpfs/
+      state: directory
+      mode: 0777
+
+  - name: ICINGA2 - INSTALLATION [STEP 16] - Change owner and permission /usr/share/icinga2/plugins
+    command: "{{ item }}"
+    with_items:
+      - chmod 775 /usr/share/icinga2/plugins
+      - chown icinga:icinga /usr/share/icinga2/plugins
+    args:
+      warn: False
+
+  - name: ICINGA2 - INSTALLATION [Step 17] - Enable Icinga2 Feature
+    command: icinga2 feature enable {{ item }}
+    with_items:
+      - api
+      - command
+#      - compatlog
+      - livestatus
+#      - perfdata
+#      - statusdata
+      - syslog
+      - influxdb
+
+  - pip:
+      name: pexpect
+    environment:
+      HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      LC_CTYPE: "en_US.UTF-8"
+
+  - name: ICINGA2 - INSTALLATION [Step 18] - Congifure API via the node wizard
+    expect:
+      command: icinga2 node wizard
+      timeout: 300
+      responses:
+        'Please specify if this is an agent/satellite setup': 'n'
+        'mPlease specify if this is a satellite/client setup': 'n'
+        'Please specify the common name': ''
+        'Master zone name': ''
+        'Do you want to specify additional global zones': ''
+        'Please specify the API bind host': ''
+        'Bind Host': ''
+        'Bind Port': '5665'
+        'Do you want to disable the inclusion of the conf.d directory': 'n'
+
+  - name: ICINGA2 - INSTALLATION [Step 19] - API setup
+    command: icinga2 api setup
+
+  - name: ICINGA2 - INSTALLATION [Step 20] - Configure Icinga2's Constant file
+    replace:
+      dest: /etc/icinga2/constants.conf
+      regexp: "{{ item.old }}"
+      replace: "{{ item.new }}"
+      backup: yes
+    with_items:
+      - { old: '^const PluginDir = "/usr/lib64/nagios/plugins"', new: 'const PluginDir = "/usr/share/icinga2/plugins/libexec"' }
+      - { old: '^const PluginContribDir = "/usr/lib64/nagios/plugins"', new: 'const PluginContribDir = "/usr/share/icinga2/plugins/libexec"' }
+
+  - name: ICINGA2 - INSTALLATION [Step 21] - Configure Icinga2's Livestatus
+    template:
+      src: "{{ role_path }}/templates/livestatus.conf.j2"
+      dest: "/etc/icinga2/features-enabled/livestatus.conf"
+      backup: yes
+      owner: icinga
+      group: icinga
+      mode: 0775
+
+  - name: ICINGA2 - INSTALLATION [Step 22] - Configure Icinga2's Api User
+    template:
+      src: "{{ role_path }}/templates/api-users.conf.j2"
+      dest: "/etc/icinga2/conf.d/api-users.conf"
+      backup: yes
+      owner: icinga
+      group: icinga
+      mode: 0775
+
+  - name: ICINGA2 - INSTALLATION [STEP 23] - Config Icinga2's services.conf, templates.conf, hosts.conf file
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: icinga
+      group: icinga
+      mode: 0775
+    with_items:
+      - { src: "{{ role_path }}/files/icinga2_config/services.conf", dest: "/etc/icinga2/conf.d/services.conf" }
+      - { src: "{{ role_path }}/files/icinga2_config/templates.conf", dest: "/etc/icinga2/conf.d/templates.conf" }
+      - { src: "{{ role_path }}/files/icinga2_config/hosts.conf", dest: "/etc/icinga2/conf.d/hosts.conf" }
+      - { src: "{{ role_path }}/files/icinga2_config/icinga2.conf", dest: "/etc/icinga2/icinga2.conf" }
+      - { src: "{{ role_path }}/files/icinga2_config/notifications.conf", dest: "/etc/icinga2/conf.d/notifications.conf" }
+
+  - name: ICINGA2 - INSTALLATION [Step 24] - Configure influxdb feature
+    template:
+      src: "{{ role_path }}/templates/influxdb.conf.j2"
+      dest: "/etc/icinga2/features-enabled/influxdb.conf"
+      backup: yes
+
+  - name: ICINGA2 - INSTALLATION [STEP 25] - Change Mode to 775 for /etc/icinga2
+    file:
+      path: /etc/icinga2
+      owner: icinga
+      group: icinga
+      mode: 0775
+      recurse: yes
+
+  - name: ICINGA2 - INSTALLATION [STEP 26] - Install IDO-Icinga
+    yum: 
+      name: icinga2-ido-mysql
+      state: latest
+
+  - name: ICINGA2 - HA - INSTALLATION [Step 27] - Create icinga database
+    mysql_db:
+      login_user: root
+      login_password: "{{ mariadb_root_password }}"
+      login_host: 127.0.0.1
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - icinga
+      - junos_tableview
+
+  - name: ICINGA2 - HA - INSTALLATION [Step 28] - Grant Mariadb Privileges for icinga user
+    mysql_user:
+      login_user: root
+      login_password: "{{ mariadb_root_password }}"
+      login_host: 127.0.0.1
+      name: "{{ icinga_user }}"
+      host: "{{ item }}"
+      password: "{{ icinga_password }}"
+      append_privs: true
+      priv: "icinga.*:ALL,GRANT"
+      state: present
+    with_items:
+      - "localhost"
+      - "127.0.0.1"
+      - "%"
+
+  - name: ICINGA2 - INSTALLATION [Step 29] - Enable Icinga2 ido-mysql Feature
+    command: icinga2 feature enable ido-mysql
+    when:
+      - role == "primary"
+
+  - name: ICINGA2 - INSTALLATION [Step 30] - Import Icinga2 IDO schema
+    shell: mysql -u{{ icinga_user }} -p{{ icinga_password }} icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+
+  - name: Empty file etc/icinga2/features-enabled/ido-mysql.conf
+    shell: "cat /dev/null > /etc/icinga2/features-enabled/ido-mysql.conf"
+
+  - name: ICINGA2 - INSTALLATION [Step 31] - Customize IDODB categories
+    blockinfile:
+      path: /etc/icinga2/features-enabled/ido-mysql.conf
+      marker: "# {mark} IDODB Config"
+      block: |
+            object IdoMysqlConnection "ido-mysql" {
+              user = "{{ icinga_user }}"
+              password = "{{ icinga_password }}"
+              host = "{{ IP }}"
+              database = "icinga"
+              categories = [ "DbCatConfig", "DbCatState", "DbCatAcknowledgement", "DbCatComment", "DbCatDowntime", "DbCatEventHandler", "DbCatFlapping", "DbCatNotification", "DbCatProgramStatus", "DbCatRetention", "DbCatStateHistory" ]
+            }
+
+
+  - name: ICINGA2 - INSTALLATION [STEP 32] - Restart icinga2
+    service: name=icinga2
+             state=restarted

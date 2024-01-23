@@ -1,0 +1,25 @@
+{
+  "uid": "jKWm3JRnk",
+  "orgId": 1,
+  "name": "Elasticsearch-PROXYSQL",
+  "type": "elasticsearch",
+  "typeLogoUrl": "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg",
+  "access": "proxy",
+  "url": "https://localhost:{{ http_port }}",
+  "basicAuthUser": "elastic",
+  "secureJsonData": {
+    "basicAuthPassword": "{{ elastic_password }}"
+  },
+  "database": "sql-proxysql*",
+  "basicAuth": true,
+  "isDefault": false,
+  "jsonData": {
+    "esVersion": 70,
+    "logLevelField": "",
+    "logMessageField": "",
+    "maxConcurrentShardRequests": 5,
+    "timeField": "@timestamp",
+    "tlsSkipVerify": true
+  },
+  "readOnly": true
+}

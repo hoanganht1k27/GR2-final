@@ -1,0 +1,63 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "community",
+  "signedByOrg": "briangann",
+  "signedByOrgName": "Brian Gann",
+  "plugin": "briangann-datatable-panel",
+  "version": "1.0.3",
+  "time": 1607208521498,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "dark.js": "b3578174af7da9909c248e93098ce5c4893d4fde3e1143ef19181db520b4a536",
+    "LICENSE": "3237850210fc297709febdbfa095583fb87d5aade9caa2f09a5fbb340fc54429",
+    "CHANGELOG.md": "5544e15e2e5d026566ecb595fa3d4557cb6707c43273e8e6ee2467484acb449c",
+    "screenshots/datatable-threshold-rowcolumn1.png": "f790cb6723bf519fd424bf662f93a77e72628eb06ba9f1115213485b922888b7",
+    "screenshots/datatable-dark-numbered-compact.png": "3bc55abfa459a33e302432ff1f2db53f5d74c4127e45c908559610ef1cbdc47c",
+    "screenshots/datatable-basic-light.png": "13aa996577176e6e1c4380f61f983018cbd308da881d66d07911bde6ea0d65df",
+    "screenshots/datatable-threshold-rowcolumn2.png": "9132aa469e8d42b07a0554c506cb166af5aa6ba6e4012a4f7a2ab71f39fa5510",
+    "screenshots/datatable-basic-dark.png": "1460597ec466dc380174600a68621138d9411240995326598c1518795141b5e7",
+    "screenshots/datatable-default-paging.png": "25de22403a75047d08f7bd17d6e66b2c71e498cc62253807fd9e44aa5ca7112a",
+    "screenshots/datatable-threshold-rowcolumn-rownumbers.png": "c6708a172c84e3bf7489584c5fe72e1a150f2b34c0e7d1eac17657bde55d1a32",
+    "screenshots/datatable-threshold-value.png": "87e3a6e942e755f9eb3daaf25f9cabe3474bbd7b6e61cda0b73d77660f3acbf1",
+    "screenshots/datatable-scroll.png": "8e5f21e6de6713172d7c483aec8c8e0ada3cb9229b2e7e948e3bb27bd75def28",
+    "screenshots/datatable-options.png": "94f68dabb85cf4357c82b946e926b546f9f073a569e88261a6d00da15e1e620f",
+    "screenshots/datatable-dt-options.png": "5adda835d1574421aeb7204648837f4eda65aeaa5d7862cfb410bc7276b2f51e",
+    "screenshots/datatable-dark-scrolling.png": "babe60c053b8526102a91eb13c239fead840d51f6f280c565c33ffec21fbeb96",
+    "screenshots/datatable-threshold-cell.png": "00fc653aa0c33ae9ec85786d139890d7cba20ac3694c31eff08aca8d711db3ca",
+    "screenshots/datatable-compact-numbered.png": "e106a2b126d1b09645b9f0d74ceb7d1376a7c8e9c8b6fab66cbe6b4aeada159d",
+    "screenshots/datatable-threshold-row.png": "a1db0bf98a4774d57f01a8fa47ff8a5f5a76cc8e18e3d261aa0ad3b2c824f148",
+    "light.js": "ad1d26d25f88ddf932030208b2bc369282b6025474fa5c39785f02513cc930e1",
+    "plugin.json": "3574891d0e937371384c2e85fc891fcfb1c5886b8c759829f36e2019122ad389",
+    "light.js.map": "81235441fea2fb128d67af3c771f5039eb8e145c032feedd993f3746b5e03287",
+    "images/sort_desc_disabled.png": "6c0f0c1b21ef6807057afc8ddc1a925d1dbd21cb11e9270ec84ff4ac40d9a3fa",
+    "images/sort_asc_disabled.png": "a65b8f4f84d6427a81c360282fc5394d51bf99dada5f159e6aa0fce3c396825c",
+    "images/sort_asc.png": "595704c3f3cf4cb65c7d9c8508a99e7480e150095473faed31a07c21b13389b8",
+    "images/sort_both.png": "3e016c23ae51417382b640ae2d19eb48047532c37ad53894bd185586559ccffb",
+    "images/sort_desc.png": "d08ed0e21f187dd309030d465224da8085119a15a17d616ba0e477bb50c6f10d",
+    "module.js": "fcc5ad2e49baf46498a9beec2e48b0b83813cfeaf74817caaf3a724854aaf6ea",
+    "img/nav-dt.png": "660a97d24a7377e6a655debe8b0be06ba75915d9477e6a315308e605620cbf13",
+    "dark.js.map": "e5971ff01a11873dda67308107aa04929dbf631967432bbdc49e4280ac6753bd",
+    "README.md": "3cd2d3f9e4953f55c67c282d746789d3fee49a08e60f03fd2d0f0822511db764",
+    "module.js.map": "8eaf3aa7d7e4cb48e944ebc1c7b0ba16ebcb8d62fb157a8d8caee292ce873b45",
+    "partials/datatables.options.html": "99dc657dfad391f181d1a066b4fe710940dc012bf3f87c5ea99c1f0f91698f35",
+    "partials/template.html": "47e468512177207a5bbbf6a20686e41618100f9982b630ee40aaa734f1886bc6",
+    "partials/editor.options.html": "be7fbfd416747e2bb8cf9819be021d60d614c03a55daf03ab1e82ef4c816798c",
+    "styles/dark.css": "61d1463f2a15d65e524d7edd7999c23093fab695dcf5b0ffe21576e46c50053a",
+    "styles/light.css": "4bb4c5a7a08de48226049cbb70f26f2c3b04504d53f8b9f8be33b11602575619",
+    "module.js.LICENSE.txt": "ce6d6e2a1690e772aa834ba666179d6aecf9caf8f07123d510138c3e3e81dced"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.1
+Comment: https://openpgpjs.org
+
+wqIEARMKAAYFAl/MDkkACgkQfk0ManCIZuczNQIJAdVxJ10JFnGARHMDzt7U
+JW4XOulGwicPCfbtB42hJurQNY301tlH7vv7YikKb7A/qB1WKEhtyz6+MvPY
+v1NFxCrZAgkB8KzuKvmbDlu4dNhoODyQDNnVvYuVHjyAZZPM6JUQC2dzscAM
+42vHWdcmqLLHO0XnhxFMT0Tfx2mLpUM9//Zk16Q=
+=DFqS
+-----END PGP SIGNATURE-----

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: False
+
+
+  roles:
+    - role: prometheus_exporter
+      vars:
+         memcheck_period: 180

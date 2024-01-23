@@ -1,0 +1,266 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-cm
+data:
+  file_hpe.yml: |
+    {{ include "common.tplvalues.render" (dict "value" .Values.fileBaseConfig.snmp "context" $) | nindent 4 }}
+  file_pve.yml: | 
+    {{ include "common.tplvalues.render" (dict "value" .Values.fileBaseConfig.pve "context" $) | nindent 4 }}
+  file_sd.yml: | 
+    {{ include "common.tplvalues.render" (dict "value" .Values.fileBaseConfig.node_exporter "context" $) | nindent 4 }}
+  prometheus.yml: |
+    global:
+      scrape_interval: {{ .Values.config.scrapeInterval }} # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: {{ .Values.config.evaluationInterval }} # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+    rule_files:
+      - "/etc/prometheus/myrules.yml"
+
+    scrape_configs:
+      - job_name: 'hpe'
+        metrics_path: /snmp
+        file_sd_configs:
+        - files:
+          - /prometheus/file_base/file_hpe.yml
+        params:
+          module: [hpe]
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: snmp:9116
+      - job_name: 'pnetlab'
+        static_configs:
+          - targets: ["pnetlab:9560"]
+        metrics_path: /metrics
+      - job_name: 'pve'
+        file_sd_configs:
+        - files:
+          - /prometheus/file_base/file_pve.yml
+        metrics_path: /pve
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: pve:9221  # PVE exporter.
+      - job_name: "node_exporter"
+        file_sd_configs:
+        - files:
+          - /prometheus/file_base/file_sd.yml
+
+      - job_name: 'vmware_esx'
+        metrics_path: '/metrics'
+        static_configs:
+        - targets: ["vmware:9272"]
+          labels:
+            target_type: "vmware"
+    remote_write:
+     - url: "http://telegraf:8023/receive"
+  myrules.yml: |
+    groups:
+      - name: my-rules
+        rules:
+        - record: job:pve_up
+          expr: pve_up * on(instance, id) group_left(name) pve_guest_info
+        - record: job:proxmox_cpu_usage
+          expr: pve_cpu_usage_ratio * 100 and on(id, target_type) pve_node_info
+        - record: job:proxmox_memory_usage
+          expr: pve_memory_usage_bytes * 100 / pve_memory_size_bytes and on(id) pve_node_info
+        - record: job:proxmox_host_down
+          expr: count(pve_up == 0) by (instance, target_type)
+        - record: job:proxmox_total_host
+          expr: count(pve_up) by (instance, target_type)
+        - record: job:vmware_cpu_usage
+          expr: vmware_host_cpu_usage / vmware_host_cpu_max * 100
+        - record: job:vmware_memory_usage
+          expr: vmware_host_memory_usage / vmware_host_memory_max * 100
+        - record: job:vmware_host_down
+          #expr: label_replace(count(vmware_vm_power_state == 0) by (host_name, target_type), "instance", "$1", "host_name", "(.*)")
+          expr: label_replace(count(vmware_vm_power_state) by(host_name, target_type) - count(vmware_vm_power_state == 1) by (host_name, target_type), "instance", "$1", "host_name", "(.*)")
+        - record: job:vmware_total_host
+          expr: label_replace(count(vmware_vm_power_state) by (host_name, target_type), "instance", "$1", "host_name", "(.*)")
+          #expr: count(vmware_vm_power_state) by (host_name)
+        - record: job:node_cpu_usage
+          expr: 100 - (avg(irate(node_cpu_seconds_total{job="node_exporter", mode="idle"}[5m])) by (instance) * 100)
+        - record: job:node_memory_usage
+          expr: (node_memory_MemTotal_bytes{job=~"node_exporter"} - node_memory_MemFree_bytes{job=~"node_exporter"}) / node_memory_MemTotal_bytes{job=~"node_exporter"}
+        - record: job:node_total_hosts
+          expr: count(up{job="node_exporter"})
+        - record: job:node_host_down
+          expr: count(up{job="node_exporter"} == 0)
+        - record: job:hypervisors_info
+          expr: (count(pve_up) by (instance, target_type)) or (label_replace(count(vmware_vm_power_state) by (host_name, target_type), "instance", "$1", "host_name", "(.*)"))
+        - record: job:proxmox_network_received
+          expr: rate(pve_network_receive_bytes[5m]) / 1024 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:proxmox_network_transmitted
+          expr: rate(pve_network_transmit_bytes[5m]) / 1024 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:proxmox_disk_read_average
+          expr: rate(pve_disk_read_bytes[5m]) / 1024 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:proxmox_disk_write_average
+          expr: rate(pve_disk_write_bytes[5m]) / 1024 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:node_disk_usage
+          expr: (1-(sum(node_filesystem_avail_bytes{job=~"node_exporter"}) by (instance) / sum(node_filesystem_size_bytes{job=~"node_exporter"}) by (instance)))
+        - record: job:proxmox_vm_cpu_usage
+          expr: pve_cpu_usage_ratio * on(id, instance) group_left(name) pve_guest_info
+        - record: job:vmware_vm_cpu_usage
+          expr: vmware_vm_cpu_usagemhz_average / vmware_vm_max_cpu_usage * 100
+        - record: job:proxmox_vm_memory_usage
+          expr: pve_memory_usage_bytes / pve_memory_size_bytes * on(id, instance) group_left(name) pve_guest_info
+        - record: job:vmware_physical_memory_utilization_percentage_for_vm
+          expr: sum(vmware_vm_mem_usage_average) by (host_name) / avg(vmware_host_memory_max) by (host_name) * 100
+        - record: job:vmware_vm_memory_usage
+          expr: vmware_vm_mem_usage_average / vmware_vm_memory_max * 100
+        - record: job:hypervisor_total_host
+          expr: (count(pve_up) by (instance)) or (count(vmware_vm_power_state) by (host_name))
+        - record: job:hypervisor_host_down
+          expr: (count(vmware_vm_power_state) by(host_name) - count(vmware_vm_power_state == 1) by (host_name)) or (count(pve_up == 0) by (instance))
+        - record: job:pnetlab_total_device
+          expr: count(node_running) by (database)
+        - record: job:pnetlab_device_down
+          expr: count(node_running == 0) by (database)
+        - record: job:node_exporter_memory_usage
+          expr: ((node_memory_MemTotal_bytes{job=~"node_exporter"} - node_memory_MemFree_bytes{job=~"node_exporter"}) / (node_memory_MemTotal_bytes{job=~"node_exporter"} )) * 100
+        - record: job:node_cpu
+          expr: sum(node_cpu) by (database)
+        - record: job:proxmox_vm_memory_usage_compare_to_total_host
+          expr: label_replace(pve_memory_usage_bytes{id=~"qemu.*"}, "ip", "$0", "instance", ".*") / on(ip) group_left node_memory_MemTotal_bytes{type="pve"} * 100 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:vmware_vm_memory_usage_compare_to_total_host
+          expr: vmware_vm_mem_usage_average / on(host_name) group_left vmware_host_memory_max * 100
+        - record: job:proxmox_vm_cpu_usage_compare_to_total_host
+          expr: pve_cpu_usage_ratio{id=~"qemu(.*)"} * on(id, instance) (label_replace(pve_cpu_usage_limit{id=~"qemu(.*)"}, "ip", "$0", "instance", ".*") / on(ip) group_left count(count(node_cpu_seconds_total) by (cpu, instance, ip)) by (instance, ip)) * 100 * on(id, instance) group_left(name) pve_guest_info
+        - record: job:vmware_vm_cpu_usage_compare_to_total_host
+          expr: vmware_vm_cpu_usagemhz_average / on(host_name) group_left vmware_host_cpu_max * 100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus-deployment
+  name: prometheus
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: prometheus-deployment
+  template:
+    metadata:
+      labels:
+        app: prometheus-deployment
+    spec:
+      initContainers:
+      - name: busybox
+        image: busybox:1.28
+        securityContext:
+          runAsUser: 0
+        command:
+          - sh
+          - -ec
+          - |
+              ls -la /tmp
+              chmod 777 /tmp
+        volumeMounts:
+        {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+        {{- range .Values.global.sharedPersistenceVolume }}
+        {{- if has "initFileBase" .shareFor }}
+        - name: {{ .volumeName }}
+          mountPath: {{ .path.initFileBase }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        name: prometheus
+        command:
+          - sh
+          - -ec
+          - |
+              function check_empty_dir {
+                  dir="$1"
+                  default_dir="$2"
+                  status=`ls -A $dir | grep -v 'lost+found' | grep -v '.stfolder' | grep -v '.stversions' | wc -l`
+
+                  if [[ "$status" != "0" ]]; then
+                      echo "$dir is not Empty. Take no action"
+                  else
+                      echo "$dir is Empty"
+                      mkdir -p $dir
+                      ls -la $dir
+                      whoami
+                      cp $default_dir/* $dir
+                  fi
+              }
+              check_empty_dir "/prometheus/file_base" "/tmp/file_base"
+              /bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.external-url=/prometheus/
+        volumeMounts:
+        - name: prometheus-init-file-base
+          mountPath: /tmp/file_base
+        - name: prometheus-volume
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+        - name: prometheus-rules-volume
+          mountPath: /etc/prometheus/myrules.yml
+          subPath: myrules.yml
+        {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+        {{- range .Values.global.sharedPersistenceVolume }}
+        {{- if has "prometheus" .shareFor }}
+        - name: {{ .volumeName }}
+          mountPath: {{ .path.prometheus }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
+      volumes:
+      - name: prometheus-init-file-base
+        configMap:
+          name: prometheus-cm
+          items:
+            - key: file_hpe.yml
+              path: file_hpe.yml
+            - key: file_pve.yml
+              path: file_pve.yml
+            - key: file_sd.yml
+              path: file_sd.yml              
+      - name: prometheus-volume
+        configMap:
+          name: prometheus-cm
+          items:
+            - key: prometheus.yml
+              path: prometheus.yml
+      - name: prometheus-rules-volume
+        configMap:
+          name: prometheus-cm
+          items:
+            - key: myrules.yml
+              path: myrules.yml
+      {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+      {{- range .Values.global.sharedPersistenceVolume }}
+      {{- if has "prometheus" .shareFor }}
+      - name: {{ .volumeName }}
+        persistentVolumeClaim:
+          claimName: {{ .pvcName }}
+      {{- end }}
+      {{- end }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  selector:
+    app: prometheus-deployment
+  ports:
+    - name: prometheus-port
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+  type: ClusterIP
+  {{- if .Values.global.prometheus.enableExternalIP }}
+  externalIPs:
+    - {{ .Values.global.externalIP }}
+  {{- end }}

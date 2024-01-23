@@ -1,0 +1,66 @@
+[nms]
+NMS_DBB_01 ansible_host=10.98.0.143 IP=10.98.0.143 backend_name=DBB-01 backend_ip=10.98.0.143 thruk_id=svtech03 priority=110 if=en0s32
+NMS_DBB_02 ansible_host=10.98.0.144 IP=10.98.0.144 backend_name=DBB-02 backend_ip=10.98.0.144 thruk_id=svtech04 priority=100 if=en0s32
+
+[all:vars]
+HA = true
+
+############################
+# Variables for icinga2-ui #
+############################
+icinga2_ui_user = icinga2-ui
+icinga2_ui_user_password = icinga2-ui@123
+
+##########################################
+# Variables for configure api-users.conf #
+##########################################
+api_user = icingaAdmin
+api_password = icingaAdmin
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_user = root
+ansible_pass = juniper@123
+
+########################
+# Variable for mariadb #
+########################
+mariadb_root_password = juniper@123
+icinga_user = icinga
+icinga_password = icinga
+
+########################
+# Variable for grafana #
+########################
+grafana_database = grafana
+grafana_database_user = grafana
+grafana_database_password = grafana
+grafana_admin_user = thrukadmin
+grafana_admin_password = thrukadmin
+organization = mobifone-dbb
+
+#########################
+# Variable for Influxdb #
+#########################
+influxdb_database = mobi_dbb_nms
+influxdb_user = juniper
+influxdb_password = juniper@123
+
+##################################
+# Variable for High Availability #
+##################################
+VIP = 10.98.0.145
+virtual_router_id = NMS_SVTECH
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+#####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = production

@@ -1,0 +1,6 @@
+---
+# tasks file for environment
+# Wrote by Hoang Anh Tu
+- include: rhel_step_01_enviroment.yml
+- include: rhel_step_02_enviroment_get_information.yml
+- include: rhel_step_03_enviroment_iptables.yml

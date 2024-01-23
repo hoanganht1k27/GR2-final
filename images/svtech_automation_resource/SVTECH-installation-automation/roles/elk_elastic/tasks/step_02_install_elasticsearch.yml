@@ -1,0 +1,5 @@
+# Wrote by Hoang Anh Tu
+---
+- name: ELASTICSEARCH - INCLUDE ROLE ansible-elasticsearch
+  include_role:
+    name: ansible-elasticsearch

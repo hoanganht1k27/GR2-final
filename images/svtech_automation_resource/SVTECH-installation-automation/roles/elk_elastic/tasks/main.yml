@@ -1,0 +1,36 @@
+# Wrote by Hoang Anh Tu
+---
+- include: step_01_install_iptables.yml
+  when: "'elastic' in group_names"
+
+- include: step_02_install_elasticsearch.yml
+  when: "'elastic' in group_names"
+
+- include: step_03_setup_ssl.yml
+  when: "'elastic' in group_names"
+
+- include: step_04_install_kibana.yml
+  when:  "'kibana' in group_names"
+
+- include: step_05_install_logstash.yml
+  when:  "'logstash' in group_names"
+
+- include: step_06_install_mariadb.yml
+  when: "('single' in groups and inventory_hostname in groups['single']) or ('replication' in groups and inventory_hostname in groups['replication']) or ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster'])"
+
+- include: step_07_install_beat.yml
+  when: "'beat' in group_names"
+
+- include: step_08_config_index_management.yml
+  when: 
+    - "'elastic' in group_names"
+    - node_master | bool
+
+- include: step_09_install_grafana.yml
+  when: 
+    - "('single' in groups and inventory_hostname in groups['single']) or ('replication' in groups and inventory_hostname in groups['replication']) or ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster'])"
+
+- include: step_10_install_wizzy.yml
+  when: 
+    - "('single' in groups and inventory_hostname in groups['single']) or ('replication' in groups and inventory_hostname in groups['replication']) or ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster'])"
+    - inventory_hostname == play_hosts[0]

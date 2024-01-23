@@ -1,0 +1,29 @@
+/**
+ *  The livestatus library implements the livestatus query protocol.
+ */
+
+library "livestatus"
+
+object LivestatusListener "livestatus" { }
+
+object LivestatusListener "livestatus-tcp-local" {
+  socket_type = "tcp"
+  bind_host = "127.0.0.1"
+  bind_port = "6558"
+}
+
+
+{% for host in groups['all'] %}
+object LivestatusListener "livestatus-tcp-remote-{{ hostvars[host].inventory_hostname }}" {
+  socket_type = "tcp"
+  bind_host = "{{hostvars[host].IP}}"
+  bind_port = "6558"
+}
+
+{% endfor %}
+
+object LivestatusListener "livestatus-tcp" {
+  socket_type = "tcp"
+  bind_host = "0.0.0.0"
+  bind_port = "6558"
+}

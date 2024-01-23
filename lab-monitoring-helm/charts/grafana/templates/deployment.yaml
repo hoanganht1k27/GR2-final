@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana-deployment
+  name: grafana
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: grafana-deployment
+  template:
+    metadata:
+      labels:
+        app: grafana-deployment
+    spec:
+      securityContext:
+        fsGroup: 0
+      {{- if .Values.init }}
+      initContainers:
+        - name: wait-for-mariadb
+          image: {{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}
+          imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              {{- if .Values.grafanaConfig.mysqlHost }}
+              until nc -zvw5 {{ .Values.grafanaConfig.mysqlHost }} 3306; do echo "Waiting for MariaDB..."; sleep 2; done
+              {{- else }}
+              until nc -zvw5 mariadb 3306; do echo "Waiting for MariaDB..."; sleep 2; done
+              {{- end }}
+      {{- end }}
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: grafana
+        env:
+          - name: MYSQL_HOST
+            value: {{ .Values.grafanaConfig.mysqlHost | quote }}
+          - name: MYSQL_PORT
+            value: {{ .Values.grafanaConfig.mysqlPort | quote }}
+          - name: MYSQL_DB
+            value: {{ .Values.grafanaConfig.mysqlDB | quote }}
+          - name: MYSQL_USER
+            value: {{ .Values.grafanaConfig.mysqlUser | quote }}
+          - name: MYSQL_PASSWORD
+            value: {{ .Values.grafanaConfig.mysqlPassword | quote }}
+          - name: ADMIN_USER
+            value: {{ .Values.grafanaConfig.adminUser}}
+          - name: ADMIN_PASSWORD
+            value: {{ .Values.grafanaConfig.adminPassword }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  selector:
+    app: grafana-deployment
+  ports:
+    - name: grafana-port
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

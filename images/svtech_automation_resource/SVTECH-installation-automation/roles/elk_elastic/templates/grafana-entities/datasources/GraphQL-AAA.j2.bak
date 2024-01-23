@@ -1,0 +1,16 @@
+{
+  "uid": "xHmOyD3Mk",
+  "orgId": 1,
+  "name": "GraphQL-AAA",
+  "type": "fifemon-graphql-datasource",
+  "typeLogoUrl": "public/plugins/fifemon-graphql-datasource/img/logo.svg",
+  "access": "proxy",
+  "url": "http://{{ vip_proxysql_host }}:{{ vip_graphql_port }}",
+  "password": "",
+  "user": "",
+  "database": "",
+  "basicAuth": false,
+  "isDefault": false,
+  "jsonData": {},
+  "readOnly": false
+}

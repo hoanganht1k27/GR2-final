@@ -1,0 +1,34 @@
+# Module: http
+# Docs: https://www.elastic.co/guide/en/beats/metricbeat/7.10/metricbeat-module-http.html
+
+- module: http
+  metricsets:
+    - json
+  period: 30s
+  hosts: ["{{ vip_api_gateway }}:{{ vip_graphql_port }}"]
+  namespace: "authentication"
+  path: "/graphql"
+  body: '{ "query": "query{authentication(sbr_server:\"{{ inventory_hostname }}\"){sbr_server, accept, accept_current_rate, accept_average_rate, accept_peak_rate, reject, reject_peak_rate, reject_current_rate, reject_average_rate, silent_discard, total_transactions, invalid_request, failed_on_check_list, failed_authentication, insufficient_resources, proxy_failure, rejected_by_proxy, transactions_retried, total_retry_packets, dropped_packet}}"}'
+  method: "POST"
+  response.enabled: true
+  response.enabled: true
+  json.is_array: false
+  dedot.enabled: true
+  headers:
+    Content-Type: "application/json"
+
+
+- module: http
+  metricsets:
+    - json
+  period: 30s
+  hosts: ["{{ vip_api_gateway }}:{{ vip_graphql_port }}"]
+  namespace: "accounting"
+  path: "/graphql"
+  body: '{ "query": "query{accounting(sbr_server:\"{{ inventory_hostname }}\"){sbr_server, start, acct_start_current_rate, acct_start_peak_rate, acct_start_average_rate, stop, acct_stop_peak_rate, acct_stop_current_rate, acct_stop_average_rate, on_status, off_status, total_transactions, invalid_request, invalid_client, invalid_shared_secret, insufficient_resources, proxy_failure, transactions_retried, total_retry_packets, interim, acct_interim_current_rate, acct_interim_average_rate, acct_interim_peak_rate, dropped_packet}}"}'
+  method: "POST"
+  response.enabled: true
+  json.is_array: false
+  dedot.enabled: true
+  headers:
+    Content-Type: "application/json"

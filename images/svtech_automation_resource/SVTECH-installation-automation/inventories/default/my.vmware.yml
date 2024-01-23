@@ -1,0 +1,7 @@
+plugin: community.vmware.vmware_vm_inventory
+strict: false
+hostname: 10.98.0.7
+username: tuha@vsphere.local
+password: ABD1234
+validate_certs: false
+with_tags: false

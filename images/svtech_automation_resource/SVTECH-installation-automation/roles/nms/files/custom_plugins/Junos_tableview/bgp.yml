@@ -1,0 +1,81 @@
+---
+BGPSummaryTable:
+    rpc: get-bgp-summary-information
+    item: //bgp-peer
+    key: peer-address
+    view: _BGPSummary_view
+_BGPSummary_view:
+   fields:
+    #general ifo
+    #local_as: local-as
+    #peer_as: peer-as
+    #local_address: local-address
+    #peer_id: peer-id
+    #state: peer-state
+    #type: peer-type
+    #peer_address: peer-address
+    ##additional info
+    #preference: bgp-option-information/preference
+    #table_name: bgp-rib/name
+    l3vpn_name: bgp-rib[contains(name,'.inet.0') or contains(name,'.inet6.0')]/name
+    #bgp_bfd_state: bgp-bfd/bfd-operational-state
+    #routing info
+    route_received_inet0: bgp-rib[starts-with(name,'inet.0')]/received-prefix-count
+    route_actived_inet0: bgp-rib[starts-with(name,'inet.0')]/active-prefix-count
+    route_advertised_inet0: bgp-rib[starts-with(name,'inet.0')]/advertised-prefix-count
+    route_received_inet3: bgp-rib[starts-with(name,'inet.3')]/received-prefix-count
+    route_actived_inet3: bgp-rib[starts-with(name,'inet.3')]/active-prefix-count
+    route_advertised_inet3: bgp-rib[starts-with(name,'inet.3')]/advertised-prefix-count
+    route_received_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/received-prefix-count
+    route_actived_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/active-prefix-count
+    route_advertised_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/advertised-prefix-count
+    route_received_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/received-prefix-count
+    route_actived_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/active-prefix-count
+    route_advertised_l3vpn: bgp-rib[starts-with(name,'l3vpn')]/advertised-prefix-count
+
+### ------------------------------------------------------
+### retrieve the neighbors status information; corresponds to:
+### show route received|advertised bgp neighbor <peer-id>
+### ------------------------------------------------------
+
+RouteBgpTable:
+  rpc: get-route-information
+  args_key: 
+    - destination
+    - hidden
+  args:
+    extensive: True
+    hidden: False
+  item: route-table
+  key: 
+    - table-name
+  view: RouteTableView
+
+RouteTableView:
+
+  fields:
+    table_name: table-name
+    rttableview: _rttableview
+
+_rttableview:
+  item: rt
+  key: rt-destination
+  view: _rt_view
+
+_rt_view:
+  fields:
+    rt_destination: rt-destination
+    rt_prefix_length: rt-prefix-length
+    bgp_peer: 
+  groups:
+    entry: rt-entry
+  fields_entry:
+#     fields taken from the group 'entry'
+    protocol: protocol-name
+    via: nh/via | nh/nh-local-interface
+    age: { age/@seconds : int }
+    active: active-tag
+    nexthop: nh/to
+    as_path: as-path
+    community: communities/community
+    preference: preference | local-preference

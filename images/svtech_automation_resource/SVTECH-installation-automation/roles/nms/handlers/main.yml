@@ -1,0 +1,79 @@
+---
+# handlers file for icinga2-ansible-no-ui
+  - name: restart icinga2
+    service:
+      name: icinga2
+      state: restarted
+      enabled: yes
+
+  - name: Restart Iptables
+    service:
+      name: iptables
+      state: restarted
+      enabled: yes
+
+  - name: Restart influxdb
+    service:
+      name: influxdb
+      state: restarted
+      enabled: yes
+
+  - name: Restart mariadb
+    service:
+      name: mariadb
+      state: restarted
+      enabled: yes
+
+  - name: Restart grafana
+    service:
+      name: grafana-server
+      state: restarted
+      enabled: yes
+
+  - name: Restart http
+    service:
+      name: httpd
+      state: restarted
+      enabled: yes
+
+  - name: Restart thruk
+    service:
+      name: thruk
+      state: restarted
+      enabled: yes
+
+  - name: Restart keepalived
+    service:
+      name: keepalived
+      state: restarted
+      enabled: yes
+
+  - name: Restart haproxy
+    service:
+      name: haproxy
+      state: restarted
+      enabled: yes
+
+  - name: Restart glusterfs
+    service:
+      name: glusterfs
+      state: restarted
+      enabled: yes
+
+  - name: Rertart icinga2-ui
+    service:
+      name: icinga2-ui
+      state: restarted
+      enabled: yes      
+
+  - name: Restart icinga2-report
+    service:
+      name: icinga2-report
+      state: restarted
+      enabled: yes
+
+  - name: Restart rundeck
+    service:
+      name: rundeckd
+      state: restarted
+      enabled: yes

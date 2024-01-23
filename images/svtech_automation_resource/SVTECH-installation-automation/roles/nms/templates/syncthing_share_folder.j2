@@ -1,0 +1,12 @@
+{% for another_host in groups['all'] | difference([inventory_hostname]) %}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share icinga2 {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share postfix {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share httpd {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share grafana {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share thruk {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share rundeck {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share nagvis {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share gitlist {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share lib_icinga2 {{ hostvars[another_host]['inventory_hostname'] }}
+{{ venv }}/bin/stman -d {{ inventory_hostname }} folder share lib_rundeck {{ hostvars[another_host]['inventory_hostname'] }}
+{% endfor %}

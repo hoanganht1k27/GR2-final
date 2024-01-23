@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+
+  icinga2-report:
+    image: trungkien210493/icinga2-report:v1.7.0
+    container_name: svtech-icinga2-report
+    volumes:
+      - "/etc/icinga2-report/configuration:/etc/icinga2-report/configuration"
+      - "/etc/icinga2-report/auth:/etc/icinga2-report/auth"
+      - "/etc/icinga2-report/datasources.yml:/etc/icinga2-report/datasources.yml"
+    restart: always
+    ports:
+      - 8888:8888

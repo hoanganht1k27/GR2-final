@@ -1,0 +1,13 @@
+echo "stop slave;" > /tmp/changemaster.sql
+echo "reset slave;" >> /tmp/changemaster.sql
+#head /tmp/db_backup.sql -n 80|grep gtid_slave_pos| sed  's/-- //g' >> /tmp/changemaster.sql
+cat {{ backup_dir }}/xtrabackup_info |grep GTID | awk '{print $NF}' |sed "s/^'/set global gtid_slave_pos='/" |sed "s/'$/';/" >> /tmp/changemaster.sql
+echo "stop slave;" >> /tmp/changemaster.sql
+echo "CHANGE MASTER TO" >> /tmp/changemaster.sql
+echo "MASTER_HOST='{{ hostvars[groups['replication_master'][0]]['IP'] }}'," >> /tmp/changemaster.sql
+echo "MASTER_USER='{{ replication_user.name }}'," >> /tmp/changemaster.sql
+echo "MASTER_PASSWORD='{{ replication_user.password }}'," >> /tmp/changemaster.sql
+echo "MASTER_PORT={{ mariadb_port }}," >> /tmp/changemaster.sql
+echo "MASTER_CONNECT_RETRY=10," >> /tmp/changemaster.sql
+echo "MASTER_USE_GTID=slave_pos;" >> /tmp/changemaster.sql
+echo "start slave;" >> /tmp/changemaster.sql

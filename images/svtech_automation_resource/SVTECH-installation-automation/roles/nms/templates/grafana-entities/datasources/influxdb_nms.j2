@@ -1,0 +1,17 @@
+{
+  "orgId": 1,
+  "name": "influxdb_nms",
+  "type": "influxdb",
+  "typeLogoUrl": "public/app/plugins/datasource/influxdb/img/influxdb_logo.svg",
+  "access": "proxy",
+  "url": "http://{{ hostvars[inventory_hostname].IP }}:8086",
+  "password": "{{ influxdb_password }}",
+  "user": "{{ influxdb_user }}",
+  "database": "{{ influxdb_database }}",
+  "basicAuth": false,
+  "isDefault": false,
+  "jsonData": {
+    "keepCookies": []
+  },
+  "readOnly": false
+}

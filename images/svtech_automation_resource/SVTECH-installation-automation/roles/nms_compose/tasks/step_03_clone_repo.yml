@@ -1,0 +1,57 @@
+# We will clone repo...
+# Wrote by Pham Tan Thanh
+---
+  - name: Init variable
+    set_fact:
+      private_key: /root/.ssh/id_rsa.github
+
+  - name: GITHUB [STEP 01] - Install git
+    yum:
+      name: git
+      state: latest
+
+  - name: GITHUB [STEP 02] - Create folder /root/.ssh
+    file:
+      path: /root/.ssh
+      state: directory
+      mode: 0700
+
+  - name: GITHUB [STEP 03] - Add Github ssh key
+    copy:
+      src: "{{ role_path }}/files/github/id_rsa.github"
+      dest: "{{ private_key }}"
+      owner: root
+      group: root
+      mode: 0600
+
+  - name: GITHUB [STEP 04] - Configure ssh to use ansible key for github.com
+    vars:
+      private_key_file: "{{ private_key }}"
+    template:
+      src: "{{ role_path }}/templates/ssh_config.j2"
+      dest: /root/.ssh/config
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: GITHUB [STEP 05] - Clone Github private repos
+    git:
+      repo: "git@github.com:{{ item }}.git"
+      key_file: "{{ private_key }}"
+      dest: /opt/{{ item.split("/") | last}}
+      accept_hostkey: yes
+    with_items:
+      "{{ list_github_repo }}"
+
+  - name: GITHUB [STEP 06] - Cleanup Key and ssh config
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /root/.ssh/id_rsa.github
+      - /root/.ssh/config
+
+  - name: GITHUB [STEP 07] - Change Github remote Url for each Repo
+    command: chdir=/opt/{{ item.split("/") | last}} git remote set-url origin https://github.com/{{item}}.git
+    with_items:
+      "{{ list_github_repo }}"

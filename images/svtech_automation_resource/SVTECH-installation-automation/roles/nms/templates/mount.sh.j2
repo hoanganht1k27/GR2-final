@@ -1,0 +1,19 @@
+{% if glusterfs_client == 'native' %}
+mount -t glusterfs {{ inventory_hostname }}:{{ ganesha_path }} /opt/shared
+{% endif %}
+{% if glusterfs_client == 'ganesha' %}
+mount -t nfs4 {{ inventory_hostname }}:{{ ganesha_path }} /opt/shared
+{% endif %}
+sleep 5
+mount --bind /opt/shared/etc--httpd/conf.d /etc/httpd/conf.d
+mount --bind /opt/shared/etc--icinga2/conf.d /etc/icinga2/conf.d
+mount --bind /opt/shared/etc--icinga2/features-available /etc/icinga2/features-available
+mount --bind /opt/shared/etc--icinga2/scripts /etc/icinga2/scripts
+mount --bind /opt/shared/etc--grafana /etc/grafana
+mount --bind /opt/shared/etc--thruk /etc/thruk
+#mount --bind /opt/shared/etc--icinga2-ui /etc/icinga2-ui
+mount --bind /opt/shared/usr--share--nagvis /usr/share/nagvis
+#mount --bind /opt/shared/usr--share--icinga2/libexec /usr/share/icinga2/plugins/libexec
+#mount --bind /opt/shared/var--rundeck--projects /var/rundeck/projects
+#mount --bind /opt/shared/var--lib--rundeck /var/lib/rundeck
+mount --bind /opt/shared/etc--rundeck /etc/rundeck

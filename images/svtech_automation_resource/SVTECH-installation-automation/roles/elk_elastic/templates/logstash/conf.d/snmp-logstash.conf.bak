@@ -1,0 +1,388 @@
+input {
+  snmp {
+    hosts => {{ es_master_http }}
+    add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+    add_field => {host_address => "%{[@metadata][host_address]}"}
+    add_field => {host_community => "%{[@metadata][host_community]}"}
+    walk => ["1.3.6.1.2.1.1", "1.3.6.1.4.1.232.6.2.6.7.1.2.0", "1.3.6.1.4.1.232.6.2.6.7.1.3.0", "1.3.6.1.4.1.232.6.2.6.7.1.4.0", "1.3.6.1.4.1.232.6.2.6.7.1.5.0", "1.3.6.1.4.1.232.6.2.6.7.1.6.0", "1.3.6.1.4.1.232.6.2.6.7.1.9.0", "1.3.6.1.4.1.232.6.2.6.8.1.2.0", "1.3.6.1.4.1.232.6.2.6.8.1.3.0", "1.3.6.1.4.1.232.6.2.6.8.1.7.0", "1.3.6.1.4.1.232.6.2.6.8.1.4.0", "1.3.6.1.4.1.232.6.2.6.8.1.5.0", "1.3.6.1.4.1.232.6.2.6.8.1.6.0", "1.3.6.1.4.1.232.1.2.2.1.1.1", "1.3.6.1.4.1.232.1.2.2.1.1.3", "1.3.6.1.4.1.232.1.2.2.1.1.4", "1.3.6.1.4.1.232.1.2.2.1.1.5", "1.3.6.1.4.1.232.1.2.2.1.1.6", "1.3.6.1.4.1.232.1.2.2.1.1.15", "1.3.6.1.4.1.232.1.2.2.1.1.25", "1.3.6.1.4.1.232.1.2.2.1.1.26", "1.3.6.1.4.1.232.3.2.3.1.1.2.0", "1.3.6.1.4.1.232.3.2.3.1.1.1.0", "1.3.6.1.4.1.232.3.2.3.1.1.3.0", "1.3.6.1.4.1.232.3.2.3.1.1.9.0", "1.3.6.1.4.1.232.3.2.3.1.1.4.0", "1.3.6.1.4.1.232.3.2.3.1.1.11.0", "1.3.6.1.4.1.232.3.2.5.1.1.2.0", "1.3.6.1.4.1.232.3.2.5.1.1.5.0", "1.3.6.1.4.1.232.3.2.5.1.1.64.0", "1.3.6.1.4.1.232.3.2.5.1.1.3.0", "1.3.6.1.4.1.232.3.2.5.1.1.51.0", "1.3.6.1.4.1.232.3.2.5.1.1.45.0", "1.3.6.1.4.1.232.3.2.5.1.1.65.0", "1.3.6.1.4.1.232.3.2.5.1.1.70.0", "1.3.6.1.4.1.232.3.2.5.1.1.71.0", "1.3.6.1.4.1.232.3.2.5.1.1.72.0", "1.3.6.1.4.1.232.3.2.5.1.1.6.0", "1.3.6.1.4.1.232.3.2.5.1.1.37.0", "1.3.6.1.4.1.232.3.2.5.1.1.9.0", "1.3.6.1.4.1.232.9.2.5.2.1.1", "1.3.6.1.4.1.232.9.2.5.1.1.2", "1.3.6.1.4.1.232.9.2.5.1.1.4", "1.3.6.1.4.1.232.9.2.5.1.1.5", "1.3.6.1.4.1.232.9.2.5.1.1.9", "1.3.6.1.4.1.232.9.2.5.1.1.14", "1.3.6.1.4.1.232.9.2.5.2.1.2", "1.3.6.1.4.1.232.9.2.5.2.1.3", "1.3.6.1.4.1.232.9.2.5.2.1.6", "1.3.6.1.4.1.232.9.2.5.2.1.7", "1.3.6.1.4.1.232.9.2.5.2.1.9", "1.3.6.1.4.1.232.9.2.5.2.1.10", "1.3.6.1.4.1.232.9.2.5.2.1.13", "1.3.6.1.4.1.232.9.2.5.2.1.14", "1.3.6.1.4.1.232.9.2.5.2.1.15", "1.3.6.1.4.1.232.6.2.14.13.1.1", "1.3.6.1.4.1.232.6.2.14.13.1.13", "1.3.6.1.4.1.232.6.2.14.13.1.9", "1.3.6.1.4.1.232.6.2.14.13.1.10", "1.3.6.1.4.1.232.6.2.14.13.1.6", "1.3.6.1.4.1.232.6.2.14.13.1.8", "1.3.6.1.4.1.232.6.2.14.13.1.7", "1.3.6.1.4.1.232.6.2.14.13.1.19", "1.3.6.1.4.1.232.6.2.14.13.1.20"]
+    interval => 30
+    tags => HPE_snmp
+  }
+
+#  snmp {
+#    hosts => {{ es_master_http }}
+#    add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+#    add_field => {host_address => "%{[@metadata][host_address]}"}
+#    add_field => {host_community => "%{[@metadata][host_community]}"}
+#    get => ["1.3.6.1.2.1.1.3.0", "1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.1.0", "1.3.6.1.4.1.2636.3.4.2.2.2.0", "1.3.6.1.4.1.2636.3.4.2.3.2.0", "1.3.6.1.4.1.2636.3.1.13.1.7.9.1.0.0", "1.3.6.1.4.1.2636.3.1.13.1.8.9.1.0.0", "1.3.6.1.4.1.2636.3.1.13.1.11.9.1.0.0"]
+#    walk => ["1.3.6.1.4.1.2636.3.1.13.1.5", "1.3.6.1.4.1.2636.3.1.13.1.6", "1.3.6.1.2.1.25.2.3.1.3", "1.3.6.1.4.1.2636.3.1.13.1.8", "1.3.6.1.4.1.2636.3.1.13.1.11", "1.3.6.1.4.1.2636.3.1.13.1.7", "1.3.6.1.2.1.31.1.1.1.18", "1.3.6.1.2.1.31.1.1.1.1", "1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.2.2.1.21", "1.3.6.1.2.1.2.2.1.8", "1.3.6.1.2.1.2.2.1.7", "1.3.6.1.2.1.2.2.1.14", "1.3.6.1.2.1.2.2.1.20", "1.3.6.1.2.1.2.2.1.13", "1.3.6.1.2.1.2.2.1.19", "1.3.6.1.2.1.2.2.1.5", "1.3.6.1.2.1.31.1.1.1.15", "1.3.6.1.2.1.31.1.1.1.6", "1.3.6.1.2.1.31.1.1.1.10"]
+#    interval => 30
+#    tags => QFX_snmp
+#  }
+
+  snmp {
+    hosts => {{ es_master_http }}
+    add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+    add_field => {host_address => "%{[@metadata][host_address]}"}
+    add_field => {host_community => "%{[@metadata][host_community]}"}
+    walk => ["1.3.6.1.2.1.67.1", "1.3.6.1.2.1.67.2", "1.3.6.1.4.1.1411.1.2.1"]
+    interval => 90
+    tags => Radius_snmp
+  }
+
+  # snmp {
+  #   hosts => {{ es_master_http }}
+  #   add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+  #   add_field => {host_address => "%{[@metadata][host_address]}"}
+  #   add_field => {host_community => "%{[@metadata][host_community]}"}
+  #   get => ["1.3.6.1.2.1.1.1.0", "1.3.6.1.2.1.1.3.0", "1.3.6.1.2.1.1.5.0", "1.3.6.1.2.1.1.7.0", "1.3.6.1.4.1.12356.101.4.1.1.0", "1.3.6.1.4.1.12356.101.4.1.2.0", "1.3.6.1.4.1.12356.101.4.1.3.0", "1.3.6.1.4.1.12356.101.4.1.4.0", "1.3.6.1.4.1.12356.101.4.1.5.0", "1.3.6.1.4.1.12356.101.4.1.6.0", "1.3.6.1.4.1.12356.101.4.1.7.0", "1.3.6.1.4.1.12356.101.4.1.8.0", "1.3.6.1.4.1.12356.101.5.2.1.1.0", "1.3.6.1.4.1.12356.101.5.2.1.2.0", "1.3.6.1.4.1.12356.101.8.2.1.1.1.1", "1.3.6.1.4.1.12356.101.8.2.1.1.2.1", "1.3.6.1.4.1.12356.101.8.2.1.1.3.1", "1.3.6.1.4.1.12356.101.8.2.1.1.4.1", "1.3.6.1.4.1.12356.101.8.2.1.1.5.1", "1.3.6.1.4.1.12356.101.8.2.1.1.6.1", "1.3.6.1.4.1.12356.101.8.2.1.1.7.1", "1.3.6.1.4.1.12356.101.8.2.1.1.8.1", "1.3.6.1.4.1.12356.101.8.2.1.1.9.1", "1.3.6.1.4.1.12356.101.8.2.1.1.10.1", "1.3.6.1.4.1.12356.101.8.2.1.1.11.1", "1.3.6.1.4.1.12356.101.8.2.1.1.12.1", "1.3.6.1.4.1.12356.101.8.2.1.1.13.1", "1.3.6.1.4.1.12356.101.8.2.1.1.14.1", "1.3.6.1.4.1.12356.101.8.2.1.1.15.1", "1.3.6.1.4.1.12356.101.8.2.1.1.16.1", "1.3.6.1.4.1.12356.101.8.2.1.1.17.1", "1.3.6.1.4.1.12356.101.8.2.1.1.18.1", "1.3.6.1.4.1.12356.101.9.2.1.1.1.1", "1.3.6.1.4.1.12356.101.9.2.1.1.2.1", "1.3.6.1.4.1.12356.101.9.2.1.1.3.1", "1.3.6.1.4.1.12356.101.9.2.1.1.4.1", "1.3.6.1.4.1.12356.101.9.2.1.1.5.1", "1.3.6.1.4.1.12356.101.9.2.1.1.6.1", "1.3.6.1.4.1.12356.101.9.2.1.1.7.1", "1.3.6.1.4.1.12356.101.9.2.1.1.8.1", "1.3.6.1.4.1.12356.101.9.2.1.1.9.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.1.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.2.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.3.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.4.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.5.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.6.1", "1.3.6.1.4.1.12356.101.10.1.2.1.1.7.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.1.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.2.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.3.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.4.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.5.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.6.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.7.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.8.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.9.1", "1.3.6.1.4.1.12356.101.10.1.2.2.1.10.1"]
+  #   walk => ["1.3.6.1.2.1.31.1.1.1.1", "1.3.6.1.2.1.2.2.1.1", "1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.2.2.1.3", "1.3.6.1.2.1.2.2.1.4", "1.3.6.1.2.1.2.2.1.5", "1.3.6.1.2.1.2.2.1.6", "1.3.6.1.2.1.2.2.1.7", "1.3.6.1.2.1.2.2.1.8", "1.3.6.1.2.1.2.2.1.9", ".1.3.6.1.2.1.31.1.1.1.6", ".1.3.6.1.2.1.31.1.1.1.10", "1.3.6.1.2.1.2.2.1.13", "1.3.6.1.2.1.2.2.1.14", "1.3.6.1.2.1.2.2.1.19", "1.3.6.1.2.1.2.2.1.20"]
+  #   interval => 30
+  #   tags => Fortigate_snmp
+  # }
+
+  snmp {
+    hosts => {{ es_master_http }}
+              { host => "udp:10.98.79.98/161" community => "public" version => "2c"}
+             ]
+    add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+    add_field => {host_address => "%{[@metadata][host_address]}"}
+    add_field => {host_community => "%{[@metadata][host_community]}"}
+    get => ["1.3.6.1.2.1.1.1.0", "1.3.6.1.2.1.1.3.0", "1.3.6.1.2.1.1.4.0", "1.3.6.1.2.1.1.6.0", "1.3.6.1.2.1.1.7.0", "1.3.6.1.2.1.25.1.2.0", "1.3.6.1.2.1.25.1.3.0", "1.3.6.1.2.1.25.1.4.0", "1.3.6.1.2.1.25.1.5.0", "1.3.6.1.2.1.25.1.6.0", "1.3.6.1.4.1.22610.2.4.1.6.2.0", "1.3.6.1.4.1.22610.2.4.1.6.3.0", "1.3.6.1.4.1.22610.2.4.1.6.4.0", "1.3.6.1.4.1.22610.2.4.1.2.1.0", "1.3.6.1.4.1.22610.2.4.1.2.2.0", "1.3.6.1.4.1.22610.2.4.1.4.1.0", "1.3.6.1.4.1.22610.2.4.1.4.2.0", "1.3.6.1.4.1.22610.2.4.1.5.1.0", "1.3.6.1.4.1.22610.2.4.1.5.7.0", "1.3.6.1.4.1.22610.2.4.1.5.8.0", "1.3.6.1.4.1.22610.2.4.1.6.1.0"]
+    walk => ["1.3.6.1.4.1.22610.2.4.1.3.2.1.1", "1.3.6.1.4.1.22610.2.4.1.3.2.1.2", "1.3.6.1.4.1.22610.2.4.1.5.9.1.1", "1.3.6.1.4.1.22610.2.4.1.5.9.1.2", "1.3.6.1.4.1.22610.2.4.1.5.9.1.3", "1.3.6.1.2.1.25.2.3.1.1", "1.3.6.1.2.1.25.2.3.1.2", "1.3.6.1.2.1.25.2.3.1.3", "1.3.6.1.2.1.25.2.3.1.4", "1.3.6.1.2.1.25.2.3.1.5", "1.3.6.1.2.1.25.2.3.1.6", "1.3.6.1.2.1.25.2.3.1.7", "1.3.6.1.2.1.25.3.2.1.1", "1.3.6.1.2.1.25.3.2.1.2", "1.3.6.1.2.1.25.3.2.1.3", "1.3.6.1.2.1.25.3.2.1.5", "1.3.6.1.2.1.25.3.2.1.6", "1.3.6.1.2.1.31.1.1.1.1", "1.3.6.1.2.1.2.2.1.1", "1.3.6.1.2.1.2.2.1.2", "1.3.6.1.2.1.2.2.1.3", "1.3.6.1.2.1.2.2.1.4", "1.3.6.1.2.1.2.2.1.5", "1.3.6.1.2.1.2.2.1.6", "1.3.6.1.2.1.2.2.1.7", "1.3.6.1.2.1.2.2.1.8", "1.3.6.1.2.1.2.2.1.9", "1.3.6.1.2.1.2.2.1.13", "1.3.6.1.2.1.2.2.1.14", "1.3.6.1.2.1.2.2.1.19", "1.3.6.1.2.1.2.2.1.20", "1.3.6.1.2.1.31.1.1.1.6", "1.3.6.1.2.1.31.1.1.1.10", "1.3.6.1.2.1.31.1.1.1.15", "1.3.6.1.2.1.31.1.1.1.18"]
+    interval => 30
+    tags => LB_snmp
+  }
+
+
+}
+
+
+filter {
+  if "HPE_snmp" in [tags] {
+    ruby {
+      code => '
+        list_field = event.to_hash
+        file = File.open("/etc/logstash/dictionary/HPE_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        list_field.each { |key, value|
+          if (key =~ /iso.org/)
+            compare_key = key.gsub(/\.\d+$/, "")
+            mapping_data.each { |item|
+              if (item["oid"] == key)
+                event.set(item["name"], value)
+                event.remove(key)
+              end
+              if (compare_key == item["oid"])
+                event.set(key.sub(item["oid"] + ".", item["name"] + "."), value)
+                event.remove(key)
+              end
+
+            }
+          end
+        }
+      '
+    }
+  }
+
+  if "QFX_snmp" in [tags] {
+    ruby {
+      code => '
+        list_field = event.to_hash
+        file = File.open("/etc/logstash/dictionary/QFX_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        list_field.each { |key, value|
+          if (key =~ /iso.org/)
+            mapping_data.each { |item|
+              cut_string = key.sub(item["oid"], "")
+              compare_key = key.sub(cut_string, "")
+              if (compare_key == item["oid"])
+                event.set(key.sub(item["oid"] + ".", item["name"] + "."), value)
+                event.remove(key)
+              end
+              if (cut_string == "")
+                event.set(key.sub(item["oid"], item["name"]), value)
+                event.remove(key)
+              end
+            }
+          end
+        }
+
+
+
+
+      '
+    }
+
+    ruby {
+      code => '
+        list_field = event.to_hash
+        interface_mapping = []
+        hardware_mapping = []
+        list_field.each { |key, value|
+          if (key =~ /interface.ifDescr/)
+            interface_index = key.split(".")[-1]
+            interface_mapping << { "index" => interface_index, "name" => value }
+          end
+          if (key =~ /healthcheck.jnxOperatingDescr/)
+            hardware_index = key.sub("healthcheck.jnxOperatingDescr.", "")
+            hardware_mapping << { "index" => hardware_index, "name" => value }
+          end
+        }
+
+        list_field.each { |key, value|
+          if (key =~ /interface.ifHCInOctets/ or key =~ /interface.ifHCOutOctets/ or key =~ /interface.ifOperStatus/ or key =~ /interface.ifAdminStatus/  or key =~ /interface.ifInErrors/ or key =~ /interface.ifOutErrors/ or key =~ /interface.ifInDiscards/ or key =~ /interface.ifOutDiscards/ or key =~ /interface.ifSpeed/ or key =~ /interface.ifHighSpeed/)
+            index = key.split(".")[-1]
+            interface_mapping.each { |item|
+              if (item["index"] == index)
+                replace_key =  key.gsub(/\.\d+$/, ".<" + item["name"] + ">" )
+                event.set(replace_key, value)
+                event.remove(key)
+              end
+            }
+          end
+
+          if (key =~ /linecard/ or key =~ /healthcheck.jnxOperatingState/)
+            key_split = key.split(".")
+            remove_string = key_split[0] + "." + key_split[1] + "."
+            index = key.sub(remove_string, "")
+
+            hardware_mapping.each { |item|
+              if (item["index"] == index)
+                replace_key =  key.sub(index, "<" + item["name"] + ">" )
+                event.set(replace_key, value)
+                event.remove(key)
+              end
+            }
+
+          end
+        }
+
+
+      '
+    }
+
+  }
+
+
+  if "Radius_snmp" in [tags] {
+    ruby {
+      code => '
+        list_field = event.to_hash
+        file = File.open("/etc/logstash/dictionary/Radius_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        list_field.each { |key, value|
+          if (key =~ /iso.org/)
+            mapping_data.each { |item|
+              cut_string = key.sub(item["oid"], "")
+              compare_key = key.sub(cut_string, "")
+              if (compare_key == item["oid"])
+                event.set(key.sub(item["oid"] + ".", item["name"] + "."), value)
+                event.remove(key)
+              end
+              if (cut_string == "")
+                event.set(key.sub(item["oid"], item["name"]), value)
+                event.remove(key)
+              end
+            }
+          end
+        }
+      '
+    }
+  }
+
+  if "Fortigate_snmp" in [tags] {
+    ruby {
+      code => '
+        list_field = event.to_hash
+        file = File.open("/etc/logstash/dictionary/Fortigate_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        list_field.each { |key, value|
+          if (key =~ /iso.org/)
+            mapping_data.each { |item|
+              cut_string = key.sub(item["oid"], "")
+              compare_key = key.sub(cut_string, "")
+              if (compare_key == item["oid"])
+                event.set(key.sub(item["oid"] + ".", item["name"] + "."), value)
+                event.remove(key)
+              end
+              if (cut_string == "")
+                event.set(key.sub(item["oid"], item["name"]), value)
+                event.remove(key)
+              end
+            }
+          end
+        }
+      '
+    }
+
+    ruby {
+      code => '
+        list_field = event.to_hash
+        interface_mapping = []
+        list_field.each { |key, value|
+          if (key =~ /interface.ifName/)
+            interface_index = key.split(".")[-1]
+            interface_mapping << { "index" => interface_index, "name" => value }
+          end
+        }
+
+        list_field.each { |key, value|
+          if (key =~ /interface.ifType/ or key =~ /interface.ifMtu/ or key =~ /interface.ifSpeed/ or key =~ /interface.ifPhysAddress/ or key =~ /interface.ifAdminStatus/ or key =~ /interface.ifOperStatus/ or key =~ /interface.ifLastChange/ or key =~ /interface.ifHCInOctets/ or key =~ /interface.ifHCOutOctets/ or key =~ /interface.ifInDiscards/ or key =~ /interface.ifInErrors/ or key =~ /interface.ifOutDiscards/ or key =~ /interface.ifOutErrors/)
+            index = key.split(".")[-1]
+            interface_mapping.each { |item|
+              if (item["index"] == index)
+                replace_key =  key.gsub(/\.\d+$/, ".<" + item["name"] + ">" )
+                event.set(replace_key, value)
+                event.remove(key)
+              end
+            }
+          end
+
+        }
+      '
+    }
+
+  }
+
+  if "LB_snmp" in [tags] {
+    ruby {
+      code => '
+        list_field = event.to_hash
+        file = File.open("/etc/logstash/dictionary/LB_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        list_field.each { |key, value|
+          if (key =~ /iso.org/)
+            mapping_data.each { |item|
+              cut_string = key.sub(item["oid"], "")
+              compare_key = key.sub(cut_string, "")
+              if (compare_key == item["oid"])
+                event.set(key.sub(item["oid"] + ".", item["name"] + "."), value)
+                event.remove(key)
+              end
+              if (cut_string == "")
+                event.set(key.sub(item["oid"], item["name"]), value)
+                event.remove(key)
+              end
+            }
+          end
+        }
+      '
+    }
+
+    ruby {
+      code => '
+        list_field = event.to_hash
+        interface_mapping = []
+        list_field.each { |key, value|
+          if (key =~ /interface.ifName/)
+            interface_index = key.split(".")[-1]
+            interface_mapping << { "index" => interface_index, "name" => value }
+          end
+        }
+
+        list_field.each { |key, value|
+          if (key =~ /interface.ifType/ or key =~ /interface.ifMtu/ or key =~ /interface.ifSpeed/ or key =~ /interface.ifPhysAddress/ or key =~ /interface.ifAdminStatus/ or key =~ /interface.ifOperStatus/ or key =~ /interface.ifLastChange/ or key =~ /interface.ifInDiscards/ or key =~ /interface.ifInErrors/ or key =~ /interface.ifOutDiscards/ or key =~ /interface.ifOutErrors/ or key =~ /interface.ifHCInOctets/ or key =~ /interface.ifHCOutOctets/ or key =~ /interface.ifHighSpeed/ or key =~ /interface.ifAlias/)
+            index = key.split(".")[-1]
+            interface_mapping.each { |item|
+              if (item["index"] == index)
+                replace_key =  key.gsub(/\.\d+$/, ".<" + item["name"] + ">" )
+                event.set(replace_key, value)
+                event.remove(key)
+              end
+            }
+          end
+
+        }
+      '
+    }
+
+  }
+
+}
+
+
+output {
+#  stdout {
+#    codec => rubydebug
+#  }
+
+  if "HPE_snmp" in [tags] {
+    elasticsearch {
+      index => "snmp-hpe-%{+YYYY.MM}"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+  if "QFX_snmp" in [tags] {
+    elasticsearch {
+      index => "snmp-qfx-%{+YYYY.MM}"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+  if "Radius_snmp" in [tags] {
+    elasticsearch {
+      index => "snmp-radius-%{+YYYY.MM}"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+
+  if "Fortigate_snmp" in [tags] {
+    elasticsearch {
+      index => "snmp-fortigate-%{+YYYY.MM}"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+
+  if "LB_snmp" in [tags] {
+    elasticsearch {
+      index => "snmp-lb-%{+YYYY.MM}"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+
+}

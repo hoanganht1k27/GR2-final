@@ -1,0 +1,34 @@
+---
+- include: rhel_step_01_iptables.yml
+
+- include: rhel_step_02_required_repo.yml
+
+- include: rhel_step_03_required_system_config.yml
+
+- include: rhel_step_04_install_docker.yml
+
+- include: rhel_step_05_install_kubernetes.yml
+
+- include: rhel_step_06_install_keepalived.yml
+  when:
+    - master_node_list|length > 1
+    - master == True
+
+- include: rhel_step_07_install_haproxy.yml
+  when:
+    - master_node_list|length > 1
+    - master == True
+
+- include: rhel_step_08_config_kubernetes_multi_master.yml
+  when:
+    - master_node_list|length > 1
+    - master == True
+
+- include: rhel_step_08_config_kubernetes_single_master.yml
+  when:
+    - master_node_list|length == 1
+    - master == True
+
+- include: rhel_step_09_config_kubernetes_worker.yml
+  when:
+    - master != True or master is not defined

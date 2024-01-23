@@ -1,0 +1,42 @@
+2023-05-22 08:24:59,214 INFO main(40)     List of received arguments {'log_prefix': 'scanIP', 'community': 'public', 'collect_hostname': True, 'log_level': 'INFO', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'output_dir': '/tmp/exporter_inventory', 'list_full_oid': None, 'log_dir': './logs', 'ping_count': 3, 'networkAddress': '10.98.0.0/28', 'ping_interval': 0.1}
+2023-05-22 08:24:59,215 INFO main(42)     Connecting to network: 10.98.0.0/28:
+2023-05-22 08:24:59,225 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.0.0/28 into list of host
+2023-05-22 08:25:01,260 INFO TEST_HOST_PING(74)     10.98.0.2 is UP!
+2023-05-22 08:25:01,275 INFO TEST_HOST_PING(74)     10.98.0.3 is UP!
+2023-05-22 08:25:01,279 INFO TEST_HOST_PING(74)     10.98.0.4 is UP!
+2023-05-22 08:25:01,280 INFO TEST_HOST_PING(74)     10.98.0.1 is UP!
+2023-05-22 08:25:01,299 INFO TEST_HOST_PING(74)     10.98.0.6 is UP!
+2023-05-22 08:25:01,300 INFO TEST_HOST_PING(74)     10.98.0.5 is UP!
+2023-05-22 08:25:03,322 INFO TEST_HOST_PING(74)     10.98.0.10 is UP!
+2023-05-22 08:25:03,326 INFO TEST_HOST_PING(74)     10.98.0.11 is UP!
+2023-05-22 08:25:03,338 INFO TEST_HOST_PING(74)     10.98.0.12 is UP!
+2023-05-22 08:25:03,338 INFO TEST_HOST_PING(74)     10.98.0.9 is UP!
+2023-05-22 08:25:03,339 INFO TEST_HOST_PING(74)     10.98.0.7 is UP!
+2023-05-22 08:25:04,327 INFO TEST_HOST_PING(77)     10.98.0.8 is DOWN!
+2023-05-22 08:25:06,365 INFO TEST_HOST_PING(77)     10.98.0.13 is DOWN!
+2023-05-22 08:25:06,398 INFO TEST_HOST_PING(77)     10.98.0.14 is DOWN!
+2023-05-22 08:25:06,399 INFO main(50)     Time to ping all host: 7.18420410156
+2023-05-22 08:25:06,400 INFO main(51)     List of alive host:: ['10.98.0.2', '10.98.0.3', '10.98.0.4', '10.98.0.1', '10.98.0.6', '10.98.0.5', '10.98.0.10', '10.98.0.11', '10.98.0.12', '10.98.0.9', '10.98.0.7']
+2023-05-22 08:25:06,400 INFO main(55)     Collecting all hostname using snmp community public
+2023-05-22 08:25:08,509 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:08,509 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.2, using IP address as hostname
+2023-05-22 08:25:10,512 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:10,513 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.3, using IP address as hostname
+2023-05-22 08:25:12,516 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:12,516 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.4, using IP address as hostname
+2023-05-22 08:25:14,520 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:14,520 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.1, using IP address as hostname
+2023-05-22 08:25:16,525 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:16,526 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.6, using IP address as hostname
+2023-05-22 08:25:18,529 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:18,530 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.5, using IP address as hostname
+2023-05-22 08:25:20,534 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:20,534 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.10, using IP address as hostname
+2023-05-22 08:25:22,538 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:22,539 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.11, using IP address as hostname
+2023-05-22 08:25:24,543 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:24,543 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.12, using IP address as hostname
+2023-05-22 08:25:26,546 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:26,547 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.9, using IP address as hostname
+2023-05-22 08:25:28,551 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-05-22 08:25:28,551 INFO main(59)     The host can be ping but doesn't have host name: 10.98.0.7, using IP address as hostname

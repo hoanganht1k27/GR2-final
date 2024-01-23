@@ -1,0 +1,18 @@
+{
+  "uid": "5PuWa8lMz",
+  "orgId": 1,
+  "name": "MySQL_Viettel_User",
+  "type": "mysql",
+  "typeLogoUrl": "public/app/plugins/datasource/mysql/img/mysql_logo.svg",
+  "access": "proxy",
+  "url": "{{ vip_proxysql_host }}:{{ vip_proxysql_port }}",
+  "basicAuthUser": "elastic",
+  "secureJsonData": {
+    "basicAuthPassword": "{{ elastic_password }}"
+  },
+  "database": "AAA",
+  "basicAuth": false,
+  "isDefault": false,
+  "jsonData": {},
+  "readOnly": false
+}

@@ -1,0 +1,97 @@
+# Wrote by Hoang Anh Tu
+---
+- stat: "path={{ gitlist_code_path }}"
+  register: gitlist_code_path_status
+
+- stat: "path={{ gitlist_data_path }}"
+  register: gitlist_data_path_status
+
+- stat: "path={{ gitlist_data_path }}/.git"
+  register: gitlist_data_path_init_status
+
+- name: GITLIST - [Step 01] - Upload gitlist package to Remote Server
+  copy:
+    src: "{{ role_path }}/files/gitlist/gitlist-1.0.2.tar"
+    dest: "/var/tmp/gitlist-1.0.2.tar"
+    mode: 0775
+  when:
+    - gitlist_code_path_status.stat.exists == false
+
+- name: GITLIST - [Step 02] - Unarchive Gitlist
+  unarchive:
+    src: /var/tmp/gitlist-1.0.2.tar
+    dest: /var/www/
+    mode: "u=rwx,g=rwx,o=rx,g+s"
+    group: apache
+    owner: apache
+    remote_src: yes
+  when:
+    - gitlist_code_path_status.stat.exists == false
+
+- name: GITLIST - [Step 03] - Create gitlist configuration file
+  copy:
+    src: "{{ gitlist_code_path }}/config.ini-example"
+    dest: "{{ gitlist_code_path }}/config.ini"
+    remote_src: yes
+    mode: "u=rwx,g=rwx,o=rx,g+s"
+    group: apache
+    owner: apache
+  when:
+    - gitlist_code_path_status.stat.exists == false
+
+- name: GITLIST - [Step 04] - Configure Gitlist 
+  replace:
+    path: "{{ gitlist_code_path }}/config.ini"
+    regexp: "'/home/git/repositories/'"
+    replace: "'{{ gitlist_data_path }}'"
+
+- name: GITLIST - [Step 05] - Create Gitlist's Sub Directory
+  file:
+    path: "{{ gitlist_data_path }}/backup_config"
+    state: directory
+    mode: "u=rwx,g=rwx,o=rx,g+s"
+    group: rundeck
+    owner: rundeck 
+    recurse: yes
+  when:
+    - gitlist_data_path_status.stat.exists == false
+
+- name: GITLIST [Step 06] - Create remote init on all Host
+  shell: "chdir={{ gitlist_data_path }}/backup_config/ {{ item }}"
+  with_items:
+    - "git init {{ gitlist_data_path }}/backup_config"
+    - git config --global user.name "NMS"
+    - git config --global user.email 'NMS@"{{ inventory_hostname }}"'
+    - "echo 'Repository for backup Juniper devices' > {{ gitlist_data_path }}/backup_config/README"
+    - "echo 'Repository for backup Juniper devices' > {{ gitlist_data_path }}/backup_config/.git/description"
+    - "git add {{ gitlist_data_path }}/backup_config/README"
+    - git commit -m initial
+  when:
+    - gitlist_data_path_init_status.stat.exists == false
+
+- name: GITLIST - [Step 07] - Change permission of a Gitlist's cache directory
+  file:
+    path: "{{ gitlist_code_path }}/cache"
+    state: directory
+    recurse: yes
+    group: apache
+    owner: apache
+    mode: "u=rwx,g=rwx,o=rx,g+s"
+
+- name: GITLIST - [Step 08] - Change Gitlist's Directory permission
+  file:
+    path: "{{ gitlist_data_path }}/backup_config"
+    mode: "u=rwx,g=rwx,o=rx,g+s"
+    group: rundeck
+    owner: rundeck
+    recurse: yes
+
+- name: GITLIST - [Step 09] - Configure Apache for gitlist
+  template:
+    src: "{{ role_path }}/templates/gitlist.conf.j2"
+    dest: "/etc/httpd/conf.d/gitlist.conf"
+    mode: 0775
+    group: apache
+    owner: apache
+  notify:
+    - Restart http

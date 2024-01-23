@@ -1,0 +1,45 @@
+#!/bin/bash
+export red='\033[0;91m'
+export green='\033[0;92m'
+export yellow='\033[0;93m'
+export nc='\033[0m'
+export services=$(echo "keepalived haproxy icinga2 httpd grafana-server rundeckd glusterd")
+export ERR=0
+
+echo ""
+echo -e "============= SHUTTING DOWN PROCESS ============="
+echo -e "[INFO] Stopping NMS's Services:"
+for i in $services
+do
+        echo -ne "- Stopping $i: "
+        systemctl stop $i || ERR=1
+        if [[ "$ERR" == "0"  ]];then
+           echo -e "${green}OK${nc}"
+        else
+           echo -e "${red}FAILED${nc}"
+           exit;
+        fi
+  
+done
+
+echo ""
+echo -e "[INFO] Unmounting NMS's Partition:"
+set -x
+umount  /etc/httpd/conf.d
+umount  /etc/icinga2/conf.d
+umount  /etc/icinga2/features-available
+umount  /etc/icinga2/scripts
+umount  /etc/grafana
+umount  /etc/thruk
+#umount /etc/icinga2-ui
+umount  /usr/share/nagvis
+#umount /usr/share/icinga2/plugins/libexec
+#umount /var/rundeck/projects
+#umount /var/lib/rundeck
+umount  /etc/rundeck
+umount /opt/shared
+set +x
+
+echo ""
+echo -e "[INFO] NMS Server is Shutting Down..."
+echo -e "================================================="

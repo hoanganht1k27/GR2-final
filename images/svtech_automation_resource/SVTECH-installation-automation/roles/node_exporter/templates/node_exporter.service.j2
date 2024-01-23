@@ -1,0 +1,12 @@
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+WorkingDirectory={{ node_exporter_specific_path }}
+ExecStart={{ node_exporter_specific_path }}/node_exporter --web.listen-address=:{{ node_exporter_port }}
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

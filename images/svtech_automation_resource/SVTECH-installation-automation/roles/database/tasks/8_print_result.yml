@@ -1,0 +1,20 @@
+---
+- name: RESULT - [Replication] - Print Replication Status
+  debug:
+    msg: "{{ replication_status.split('\n')[:-1] }}"
+  when:
+    - replication_status is defined
+    - inventory_hostname in groups['replication']
+
+- name: RESULT - [Maxscale] - Print Maxscale Status (Non SSL)
+  debug:
+    var: maxscale_status.stdout_lines
+  when:
+    - maxscale_status is not skipped and inventory_hostname in groups['maxscale']
+
+- name: RESULT - [Maxscale] - Print Maxscale Status (SSL)
+  debug:
+    var: maxscale_status_ssl.stdout_lines
+  when:
+    - maxscale_status_ssl is not skipped and inventory_hostname in groups['maxscale']
+

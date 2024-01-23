@@ -1,0 +1,84 @@
+---
+- name: ENVIRONMENT SETUP
+  hosts: elastic
+  roles:
+    - role: environment
+      become: yes
+      tag: environment
+
+- name: SETUP
+  hosts: elastic
+  any_errors_fatal: true
+  vars:
+    ####### ELASTICSEARCH VARIABLES #######
+    es_version: "{{ version | default('7.16.2') }}"
+    es_api_host: "{{ hostvars[inventory_hostname].IP }}"
+    es_data_dirs:
+      - "/sata/elasticsearch/data"
+    es_log_dir: "/var/log/elasticsearch"
+    es_use_repository: true
+    es_add_repository: true
+    es_config:
+      node.name: "{{ inventory_hostname }}"
+      cluster.name: "{{ cluster_name }}"
+      # for ES 7 or higher
+#      cluster.initial_master_nodes: "{% for host in groups['elastic'] %}{{hostvars[host].inventory_hostname}}{% if not loop.last %},{% endif %}{% endfor %}"
+      cluster.initial_master_nodes: "{% for host in groups['elastic'] %}{% if (hostvars[host].node_master == true) %}{{ hostvars[host].inventory_hostname }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+#      discovery.seed_hosts: "{% for host in groups['elastic'] %}{{hostvars[host].IP}}:{{ transport_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+      discovery.seed_hosts: "{% for host in groups['elastic'] %}{% if (hostvars[host].node_master == true) %}{{ hostvars[host].IP }}:{{ transport_port }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+      # for lower ES 7
+      #discovery.zen.ping.unicast.hosts: "{% for host in groups['elastic'] %}{{hostvars[host].IP}}:{{ transport_port }}{% if not loop.last %},{% endif %}{% endfor %}"
+      http.port: "{{ http_port }}"
+      transport.port: "{{ transport_port }}"
+      transport.host: "{{ hostvars[inventory_hostname].IP }}"
+      network.host: 0.0.0.0
+      node.master: "{{ node_master }}"
+      node.data: "{{ node_data }}"
+      node.ingest: "{{ node_ingest }}"
+      bootstrap.memory_lock: true
+      xpack.monitoring.collection.enabled: true
+      xpack.monitoring.elasticsearch.collection.enabled: false
+    es_scripts: false
+    es_templates: false
+    es_templates_fileglob: "{{ role_path }}/test/integration/files/templates-7.x/default.json"
+    es_version_lock: true
+    es_heap_size: "{{ es_mem_size }}"
+    es_api_port: "{{ http_port }}"
+    es_xpack_features: []
+    ### SSL ###
+    es_api_basic_auth_username: "elastic"
+    es_api_basic_auth_password: "{{ api_basic_auth_password }}"
+    es_enable_http_ssl: true
+    es_enable_transport_ssl: true
+    es_ssl_keystore: "{{ playbook_dir }}/roles/elk_elastic/files/certs/{{ keystore_file }}"
+    es_ssl_keystore_password: "{{ keystore_password }}"
+    es_ssl_truststore: "{{ playbook_dir }}/roles/elk_elastic/files/certs/{{ truststore_file }}"
+    es_ssl_truststore_password: "{{ ca_password }}"
+    es_validate_certs: no
+#    es_plugins:
+#      - plugin: ingest-attachment
+
+  pre_tasks:
+    - name: set fact for list of Elasticsearch Master/Ingest HTTP port
+      set_fact:
+        es_master_http: "{{ es_master_http | default([]) + [ 'https://' + hostvars[item].IP + ':' + hostvars[item].http_port] }}"
+      delegate_to: localhost
+      run_once: true
+      when:
+        - hostvars[item].node_master |bool or hostvars[item].node_ingest |bool
+      with_items:
+        - "{{ groups['elastic'] }}"
+    
+    - name: set fact for list of Elasticsearch Master/Ingest TRANSPORT port
+      set_fact:
+        es_master_transport: "{{ es_master_http | default([]) + [ 'https://' + hostvars[item].IP + ':' + hostvars[item].transport_port] }}"
+      delegate_to: localhost
+      run_once: true
+      when:
+        - hostvars[item].node_master |bool or hostvars[item].node_ingest |bool
+      with_items:
+        - "{{ groups['elastic'] }}"
+    
+  roles:
+    - role: elk_elastic
+      become: yes

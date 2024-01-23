@@ -1,0 +1,75 @@
+# hoanganht1k27
+---
+#- name: RUN NODE EXPORTER [Step 0] Install lsof package
+#  yum:
+#    name: lsof
+#    state: present
+#  when: ansible_os_family == "RedHat"
+
+#- name: RUN NODE EXPORTER [Step 0] Install lsof package
+#  apt:
+#    name: lsof
+#    state: present
+#  when: ansible_os_family == "Debian"
+
+- name: "RUN NODE EXPORTER [Step 01] - Get old pid of service running on port {{ node_exporter_port }}"
+  command: "ss -lnpt 'sport = :{{ node_exporter_port }}'"
+  register: lsof_output
+  changed_when: false
+  ignore_errors: true
+
+#- name: DEBUG
+#  debug:
+#    var: lsof_output
+
+- name: RUN NODE EXPORTER [Step 02] - Set get old pid failed or not
+  set_fact:
+    thatbai: 1
+  when: lsof_output.rc != 0
+
+- name: "RUN NODE EXPORTER [Step 03] - Extract pid value of service running on port {{ node_exporter_port }}"
+  set_fact:
+    pid: "{{ lsof_output.stdout_lines[1] | regex_search('pid=(\\d+)', '\\1') }}"
+  when: thatbai is not defined and lsof_output.stdout_lines | length >= 2
+
+- name: RUN NODE EXPORTER [Step 04] - Get pwdx of current pid
+  shell: |
+    pwdx {{ pid[0] }}
+  when: thatbai is not defined and pid is defined
+  register: pwdx_output
+  #failed_when: not (pwdx_output.stdout is search(node_exporter_specific_path))
+
+#- name: RUN NODE EXPORTER [Step 3] - debug
+#  debug:
+#    var: pwdx_output.stdout is search(node_exporter_specific_path)
+
+- name: "RUN NODE EXPORTER [Step 05] - Check port {{ node_exporter_port }} is valid or not"
+  fail:
+    msg: "{{ node_exporter_port }} is used by another service, please choose another port for node exporter"
+  when: thatbai is not defined and pid is defined and not (pwdx_output.stdout is search(node_exporter_specific_path))
+
+- name: RUN NODE EXPORTER [Step 06] - Kill old process
+  shell: "kill -9 {{ pid_output.stdout }}"
+  when: thatbai is not defined and reload_service.changed and pid is defined and pwdx_output.stdout is search(node_exporter_specific_path)
+
+  #- name: RUN NODE EXPORTER [Step 07] - Run node exporter
+  #become_user: "{{ node_exporter_username }}"
+  #shell: |
+  #  cd {{ node_exporter_specific_path }}
+  #  nohup ./node_exporter --web.listen-address=:{{ node_exporter_port }} &
+  #when: thatbai is defined or reload_service.changed or pid is not defined
+
+- name: RUN NODE EXPORTER [Step 07] - Copy node exporter service file
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+ 
+- name: RUN NODE EXPORTER [Step 08] - Reload daemon
+  shell: systemctl daemon-reload
+
+- name: RUN NODE EXPORTER [Step 09] - Run node exporter service
+  service:
+    name: node_exporter
+    state: started
+    enabled: yes
+

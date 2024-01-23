@@ -1,0 +1,13 @@
+set -e
+mysql -u{{ ha_user }} -p{{ ha_password }} -e "stop slave;"
+mysql -u{{ ha_user }} -p{{ ha_password }} -e "reset slave;"
+mysqldump -u{{ ha_user }} -p{{ ha_password }} --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -h {{ VIP }} grafana  > /tmp/grafana.sql
+head /tmp/grafana.sql -n 80|grep MASTER_LOG| sed  's/-- //g'| sed 's/;/,/g' > /tmp/changemaster.sql
+echo "master_host='{{ VIP }}'," >> /tmp/changemaster.sql
+echo "master_user='{{ ha_user }}'," >> /tmp/changemaster.sql
+echo "master_password='{{ ha_password }}'," >> /tmp/changemaster.sql
+echo "master_port=3306," >> /tmp/changemaster.sql
+echo "master_connect_retry=10;" >> /tmp/changemaster.sql
+mysql -u{{ ha_user }} -p{{ ha_password }} grafana < /tmp/grafana.sql
+mysql -u{{ ha_user }} -p{{ ha_password }} -e "source /tmp/changemaster.sql;"
+mysql -u{{ ha_user }} -p{{ ha_password }} -e "start slave;"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Libvirt Listen Events
+After=network.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+ExecStart=/usr/share/libvirt/scripts/libvirt-listen-events.py --period {{ memcheck_period }}
+
+[Install]
+WantedBy=multi-user.target

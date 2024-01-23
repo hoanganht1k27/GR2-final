@@ -1,0 +1,7 @@
+[all]
+ES-01 ansible_port=22 ansible_host=10.98.0.161 IP=10.98.0.161 java_version=8 prefix=production
+ES-02 ansible_port=22 ansible_host=10.98.0.162 IP=10.98.0.162 java_version=8 prefix=production
+ES-03 ansible_port=22 ansible_host=10.98.0.163 IP=10.98.0.163 java_version=8 prefix=production
+
+[all:vars]
+ansible_ssh_user=root

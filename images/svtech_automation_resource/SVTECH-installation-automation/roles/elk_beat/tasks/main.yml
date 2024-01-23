@@ -1,0 +1,10 @@
+# Wrote by Hoang Anh Tu
+---
+- include: step_01_install_beat.yml
+
+- include: step_02_config_metricbeat.yml
+  #  when: beat == "metricbeat"
+
+- include: step_03_config_filebeat.yml
+  #  when: beat == "filebeat"
+

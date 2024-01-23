@@ -1,0 +1,44 @@
+---
+#Handlers for Services
+  - name: Restart Elasticsearch
+    service: 
+      name: elasticsearch
+      state: restarted
+      enabled: yes
+    register: es_restarted
+
+  - name: Restart Logstash 
+    service: 
+      name: logstash
+      state: restarted
+      enabled: yes
+
+  - name: Restart Metricbeat
+    service: 
+      name: metricbeat
+      state: restarted
+      enabled: yes
+
+  - name: Restart Iptables
+    service:
+      name: iptables
+      state: restarted
+      enabled: yes
+
+  - name: Restart http
+    service:
+      name: httpd
+      state: restarted
+      enabled: yes
+
+  - name: Restart Kibana
+    service:
+      name: kibana
+      state: restarted
+      enabled: yes
+
+  - name: Restart Grafana
+    service:
+      name: grafana
+      state: restarted
+      enabled: yes

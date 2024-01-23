@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: telegraf-cm
+data:
+  telegraf.conf: |
+    [agent]
+      interval = "10s"
+      round_interval = true
+      metric_batch_size = 50000
+      metric_buffer_limit = 1000000
+      collection_jitter = "0s"
+      flush_interval = "10s"
+      flush_jitter = "0s"
+      precision = "0s"
+      omit_hostname = false
+      hostname = ""
+
+    [[outputs.kafka]]
+      brokers = ["kafka-kafka-brokers:9092"]
+      topic = "{{ .Values.global.kafkaConfig.topic }}"
+
+    [[inputs.http_listener_v2]]
+      service_address = ":8023"
+      paths = ["/receive"]
+      data_format = "prometheusremotewrite"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: telegraf-deployment
+  name: telegraf
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: telegraf-deployment
+  template:
+    metadata:
+      labels:
+        app: telegraf-deployment
+    spec:
+      securityContext:
+        fsGroup: 0
+      initContainers:
+      - name: wait-for-kafka
+        image: {{ .Values.init.waitForKafka.image.repository }}:{{ .Values.init.waitForKafka.image.tag }}
+        command:
+          - /bin/sh
+          - -ec
+          - |
+              until nc -zvw5 kafka-kafka-brokers 9092; do echo "Waiting for Kafka..."; sleep 2; done
+      - name: wait-for-kafka-topic
+        image: {{ .Values.init.waitForKafkaTopic.image.repository }}:{{ .Values.init.waitForKafkaTopic.image.tag }}
+        command:
+          - /bin/sh
+          - -ec
+          - |
+              until bin/kafka-topics.sh --list --bootstrap-server kafka-kafka-bootstrap:9092 | grep {{ .Values.global.kafkaConfig.topic }}; do echo "Waiting..."; sleep 2; done
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        name: telegraf
+        volumeMounts:
+        - name: telegraf-volume
+          mountPath: /etc/telegraf/telegraf.conf
+          subPath: telegraf.conf
+        resources:
+{{ .Values.resources | toYaml | indent 10 }}          
+      volumes:
+      - name: telegraf-volume
+        configMap:
+          name: telegraf-cm
+          items:
+            - key: telegraf.conf
+              path: telegraf.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegraf
+spec:
+  selector:
+    app: telegraf-deployment
+  ports:
+    - name: telegraf-port
+      protocol: TCP
+      port: 8023
+      targetPort: 8023
+  type: ClusterIP

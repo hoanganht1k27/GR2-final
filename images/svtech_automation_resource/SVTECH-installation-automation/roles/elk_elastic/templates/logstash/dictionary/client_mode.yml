@@ -1,0 +1,6 @@
+---
+- "cli": "ssh"
+- "tty*": "telnet"
+- "netconf": "netconf"
+- "junoscript*": "junoscript"
+- "pts*": "telnet"

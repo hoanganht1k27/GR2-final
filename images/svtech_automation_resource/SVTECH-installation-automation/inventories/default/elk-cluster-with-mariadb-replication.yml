@@ -1,0 +1,265 @@
+all:
+  children:
+    elastic:
+      hosts:
+        ES-01:
+          ansible_host: 10.98.10.172 
+          IP: 10.98.10.172 
+          node_master: true 
+          node_data: true 
+          node_ingest: true
+          es_mem_size: "2g"
+          gen_cert: true
+        ES-02:
+          ansible_host: 10.98.10.173
+          IP: 10.98.10.173
+          node_master: true
+          node_data: true
+          node_ingest: true
+          es_mem_size: "2g"
+        ES-03:
+          ansible_host: 10.98.10.174
+          IP: 10.98.10.174
+          node_master: true
+          node_data: true
+          node_ingest: true
+          es_mem_size: "2g"
+        ES-04:
+          ansible_host: 10.98.10.175
+          IP: 10.98.10.175
+          node_master: false
+          node_data: true
+          node_ingest: false
+          es_mem_size: "2g"
+      vars:
+        cluster_name: "aaa"
+        ### Elastic's SSL Variables ###
+        keystore_file: "elastic-certificates.p12"
+        truststore_file: "elastic-certificates.p12"
+        api_basic_auth_password: "juniper@123"
+        keystore_password: ""
+        ca_password: ""
+        elastic_password: "juniper@123"
+        apm_system_password: "juniper@123"
+        kibana_system_password: "juniper@123"
+        logstash_system_password: "juniper@123"
+        beats_system_password: "juniper@123"
+        remote_monitoring_user: "juniper@123"
+
+    replication:
+      children:
+        replication_master:
+          hosts:
+            ES-01:
+              ansible_host: 10.98.10.172
+              IP: 10.98.10.172
+              server_id: 1
+        replication_slave:
+          hosts:
+            ES-02:
+              ansible_host: 10.98.10.173
+              IP: 10.98.10.173
+              server_id: 2
+            ES-03:
+              ansible_host: 10.98.10.174
+              IP: 10.98.10.174
+              server_id: 3
+          vars:
+            Is_Slave: true
+            backup_dir: /tmp/mariabackup
+      vars:
+        gtid_domain: 1
+        replication_user:
+          name: "repl_user"
+          host: "%"
+          password: "repl_user@123"
+          priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
+
+    maxscale:
+      hosts:
+        ES-01:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+        ES-02:
+          ansible_host: 10.98.10.173
+          IP: 10.98.10.173
+        ES-03:
+          ansible_host: 10.98.10.174
+          IP: 10.98.10.174
+      vars:
+        # Maxscale Global attributes
+        admin_host: "0.0.0.0"
+        admin_secure_gui: "true"
+        maxscale_datadir: "/var/lib/maxscale"
+        maxscale_admin_user: "juniper"
+        maxscale_admin_password: "juniper@123"
+        maxscale_ca_cert: "ca-cert.pem"
+        maxscale_key: "server-key.pem"
+        maxscale_csr: "server-req.pem"
+        maxscale_cert: "server-cert.pem"
+        # Maxscale monitor attributes
+        monitor_interval: 1000
+        auto_failover: "true"
+        auto_rejoin: "true"
+        enforce_read_only_slaves: "on"
+        enforce_writable_master: "on"
+        cooperative_monitoring_locks: "majority_of_running"
+        master_conditions: "primary_monitor_master,connected_slave,running_slave"
+        slave_conditions: "primary_monitor_master,linked_master,writable_master"
+        failcount: 3
+        # Maxscal Read-Write-Split service attributes
+        master_accept_reads: "true"
+        master_failure_mode: "error_on_write"
+        master_reconnection: "true"
+        maxscale_read_write_port: "3306"
+        # Maxscale binlog service attributes
+        select_master: "true"
+        server_id: "999"
+        expire_log_duration: "5h"
+        expire_log_minimum_files: "3"
+        binlog_dir: "/var/lib/maxscale/binlogs"
+        maxscale_bin_log_port: "3307"
+        # Login to Mariadb console and create maxscale user (CHECK VALID USER FROM CLIENT ONLY)
+        maxscale_user:
+          name: "maxscale"
+          password: "maxscale@123"
+          host:
+            - localhost
+          priv:
+            'mysql.user': 'SELECT'
+            'mysql.db': 'SELECT'
+            'mysql.tables_priv': 'SELECT'
+            'mysql.columns_priv': 'SELECT'
+            'mysql.proxies_priv': 'SELECT'
+            'mysql.roles_mapping': 'SELECT'
+            'mysql.procs_priv': 'SELECT'
+            '*.*': 'SHOW DATABASES,REPLICATION SLAVE,REPLICATION CLIENT'
+        monitor_user:
+          name: "maxscale_monitor"
+          password: "maxscale@123"
+          host:
+            - localhost
+          priv:
+            '*.*': 'FILE,REPLICATION SLAVE,REPLICATION CLIENT,SUPER,RELOAD'
+   
+    ### KIBANA HOSTS ###
+    kibana:
+      hosts:
+        ES-01:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+          kibana: true 
+        ES-02:
+          ansible_host: 10.98.10.173
+          IP: 10.98.10.173
+          kibana: true
+        ES-03:
+          ansible_host: 10.98.10.174
+          IP: 10.98.10.174
+          kibana: true
+      vars:
+          kibana_port: 5601
+    #####################
+
+    ### LOGSTASH HOSTS ###
+    logstash:
+      hosts:
+        ES-01:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+        ES-02:
+          ansible_host: 10.98.10.173
+          IP: 10.98.10.173
+        ES-03:
+          ansible_host: 10.98.10.174
+          IP: 10.98.10.174
+    #####################
+
+    ### BEAT HOSTS ###
+    beat:
+      hosts:
+        ES-01:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172    
+        ES-02:
+          ansible_host: 10.98.10.173
+          IP: 10.98.10.173
+        ES-03:
+          ansible_host: 10.98.10.174
+          IP: 10.98.10.174
+        ES-04:
+          ansible_host: 10.98.10.175
+          IP: 10.98.10.175
+    ##################
+
+#=============================================
+  vars:
+    prefix: "production"
+    ansible_ssh_user: "root"
+    ansible_ssh_port: 22
+    admin_user: "juniper"
+    admin_password: "juniper@123"
+    timezone: "Asia/Ho_Chi_Minh"
+
+    ### Elastic Stack Variables ###
+    version: "7.16.2"
+    http_port: "9200"
+    transport_port: "9300"
+    app_group: "EMS"
+    ### BEAT Variables ###
+    beats:
+      ## System Module Variables ##
+      system_reload_period: "30s"
+      number_of_replicas: "1"
+      number_of_shards: "3"
+      ## Index List ##
+      index_list:
+        - "junos-log"
+      ## MYSQL Module Variables ##
+      mysql:
+        db_period: "30s"
+        host:
+          - localhost
+        port: "3306"
+        monitor_username: "monitor"
+        monitor_password: "monitor@aaa"
+        error_log_path: "/var/log/mysql/error.log"
+        slow_log_path: "/var/log/mysql/slow.log"
+
+      ## LOGSTASH Variables ###
+      logstash:
+        listen_port:
+          metricbeat: "5044"
+          filebeat: "5045"
+          radiuslog: "5045"
+        logstash_writer:
+          username: "logstash"
+          password: "juniper@123"
+
+    ## Grafana Variables
+    organization: "viettelnet-hlc"
+    grafana_database: "grafana"
+    grafana_database_user: "grafana"
+    grafana_database_password: "juniper@123"
+    grafana_admin_user: "admin"
+    grafana_admin_password: "juniper@123"
+
+    ### MariaDB Variables ###
+    mariadb_version: "10.5"
+    auto_gen_password: "false"
+    mariadb_root_password: "juniper@123"
+    mariadb_port: 3307
+    innodb_buffer_pool_size_percent: 50
+    data_dir: /var/lib/mysql
+
+    ## Variables for PyENV 
+    pyenv_repo: "https://github.com/pyenv/pyenv.git"
+    pyenv_root: "/opt/.pyenv"
+    pyenv_version: "v1.2.11"
+    pyenv_update: "no"
+    pyenv_share: "/etc/profile.d/bash_profile.sh"
+    pyenv_default: "/opt/.pyenv/versions/automation36"
+
+    ## Varibles for Ansible
+    ansible_vers: 2.8
+

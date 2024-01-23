@@ -1,0 +1,136 @@
+# Wrote by Hoang Anh Tu
+---
+- include_vars: "{{ item }}"
+  with_items:
+    - "{{ role_path }}/../ansible-elasticsearch/defaults/main.yml"
+    - "{{ role_path }}/../ansible-elasticsearch/vars/RedHat.yml"
+
+- name: "ELASTICSEARCH - STEP 01 - Install expect package"
+  yum:
+    name: expect
+    state: latest
+  when: 
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+
+- name: "ELASTICSEARCH - STEP 02 - Config HTTP verification_mode"
+  lineinfile:
+    dest: "{{ es_conf_dir }}/elasticsearch.yml"
+    insertafter: 'xpack.security.http.ssl.enabled: true'
+    line: 'xpack.security.http.ssl.verification_mode: "certificate"'
+    state: present
+  notify: Restart Elasticsearch
+  when: 
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+
+- meta: flush_handlers
+  when:
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+
+- name: "ELASTICSEARCH - STEP 03 - Make sure elasticsearch is started"
+  become: yes
+  service: name=elasticsearch state=started enabled=yes
+  when:
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+    - es_start_service
+
+- name: "ELASTICSEARCH - STEP 04 - Wait for elasticsearch to startup"
+  wait_for: host={{ es_api_host }} port={{ es_api_port }} delay=5 connect_timeout=1
+  when:
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+    - es_restarted is defined and es_restarted.changed and es_start_service
+
+- name: "ELASTICSEARCH - STEP 05 - Setup Password Interactive"
+  shell: |
+    set timeout 60
+    spawn {{ es_home }}/bin/elasticsearch-setup-passwords interactive
+    expect -ex {Please confirm that you would like to continue}
+    send "y\n"
+    expect -ex {Enter password for [elastic]:}
+    send "{{ elastic_password }}\n"
+    expect -ex {Reenter password for [elastic]:}
+    send "{{ elastic_password }}\n"
+    expect -ex {Enter password for [apm_system]:}
+    send "{{ apm_system_password }}\n"
+    expect -ex {Reenter password for [apm_system]:}
+    send "{{ apm_system_password }}\n"
+    expect -ex {Enter password for [kibana_system]:}
+    send "{{ kibana_system_password }}\n"
+    expect -ex {Reenter password for [kibana_system]:}
+    send "{{ kibana_system_password }}\n"
+    expect -ex {Enter password for [logstash_system]:}
+    send "{{ logstash_system_password }}\n"
+    expect -ex {Reenter password for [logstash_system]:}
+    send "{{ logstash_system_password }}\n"
+    expect -ex {Enter password for [beats_system]:}
+    send "{{ beats_system_password }}\n"
+    expect -ex {Reenter password for [beats_system]:}
+    send "{{ beats_system_password }}\n"
+    expect -ex {Enter password for [remote_monitoring_user]:}
+    send "{{ remote_monitoring_user }}\n"
+    expect -ex {Reenter password for [remote_monitoring_user]:}
+    send "{{ remote_monitoring_user }}\n"
+    expect eof
+  args:
+    executable: /usr/bin/expect
+  when: 
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+  register: bootstrap_password
+
+- name: "ELASTICSEARCH - STEP 06 - Print Error Messages if Above step failed"
+  assert:
+    that:
+      - bootstrap_password.stderr | length == 0
+    fail_msg: "{{ bootstrap_password.stderr }}"
+    success_msg: "[INFO] - Interactive Password was set successfully"
+    quiet: true
+  when:
+    - bootstrap_password is not skipped
+
+- name: "ELASTICSEARCH - STEP 07 - Remove HTTP verification_mode config"
+  lineinfile:
+    dest: "{{ es_conf_dir }}/elasticsearch.yml"
+    line: 'xpack.security.http.ssl.verification_mode: "certificate"'
+    state: absent
+  notify: Restart Elasticsearch
+  when:
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+
+- name: "ELASTICSEARCH - STEP 08 - Increase TimeoutStartSec for Elasticsearch service"
+  replace:
+    dest: /usr/lib/systemd/system/elasticsearch.service
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+  become: yes
+  with_items:
+    - { old: 'TimeoutStartSec.*', new: 'TimeoutStartSec=300'}
+
+- name: "ELASTICSEARCH - STEP 08 - Just force systemd to reread configs"
+  systemd: 
+    daemon_reload: yes
+
+- meta: flush_handlers
+  when: 
+    - inventory_hostname == play_hosts[0]
+    - gen_cert is defined and gen_cert | bool
+
+- name: "ELASTICSEARCH - STEP 09 - Make sure elasticsearch is started"
+  become: yes
+  service: name=elasticsearch state=started enabled=yes
+  when: 
+#    - inventory_hostname == play_hosts[0]
+    - es_start_service
+
+- name: "ELASTICSEARCH - STEP 10 - Wait for elasticsearch to startup"
+  wait_for: host={{ es_api_host }} port={{ es_api_port }} delay=5 connect_timeout=1
+  when: 
+    - inventory_hostname == play_hosts[0] 
+    - gen_cert is defined and gen_cert | bool
+    - es_restarted is defined and es_restarted.changed and es_start_service
+

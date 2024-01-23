@@ -1,0 +1,71 @@
+---
+# Wrote by Hoang Anh Tu
+
+  - name: WIZZY - STEP 01 - INSTALLATION - Check nodejs version
+    shell: "node -v"
+    register: nodejs_version
+    ignore_errors: true
+
+  - name: WIZZY - STEP 02 - Install Wizzy (nodejs 8x)
+    shell: "npm install -g wizzy"
+    when:
+      - "nodejs_version.failed == false and 'v8' in nodejs_version.stdout"
+
+  - name: WIZZY - STEP 03 - Install Wizzy (not nodejs 8x)
+    shell: "{{ item }}"
+    with_items:
+      - yum remove -y nodejs
+      - curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash -
+      - yum install -y nodejs
+      - npm install -g wizzy
+    when:
+      - "nodejs_version.failed == false and 'v8' not in nodejs_version.stdout"
+
+  - name: WIZZY - STEP 04 - Install Wizzy (nodejs not install)
+    shell: "{{ item }}"
+    with_items:
+      - curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash -
+      - yum install -y nodejs
+      - npm install -g wizzy
+    when:
+      - "nodejs_version.failed == true"
+
+  - name: WIZZY - STEP 05 - Create grafana-entities directory
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+    with_items:
+      - /opt/grafana-entities/datasources
+      - /opt/grafana-entities/dashboards
+
+  - name: WIZZY - STEP 06 - Initialize Wizzy
+    command: chdir=/opt/grafana-entities {{ item }}
+    with_items:
+      - wizzy init
+      - "wizzy set grafana url http://localhost/grafana"
+      - "wizzy set grafana username {{ grafana_admin_user }}"
+      - "wizzy set grafana password {{ grafana_admin_password }}"
+    args:
+      warn: false
+
+  - name: WIZZY - STEP 07 - Copy Dashboard to Wizzy's directory
+    copy:
+      src: "{{ role_path }}/templates/grafana-entities/dashboards/"
+      dest: /opt/grafana-entities/dashboards/
+      mode: 0775
+      owner: root
+      group: root
+
+  - name: WIZZY - STEP 08 - Copy Datasource to Wizzy's directory
+    template:
+      src: "{{ item }}"
+      dest: "/opt/grafana-entities/datasources/{{ item | basename }}.json"
+    with_fileglob:
+      - "{{ role_path }}/templates/grafana-entities/datasources/*.j2"
+
+  - name: WIZZY - STEP 09 - Restore Datasource to grafana via wizzy
+    command: chdir=/opt/grafana-entities {{ item }}
+    with_items:
+      - wizzy export datasources
+      - wizzy export dashboards

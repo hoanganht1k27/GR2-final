@@ -1,0 +1,70 @@
+---
+# Wrote by Hoang Anh Tu
+  - name: ICINGA-REPO [Step 01] - Install git
+    yum:
+      name: git
+      state: latest
+
+  - stat: "path=/etc/icinga2/conf.d/managed"
+    register: icinga2_managed_path
+
+  - stat: "path=/etc/icinga2/conf.d/managed/.git"
+    register: git_init_path
+
+  - name: ICINGA-REPO [STEP 02] - Creates Icinga2's Managed directory
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: icinga
+      group: icinga
+      mode: 0775
+      recurse: yes
+    with_items:
+      - /etc/icinga2/conf.d/managed
+      - /etc/icinga2/conf.d
+    when:
+      - icinga2_managed_path.stat.exists == false
+
+  - name: ICINGA-REPO [Step 03] - Create remote init on all Host
+    command: "{{ item }}"
+    with_items:
+      - git init /etc/icinga2/conf.d/managed
+      - git config --global user.name "icinga"
+      - git config --global user.email 'icinga@"{{ inventory_hostname }}"'
+    when:
+      - git_init_path.stat.exists == false
+
+  - name: ICINGA-REPO [Step 04] - Create README file for git Remote
+    copy:
+      content: "Managed by icinga2-ui"
+      dest: /etc/icinga2/conf.d/managed/README.txt
+      owner: icinga
+      group: icinga
+      mode: 0775
+
+  - name: ICINGA-REPO [Step 05] - Create Post-Receive file for Git
+    copy:
+#      content: 'GIT_WORK_TREE=/etc/icinga2/conf.d/managed git checkout -f'
+      content: 'systemctl reload icinga2'
+      dest: /etc/icinga2/conf.d/managed/.git/hooks/post-commit
+      backup: yes
+      owner: icinga
+      group: icinga
+      mode: 0775
+
+  - name: ICINGA-REPO [Step 06] - Copy Icinga2's initial configure
+    copy:
+      src: "{{ role_path }}/files/demo_icinga_config/"
+      dest: "/etc/icinga2/conf.d/managed/"
+      owner: icinga
+      group: icinga
+      mode: 0775
+
+  - name: ICINGA-REPO [Step 07] - Git commit
+    command: chdir=/etc/icinga2/conf.d/managed/ {{ item }}
+    with_items:
+      - git add -A
+      - git commit -m "Initial commit"
+    ignore_errors: True
+    register: commit_result
+    failed_when: "'FAILED' in commit_result.stderr"

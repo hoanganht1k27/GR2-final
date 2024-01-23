@@ -1,0 +1,74 @@
+# MaxScale documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-25/
+
+# Global parameters
+#
+# Complete list of configuration options:
+# https://mariadb.com/kb/en/mariadb-maxscale-25-mariadb-maxscale-configuration-guide/
+
+[maxscale]
+threads=auto
+datadir={{ maxscale_datadir }}
+admin_host={{ admin_host }}
+{% if admin_secure_gui == "true" %}
+admin_secure_gui={{ admin_secure_gui }}
+admin_ssl_key={{ maxscale_datadir }}/{{ maxscale_key }}
+admin_ssl_cert={{ maxscale_datadir }}/{{ maxscale_cert }}
+admin_ssl_ca_cert={{ maxscale_datadir }}/{{ maxscale_ca_cert }}
+{% endif %}
+
+# Server definitions
+#
+# Set the address of the server to the network
+# address of a MariaDB server.
+#
+
+{% for host in groups['galera_cluster'] %}
+[{{ hostvars[host].inventory_hostname }}]
+type=server
+address={{ hostvars[host].IP }}
+port={{ mariadb_port }}
+protocol=MariaDBBackend
+
+{% endfor %}
+
+# Monitor for the servers
+#
+# This will keep MaxScale aware of the state of the servers.
+# MariaDB Monitor documentation:
+# https://mariadb.com/kb/en/maxscale-25-monitors/
+
+[MariaDB-Monitor]
+type=monitor
+module=galeramon
+servers={% for host in groups['galera_cluster'] %}{{ hostvars[host].inventory_hostname }}{% if not loop.last %},{% endif %}{% endfor %}
+
+user={{ monitor_user.name }}
+password={{ monitor_user.password }}
+monitor_interval={{ monitor_interval }}
+available_when_donor={{ available_when_donor }} 
+root_node_as_master={{ root_node_as_master }}
+
+# Service definitions
+#
+# Service Definition for a read-only service and
+# a read/write splitting service.
+#
+
+### READ-WRITE 
+[maxscale-read-write-split]
+type=service
+router=readwritesplit
+servers={% for host in groups['galera_cluster'] %}{{ hostvars[host].inventory_hostname }}{% if not loop.last %},{% endif %}{% endfor %}
+
+user={{ maxscale_user.name }}
+password={{ maxscale_user.password }}
+master_accept_reads={{ master_accept_reads }}
+master_failure_mode={{ master_failure_mode }}
+master_reconnection={{ master_reconnection }}
+
+[maxscale-read-write-listener]]
+type=listener
+service=maxscale-read-write-split
+protocol=MariaDBClient
+port={{ maxscale_read_write_port }}

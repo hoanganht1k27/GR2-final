@@ -1,0 +1,12 @@
+---
+- name: ENVIRONMENT SETUP
+  hosts: all
+  roles:
+    - role: environment
+      become: yes
+      tag: environment
+
+- name: METRICBEAT SETUP
+  hosts: all
+  roles:
+    - role: elk_beat

@@ -1,0 +1,1326 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1627543623360,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Elasticsearch-Fortigate-Syslog",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dateTimeAsSystem"
+        },
+        "overrides": []
+      },
+      "hideTimeOverride": true,
+      "id": 44,
+      "interval": null,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^@timestamp$/",
+          "values": false
+        },
+        "text": {
+          "valueSize": 25
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "observer.name: \"[[hostname]]\" OR not observer.name:*",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "90d",
+      "timeShift": null,
+      "title": "Last Data Received",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "@timestamp"
+              ]
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "Elasticsearch-Metric",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 34,
+      "options": {
+        "content": "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.back {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n}\n\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n.button {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n  float: right;\n  margin:2px\n}\n\n.clicked {\n  display: inline-block;\n  background-color: white;\n  border: none;\n  color: grey;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid grey;\n  font-weight: bold;\n  margin:2px;\n  float: right;\n}\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n\n</style>\n</head>\n<body>\n\n<button class=\"button\" style=\"vertical-align:middle\" onclick=\"window.open('/grafana/d/menu/menu?orgId=1', '_self')\"><span>BACK TO MENU</span></button>\n\n</body>\n</html>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": " ",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "datasource": "Elasticsearch-Metric",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 16,
+      "panels": [],
+      "title": "Syslog Overview Informations",
+      "type": "row"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Elasticsearch-Fortigate-Syslog",
+      "decimals": 0,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "fill": 7,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "interval": null,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 7,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.4.3",
+      "pointradius": 3,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": true,
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "field": "observer.name",
+              "id": "4",
+              "settings": {
+                "min_doc_count": "1",
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "3",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "1",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "observer.name: [[hostname]] AND log.level: [[log_level]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Logs by Host Over Time (Log Level: [[log_level]])",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "transformations": [],
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:151",
+          "decimals": 0,
+          "format": "none",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "1",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:152",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "25%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "Elasticsearch-Fortigate-Syslog",
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "none",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 26,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "pluginVersion": "7.4.1",
+      "strokeWidth": "1",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "observer.name",
+              "id": "2",
+              "settings": {
+                "min_doc_count": "0",
+                "order": "desc",
+                "orderBy": "_count",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "observer.name: [[hostname]] AND log.level: [[log_level]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Syslog Logs by Hosts (Log Level: [[log_level]])",
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "25%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "Elasticsearch-Fortigate-Syslog",
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "none",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 11
+      },
+      "id": 27,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "pluginVersion": "7.4.1",
+      "strokeWidth": "1",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "log.level",
+              "id": "3",
+              "settings": {
+                "min_doc_count": "1",
+                "order": "desc",
+                "orderBy": "_count",
+                "size": "0"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "1",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "observer.name: [[hostname]] AND log.level: [[log_level]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Syslog Logs by Seveirty (Log Level: [[log_level]])",
+      "transformations": [],
+      "type": "grafana-piechart-panel",
+      "valueName": "total"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 38,
+      "panels": [
+        {
+          "aliasColors": {},
+          "breakPoint": "25%",
+          "cacheTimeout": null,
+          "combine": {
+            "label": "Others",
+            "threshold": 0
+          },
+          "datasource": "Elasticsearch-Fortigate-Syslog",
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "80%",
+          "format": "none",
+          "gridPos": {
+            "h": 11,
+            "w": 12,
+            "x": 0,
+            "y": 20
+          },
+          "id": 35,
+          "interval": null,
+          "legend": {
+            "percentage": true,
+            "show": true,
+            "values": true
+          },
+          "legendType": "Right side",
+          "links": [],
+          "nullPointMode": "connected",
+          "pieType": "pie",
+          "pluginVersion": "7.4.1",
+          "strokeWidth": "1",
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "source.ip",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": "1",
+                    "order": "desc",
+                    "orderBy": "_count",
+                    "size": "0"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "field": "@timestamp",
+                  "id": "1",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "observer.name: [[hostname]] AND source.ip: [[src_ip]] AND log.level: [[log_level]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Syslog Logs by Source IP (Log Level: [[log_level]])",
+          "transformations": [],
+          "type": "grafana-piechart-panel",
+          "valueName": "total"
+        },
+        {
+          "aliasColors": {},
+          "breakPoint": "25%",
+          "cacheTimeout": null,
+          "combine": {
+            "label": "Others",
+            "threshold": 0
+          },
+          "datasource": "Elasticsearch-Fortigate-Syslog",
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "80%",
+          "format": "none",
+          "gridPos": {
+            "h": 11,
+            "w": 12,
+            "x": 12,
+            "y": 20
+          },
+          "id": 36,
+          "interval": null,
+          "legend": {
+            "percentage": true,
+            "show": true,
+            "values": true
+          },
+          "legendType": "Right side",
+          "links": [],
+          "nullPointMode": "connected",
+          "pieType": "pie",
+          "pluginVersion": "7.4.1",
+          "strokeWidth": "1",
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "destination.ip",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": "1",
+                    "order": "desc",
+                    "orderBy": "_count",
+                    "size": "0"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "field": "@timestamp",
+                  "id": "1",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "observer.name: [[hostname]] AND source.ip: [[src_ip]] AND log.level: [[log_level]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Syslog from <[[src_ip]]> (Source IP) to Destination IP (Log Level: [[log_level]])",
+          "transformations": [],
+          "type": "grafana-piechart-panel",
+          "valueName": "total"
+        }
+      ],
+      "title": "Syslog by Source IP: <[[src_ip]]>",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 40,
+      "panels": [
+        {
+          "aliasColors": {},
+          "breakPoint": "25%",
+          "cacheTimeout": null,
+          "combine": {
+            "label": "Others",
+            "threshold": 0
+          },
+          "datasource": "Elasticsearch-Fortigate-Syslog",
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "80%",
+          "format": "none",
+          "gridPos": {
+            "h": 11,
+            "w": 12,
+            "x": 0,
+            "y": 32
+          },
+          "id": 41,
+          "interval": null,
+          "legend": {
+            "percentage": true,
+            "show": true,
+            "values": true
+          },
+          "legendType": "Right side",
+          "links": [],
+          "nullPointMode": "connected",
+          "pieType": "pie",
+          "pluginVersion": "7.4.1",
+          "strokeWidth": "1",
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "destination.ip",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": "1",
+                    "order": "desc",
+                    "orderBy": "_count",
+                    "size": "0"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "field": "@timestamp",
+                  "id": "1",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "observer.name: [[hostname]] AND destination.ip: [[dst_ip]] AND log.level: [[log_level]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Syslog Logs by Destination IP (Log Level: [[log_level]])",
+          "transformations": [],
+          "type": "grafana-piechart-panel",
+          "valueName": "total"
+        },
+        {
+          "aliasColors": {},
+          "breakPoint": "25%",
+          "cacheTimeout": null,
+          "combine": {
+            "label": "Others",
+            "threshold": 0
+          },
+          "datasource": "Elasticsearch-Fortigate-Syslog",
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "80%",
+          "format": "none",
+          "gridPos": {
+            "h": 11,
+            "w": 12,
+            "x": 12,
+            "y": 32
+          },
+          "id": 42,
+          "interval": null,
+          "legend": {
+            "percentage": true,
+            "show": true,
+            "values": true
+          },
+          "legendType": "Right side",
+          "links": [],
+          "nullPointMode": "connected",
+          "pieType": "pie",
+          "pluginVersion": "7.4.1",
+          "strokeWidth": "1",
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "source.ip",
+                  "id": "3",
+                  "settings": {
+                    "min_doc_count": "1",
+                    "order": "desc",
+                    "orderBy": "_count",
+                    "size": "0"
+                  },
+                  "type": "terms"
+                },
+                {
+                  "field": "@timestamp",
+                  "id": "1",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "observer.name: [[hostname]] AND destination.ip: [[dst_ip]] AND log.level: [[log_level]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Syslog from Source IP to <[[dst_ip]]> (Log Level: [[log_level]])",
+          "transformations": [],
+          "type": "grafana-piechart-panel",
+          "valueName": "total"
+        }
+      ],
+      "title": "Syslog by Destination IP <[[dst_ip]]>",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": "Elasticsearch-Metric",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 24,
+      "panels": [
+        {
+          "alignNumbersToRightEnabled": false,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:512",
+              "alias": "firewall.action",
+              "name": "fortinet.firewall.action"
+            },
+            {
+              "$$hashKey": "object:514",
+              "alias": "firewall.dstintfrole",
+              "name": "fortinet.firewall.dstintfrole"
+            },
+            {
+              "$$hashKey": "object:516",
+              "alias": "firewall.qtypeval",
+              "name": "fortinet.firewall.qtypeval"
+            },
+            {
+              "$$hashKey": "object:518",
+              "alias": "firewall.sessionid",
+              "name": "fortinet.firewall.sessionid"
+            },
+            {
+              "$$hashKey": "object:520",
+              "alias": "firewall.srcintfrole",
+              "name": "fortinet.firewall.srcintfrole"
+            },
+            {
+              "$$hashKey": "object:522",
+              "alias": "firewall.subtype",
+              "name": "fortinet.firewall.subtype"
+            },
+            {
+              "$$hashKey": "object:524",
+              "alias": "firewall.vd",
+              "name": "fortinet.firewall.vd"
+            },
+            {
+              "$$hashKey": "object:526",
+              "alias": "firewall_timestamp",
+              "name": "@timestamp"
+            }
+          ],
+          "columnFiltersEnabled": true,
+          "columnWidthHints": [
+            {
+              "$$hashKey": "object:319",
+              "name": "@timestamp",
+              "width": "120px"
+            }
+          ],
+          "columns": [],
+          "compactRowsEnabled": true,
+          "datasource": "Elasticsearch-Fortigate-Syslog",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "description": "",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 19,
+            "w": 24,
+            "x": 0,
+            "y": 22
+          },
+          "hoverEnabled": true,
+          "id": 29,
+          "infoEnabled": true,
+          "lengthChangeEnabled": false,
+          "orderColumnEnabled": true,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:464",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:465",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:466",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:467",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:468",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:469",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 330,
+          "pluginVersion": "7.4.1",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 20,
+          "scroll": true,
+          "scrollHeight": "default",
+          "searchEnabled": true,
+          "searchHighlightingEnabled": true,
+          "showCellBorders": true,
+          "showHeader": true,
+          "showRowBorders": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:402",
+              "columnData": 0,
+              "sortMethod": "desc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              5,
+              "desc"
+            ]
+          ],
+          "stripedRowsEnabled": true,
+          "styles": [
+            {
+              "$$hashKey": "object:404",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "@timestamp",
+              "type": "date"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [],
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "500"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "observer.name: [[hostname]] AND log.level: [[log_level]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:439",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:440",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:441",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:442",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "title": " ",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "names": [
+                    "@timestamp",
+                    "destination.as.number",
+                    "destination.as.organization.name",
+                    "destination.geo.city_name",
+                    "destination.geo.continent_name",
+                    "destination.geo.country_iso_code",
+                    "destination.geo.country_name",
+                    "destination.geo.location.lat",
+                    "destination.geo.location.lon",
+                    "destination.geo.region_iso_code",
+                    "destination.geo.region_name",
+                    "destination.ip",
+                    "destination.port",
+                    "dns.id",
+                    "dns.question.class",
+                    "dns.question.name",
+                    "dns.question.type",
+                    "event.action",
+                    "event.category",
+                    "event.code",
+                    "event.dataset",
+                    "event.kind",
+                    "event.message",
+                    "event.module",
+                    "event.type",
+                    "fortinet.firewall.action",
+                    "fortinet.firewall.dstintfrole",
+                    "fortinet.firewall.qtypeval",
+                    "fortinet.firewall.sessionid",
+                    "fortinet.firewall.srcintfrole",
+                    "fortinet.firewall.subtype",
+                    "fortinet.firewall.type",
+                    "fortinet.firewall.vd",
+                    "log.level",
+                    "message",
+                    "network.iana_number",
+                    "observer.egress.interface.name",
+                    "observer.ingress.interface.name",
+                    "observer.name",
+                    "observer.product",
+                    "observer.serial_number",
+                    "observer.type",
+                    "observer.vendor",
+                    "related.ip",
+                    "rule.id",
+                    "source.ip",
+                    "source.port"
+                  ]
+                }
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {
+                  "@timestamp": 0,
+                  "destination.as.number": 14,
+                  "destination.as.organization.name": 15,
+                  "destination.geo.city_name": 16,
+                  "destination.geo.continent_name": 17,
+                  "destination.geo.country_iso_code": 18,
+                  "destination.geo.country_name": 19,
+                  "destination.geo.location.lat": 20,
+                  "destination.geo.location.lon": 21,
+                  "destination.geo.region_iso_code": 22,
+                  "destination.geo.region_name": 23,
+                  "destination.ip": 3,
+                  "destination.port": 4,
+                  "dns.id": 24,
+                  "dns.question.class": 25,
+                  "dns.question.name": 26,
+                  "dns.question.type": 27,
+                  "event.action": 28,
+                  "event.category": 29,
+                  "event.code": 30,
+                  "event.dataset": 31,
+                  "event.ingested": 32,
+                  "event.kind": 33,
+                  "event.message": 34,
+                  "event.module": 35,
+                  "event.start": 36,
+                  "event.type": 37,
+                  "fortinet.firewall.action": 6,
+                  "fortinet.firewall.dstintfrole": 7,
+                  "fortinet.firewall.qtypeval": 8,
+                  "fortinet.firewall.sessionid": 9,
+                  "fortinet.firewall.srcintfrole": 10,
+                  "fortinet.firewall.subtype": 11,
+                  "fortinet.firewall.type": 12,
+                  "fortinet.firewall.vd": 13,
+                  "log.level": 5,
+                  "message": 38,
+                  "network.iana_number": 39,
+                  "observer.egress.interface.name": 40,
+                  "observer.ingress.interface.name": 41,
+                  "observer.name": 42,
+                  "observer.product": 43,
+                  "observer.serial_number": 44,
+                  "observer.type": 45,
+                  "observer.vendor": 46,
+                  "related.ip": 47,
+                  "rule.id": 48,
+                  "source.ip": 1,
+                  "source.port": 2
+                },
+                "renameByName": {
+                  "fortinet.firewall.action": ""
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        }
+      ],
+      "title": "Log Detail",
+      "type": "row"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "Log",
+    "Hardware-Log"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Elasticsearch-Fortigate-Syslog",
+        "definition": "{\"find\": \"terms\", \"field\": \"observer.name\", \"query\":\"\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Hostname",
+        "multi": true,
+        "name": "hostname",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"observer.name\", \"query\":\"\"}",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Elasticsearch-Fortigate-Syslog",
+        "definition": "{\"find\": \"terms\", \"field\": \"log.level\", \"query\":\"observer.name:[[hostname]]\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Log Level",
+        "multi": true,
+        "name": "log_level",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"log.level\", \"query\":\"observer.name:[[hostname]]\"}",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Elasticsearch-Fortigate-Syslog",
+        "definition": "{\"find\": \"terms\", \"field\": \"source.ip\", \"query\":\"observer.name:[[hostname]] and log.level:[[log_level]]\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Source IP",
+        "multi": true,
+        "name": "src_ip",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"source.ip\", \"query\":\"observer.name:[[hostname]] and log.level:[[log_level]]\"}",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "Elasticsearch-Fortigate-Syslog",
+        "definition": "{\"find\": \"terms\", \"field\": \"destination.ip\", \"query\":\"observer.name:[[hostname]] and log.level:[[log_level]]\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Destination IP",
+        "multi": true,
+        "name": "dst_ip",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"destination.ip\", \"query\":\"observer.name:[[hostname]] and log.level:[[log_level]]\"}",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "02 - Fortigate - Syslog",
+  "uid": "02-fortigate-syslog"
+}

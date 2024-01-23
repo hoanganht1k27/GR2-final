@@ -1,0 +1,23 @@
+{{- $basePath := .Values.global.basePath }}
+{{- $namespace := .Release.Namespace }}
+
+{{- range .Values.global.sharedPersistenceVolume }}
+{{- if eq .storageClass "lab-monitoring-resource-hostpath" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $namespace }}-lab-monitoring-resource-pv
+spec:
+  storageClassName: {{ $namespace }}-lab-monitoring-resource-hostpath
+  capacity:
+    # storage: 2Gi
+    storage: {{ .storageSize }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: {{ $basePath }}{{ $namespace }}/lab-monitoring-resource
+    type: DirectoryOrCreate
+{{- end }}
+
+{{- end  }}

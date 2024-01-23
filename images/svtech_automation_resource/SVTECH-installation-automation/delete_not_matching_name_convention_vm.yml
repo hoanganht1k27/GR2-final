@@ -1,0 +1,35 @@
+- hosts: all
+  gather_facts: false
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: juniper@123
+    not_matching_host_file: /tmp/not_matching_host_file
+    vmids: []
+    regex_pattern: '(\d+)\s'
+    job_options: delete_not_matching_name_convention_vm
+    delete_vm_option: delete_not_matching_name_convention_vm
+  tasks:
+    - name: Check playbook can run or not
+      fail:
+        msg: 'The playbook is not chosen to run'
+      when: job_options is not search(delete_vm_option)
+    - name: Read not matching name convention hosts list file
+      set_fact:
+        vms: "{{ lookup('file', not_matching_host_file).splitlines() }}"
+      delegate_to: localhost
+      run_once: true
+    - name: debug
+      debug:
+        var: vms
+    - name: Get list of vm information
+      command: qm list
+      register: qm_list
+    - name: Find vm id
+      set_fact:
+        vmids: "{{ vmids + [ qm_list.stdout | regex_search(regex_pattern ~ item, '\\1') ] }}"
+      loop: "{{ vms }}"
+    - name: Delete not matching name convention vm 
+      debug:
+        msg: "qm destroy {{ item[0] }}"
+      loop: "{{ vmids }}"
+      ignore_errors: true

@@ -1,0 +1,54 @@
+- hosts: all
+  gather_facts: false
+  connection: local
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: juniper@123
+    generated_inventory: /opt/SVTECH-installation-automation/inventories/default/proxmox_dynamic_inventory
+    regex_pattern: '^.*-\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+    not_matching_host_file: /tmp/not_matching_host_file
+    job_options: ''
+    delete_vm_option: 'delete_not_matching_name_convention_vm'
+    install_exporter_option: 'install_exporter'
+  tasks:
+    - name: Save matching hosts to inventory file
+      lineinfile:
+        path: "{{ generated_inventory }}"
+        line: "{{ item }} ansible_host={{ item.split('-')[-1] }}"
+        state: present
+        create: true
+      when: item is match(regex_pattern)
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Notify not matching hosts
+      debug:
+        msg: "Host with name {{ item }} doesn't match the naming convention"
+      when: item is not match(regex_pattern)
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Delete not matching hosts from inventory file
+      lineinfile:
+        path: "{{ generated_inventory }}"
+        line: "{{ item }} ansible_host={{ item.split('-')[-1] }}"
+        state: absent
+        create: true
+      when: item is not match(regex_pattern)
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: "Save not matching hosts to {{ not_matching_host_file }}"
+      lineinfile:
+        path: "{{ not_matching_host_file }}"
+        line: "{{ item }}"
+        state: present
+        create: true
+      when: item is not match(regex_pattern) and job_options is search(delete_vm_option)
+      loop: "{{ groups['all'] }}"
+      delegate_to: localhost
+      run_once: true
+

@@ -1,0 +1,40 @@
+---
+- hosts: all
+  gather_facts: True
+  pre_tasks:
+    - pause:
+        prompt: "{{ item }}"
+      register: cni_user_select
+      delegate_to: localhost
+      no_log: true
+      run_once: yes
+      with_items: |
+          [INFO] - [K8s NETWORKING] - Choosing the one of following CNI projects:
+          [INFO] - [K8s NETWORKING] - 1 - calico (default)
+          [INFO] - [K8s NETWORKING] - 2 - weave
+          [INFO] - [K8s NETWORKING] - User input is
+
+    - name: "[INFO] - [K8s NETWORKINg] - Checking user inpput for CNI project"
+      assert:
+        that: 
+          - cni_user_select.results | map(attribute='user_input') | list | lower | regex_search('[1:2]')
+        fail_msg: "[ERROR] - [K8s NETWORKING] - The user input for CNI Project is INVALID. This run will be EXITED!"
+        success_msg: >-
+          {% if '1' in cni_user_select.results | map(attribute='user_input') | list %}[INFO] - [K8s NETWORKING] - The user input for CNI Project is [calico]. This run will be EXECUTED!{% endif %}
+          {% if '2' in cni_user_select.results | map(attribute='user_input') | list %}[INFO] - [K8s NETWORKING] - The user input for CNI Project is [weave]. This run will be EXECUTED!{% endif %}
+      delegate_to: localhost
+      run_once: yes
+
+    - set_fact:
+        cni: >-
+          {%- if '1' in cni_user_select.results | map(attribute='user_input') | list -%}calico
+          {%- elif '2' in cni_user_select.results | map(attribute='user_input') | list -%}weave{%- endif -%}
+  roles:
+    - role: environment
+      become: yes
+      tag: environment
+
+    - role: k8s
+      become: yes
+      tag: k8s
+      any_errors_fatal: true

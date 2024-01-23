@@ -1,0 +1,6 @@
+FROM busybox
+RUN mkdir -p /opt
+RUN mkdir -p /opt/SVTECH-installation-automation
+COPY ./SVTECH-installation-automation /opt/SVTECH-installation-automation
+RUN mkdir -p /opt/SVTECH-Junos-Automation
+COPY ./SVTECH-Junos-Automation /opt/SVTECH-Junos-Automation

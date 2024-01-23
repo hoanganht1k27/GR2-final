@@ -1,0 +1,23 @@
+{{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+
+{{- $namespace := .Release.Namespace }}
+
+{{- range .Values.global.sharedPersistenceVolume }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .pvcName }}
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  # storageClassName: longhorn
+  storageClassName: {{ $namespace }}-{{ .storageClass }}
+  accessModes:
+    - {{ .accessMode }}
+  resources:
+    requests:
+      storage: {{ .storageSize }}
+{{- end }}
+
+{{- end  }}

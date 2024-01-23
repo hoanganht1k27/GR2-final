@@ -1,0 +1,213 @@
+# Wrote by Hoang Anh Tu
+---
+- name: "BEAT - STEP 01 - Stop all Beat Service on EMS"
+  service: 
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - logstash
+    - metricbeat
+    - filebeat
+
+- name: "BEAT - STEP 02 - Clone Beat.yml to setup_index_management.yml"
+  copy:
+    src: "/etc/{{ item }}/{{ item }}.yml"
+    dest: "/etc/{{ item }}/setup_index_management.yml"
+    mode: 0644
+    remote_src: yes
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+    
+- name: "BEAT - STEP 03 - Add BEGIN REMOVE BLOCK to setup_index_management.yml"
+  lineinfile:
+    path: "/etc/{{ item }}/setup_index_management.yml"
+    insertbefore: 'output'
+    line: "# BEGIN REMOVE BLOCK"
+    state: present
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 04 - Add END REMOVE BLOCK to setup_index_management.yml"
+  lineinfile:
+    path: "/etc/{{ item }}/setup_index_management.yml"
+    insertafter: '    loadbalance: true'
+    line: "# END REMOVE BLOCK"
+    state: present
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 05 - REMOVE BLOCK setup_index_management.yml"
+  blockinfile:
+    state: absent
+    path: /etc/{{ item }}/setup_index_management.yml
+    marker: "# {mark} REMOVE BLOCK"
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 06 - Add Output Elasticsearch to setup_index_management.yml"
+  blockinfile:
+    path: "/etc/{{ item }}/setup_index_management.yml"
+    insertafter: "############################# Output ##########################################"
+    block: |
+      output:
+        elasticsearch:
+          hosts:
+          - localhost:{{ http_port }}
+          username: elastic
+          password: {{ elastic_password }}
+          protocol: https
+          ssl.verification_mode: none
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 07 - Delete Default Beat Index"
+  uri:
+    url: "https://localhost:{{ http_port }}/{{ item }}*"
+    method: DELETE
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+  failed_when: false
+  with_items:
+    - "{{ beats.index_list }}"
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 08 - Setup index management for Beat"
+  command: "{{ item }} setup -c /etc/{{ item }}/setup_index_management.yml --index-management"
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 09 - Setup ingest pipeline for Filebeat to Logstash"
+  command: "{{ item }} setup -c /etc/{{ item }}/setup_index_management.yml --pipelines --modules mysql,system,apache"
+  with_items:
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 10 - Remove setup_index_management.yml file"
+  file:
+    state: absent
+    path: "/etc/{{ item }}/setup_index_management.yml"
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - inventory_hostname == play_hosts[0]
+
+      #- name: "BEAT - STEP 10 - Checking Beat Index"
+      #  uri:
+      #    url: "https://localhost:{{ http_port }}/{{ item }}*"
+      #    method: GET
+      #    user: "elastic"
+      #    password: "{{ elastic_password }}"
+      #    force_basic_auth: yes
+      #    validate_certs: no
+      #  register: check_metricbeat_index
+      #  failed_when: false
+      #  with_items:
+      #    - "{{ index_list }}"
+      #  when: 
+      #    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 11 - Delete Default Beat Index"
+  uri:
+    url: "https://localhost:{{ http_port }}/{{ item }}*"
+    method: DELETE
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+  with_items:
+    - "{{ beats.index_list }}"
+    - metricbeat
+    - filebeat
+  when: 
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 12 - Bootstrap the initial Beat index with a write index alias"
+  uri:
+    url: "https://localhost:{{ http_port }}/%3C{{ item }}-%7Bnow%2Fd%7D-000001%3E"
+    method: PUT
+    body: "{\"aliases\": {\"{{ item }}\": {\"is_write_index\": true}}}"
+    body_format: json
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    headers:
+      Content-Type: "application/json"
+  with_items:
+    - "{{ beats.index_list }}"
+    - metricbeat
+    - filebeat
+  when: 
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 13 - Creating Monitor User for MySQL"
+  mysql_user:
+    name: "{{ beats.mysql.monitor_username }}"
+    password: "{{ beats.mysql.monitor_password }}"
+    priv: "*.*:usage"
+    host: "{{ item }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    login_host: "localhost"
+    login_user: "root"
+    login_password: "{{ mariadb_root_password }}"
+    state: present
+    #  no_log: true
+  with_items:
+    - "{{ beats.mysql.host }}"
+    - "{% for host in groups['elastic'] %}{% if (hostvars[host].node_master == true) %}['{{ hostvars[host].IP }}']{% endif %}{% if not loop.last %}+{% endif %}{% endfor %}"
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "BEAT - STEP 14 - Start all Beat Service on EMS"
+  service:
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - logstash
+    - metricbeat
+    - filebeat
+
+- name: "BEAT - STEP 15 - Create index pattern"
+  uri:
+    url: "http://localhost/kibana/api/saved_objects/index-pattern/{{ item }}"
+    method: POST
+    body: "{\"attributes\": {\"title\": \"{{ item }}*\",\"timeFieldName\": \"@timestamp\"}}"
+    body_format: json
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    headers:
+      Content-Type: "application/json"
+      kbn-xsrf: true
+  with_items:
+    - "{{ beats.index_list }}"
+    - metricbeat
+    - filebeat
+  when:
+     inventory_hostname == play_hosts[0]

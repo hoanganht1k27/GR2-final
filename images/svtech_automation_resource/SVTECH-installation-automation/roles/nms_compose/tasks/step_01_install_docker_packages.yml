@@ -1,0 +1,46 @@
+# Install Docker Packages...
+# Wrote by Pham Tan Thanh
+---
+- name: Install Docker [STEP 01] - Checking old Docker and remove them if existed
+  yum:
+    name: ["docker-ce", "docker-ce-cli", "containerd.io"]
+    state: absent
+
+- name: Install Docker [STEP 02] - Add Docker Repository
+  yum_repository:
+    name: docker-ce
+    description: Docker-CE Repo
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: Install Docker [STEP 03] - Install Docker Package
+  yum:
+    name: ["yum-utils", "device-mapper-persistent-data", "lvm2", "docker-ce", "docker-ce-cli", "containerd.io", "bash-completion"]
+
+- name: Install Docker [STEP 04] - Install Python-Pip
+  yum:
+    name: ["python3", "python3-pip", "python-setuptools"]
+    state: present
+  ignore_errors: true
+
+- name: Install Docker [STEP 05] - Pip install Docker, Docker-compose
+  pip:
+    name:
+      - "pip"
+      - "docker==5.0.3"
+      - "docker-compose==1.29.2"
+    executable: pip3
+    state: forcereinstall
+
+- name: Install Docker [STEP 06] - Install docker Auto-Complete
+  shell: "curl https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker -o /etc/bash_completion.d/docker.sh"
+
+- name: Install Docker [STEP 06] - Install docker-compose Auto-Complete
+  shell: "curl -L https://raw.githubusercontent.com/docker/compose/1.26.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose"
+
+- name: Install Docker [STEP 06] - Enable Docker Service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  failed_when: false

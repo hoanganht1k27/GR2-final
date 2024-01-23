@@ -1,0 +1,5 @@
+---
+- include: 1_get_installation_file.yml
+#- include: 2_node_exporter_iptables.yml
+- include: 3_run_node_exporter.yml
+- include: 4_add_host_to_prometheus.yml

@@ -1,0 +1,33 @@
+NMS_Compose ansible_host=10.98.4.33 IP=10.98.4.33 if=ens192
+
+[all:vars]
+CI = true
+use_private_registry=true
+private_registry=10.98.0.121:5000
+timezone = "Asia/Ho_Chi_Minh"
+
+ansible_vers = 2.8
+#proxy = http://10.98.0.135:3128
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_ssh_user = root
+ansible_ssh_pass = juniper@123
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+#####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = stagging
+
+############################################
+#  Variables for Dependencies Github Repo  #
+############################################
+list_github_repo = ["moophat/SVTECH-Junos-Automation", "moophat/SVTECH-Junos-Monitoring", "moophat/icinga2-report", "moophat/SVTECH_Projects_Container"]

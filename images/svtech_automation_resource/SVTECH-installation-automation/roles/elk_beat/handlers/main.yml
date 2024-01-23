@@ -1,0 +1,25 @@
+---
+#Handlers for Services
+  - name: Restart Elasticsearch
+    service: 
+      name: elasticsearch
+      state: restarted
+      enabled: yes
+
+  - name: Restart Logstash 
+    service: 
+      name: logstash
+      state: restarted
+      enabled: yes
+
+  - name: Restart Metricbeat
+    service: 
+      name: metricbeat
+      state: restarted
+      enabled: yes
+
+  - name: Restart Iptables
+    service:
+      name: iptables
+      state: restarted
+      enabled: yes

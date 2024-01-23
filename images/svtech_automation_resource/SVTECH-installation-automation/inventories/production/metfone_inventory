@@ -1,0 +1,113 @@
+[active]
+Metfone-NMS-01 ansible_host=10.101.2.213 IP=10.79.66.69 backend_name=Metfone-NMS-01 backend_ip=10.79.66.69 thruk_id=Metfone-NMS-01 priority=110 if=ens18 role=primary serverid=1 ganesha_id=111
+
+[backup]
+Metfone-NMS-02 ansible_host=10.101.2.214 IP=10.79.66.70 backend_name=Metfone-NMS-02 backend_ip=10.79.66.70 thruk_id=Metfone-NMS-02 priority=100 if=ens18 role=backup serverid=2 ganesha_id=1112
+
+
+
+
+[all:vars]
+####################################
+#  Variables for HA Configuration  #
+####################################
+# Set HA = true for installing Active - Backup NMS
+# Set HA = false for installing multi single or single NMS
+HA = true
+ha_thruk_id = Metfone-NMS-VIP
+ha_backend_name = Metfone-NMS-VIP
+VIP = 10.79.66.71
+virtual_router_id = 120
+timezone = "Asia/Phnom_Penh"
+# Check timezone in this link: https://www.ibm.com/support/knowledgecenter/it/SSAW57_8.5.5/com.ibm.websphere.nd.multiplatform.doc/ae/rrun_svr_timezones.html
+java_url = "https://www.dropbox.com/s/s3eirfc7gix3osf/jdk-8u131-linux-x64.rpm?dl=1"
+
+#########################
+# Variables for HAProxy #
+#########################
+mail_from = tuhoang@svtech.com.vn
+mail_to = tuhoang@svtech.com.vn
+
+#############################
+#  Variables for Glusterfs  #
+#############################
+glusterfs_client = ganesha
+#glusterfs_client = native
+ganesha_path = /opt/data
+
+############################
+# Variables for icinga2-ui #
+############################
+icinga2_ui_user = icinga2-ui
+icinga2_ui_user_password = icinga2-ui@123
+
+##########################################
+# Variables for configure api-users.conf #
+##########################################
+api_user = icingaAdmin
+api_password = icingaAdmin
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_user = root
+ansible_pass = juniper@123
+
+########################
+# Variable for mariadb #
+########################
+mariadb_root_password = juniper@123
+ha_user = juniper
+ha_password = juniper@123
+icinga_user = icinga
+icinga_password = icinga
+
+########################
+# Variable for grafana #
+########################
+grafana_database = grafana
+grafana_database_user = grafana
+grafana_database_password = grafana
+grafana_admin_user = thrukadmin
+grafana_admin_password = thrukadmin
+organization = svtech
+
+#########################
+# Variable for Influxdb #
+#########################
+influxdb_database = influxdb_nms
+influxdb_user = juniper
+influxdb_password = juniper@123
+
+#########################
+# Variable for Rundeck #
+#########################
+rundeck_user = thrukadmin
+rundeck_password = thrukadmin
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+#####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = stagging
+
+#######################
+# Variables for PyENV #
+#######################
+pyenv_repo = https://github.com/pyenv/pyenv.git
+pyenv_root = "/opt/.pyenv"
+pyenv_version = v1.2.11
+pyenv_update = no
+pyenv_share = /etc/profile.d/bash_profile.sh
+pyenv_default = /opt/.pyenv/versions/automation36
+
+#############################
+#  Variables for Syncthing  #
+#############################
+sync_api_key = juniper@123

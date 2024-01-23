@@ -1,0 +1,25 @@
+2023-06-25 10:14:37,953 INFO main(40)     List of received arguments {'networkAddress': '10.98.2.10/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-25 10:14:37,953 INFO main(42)     Connecting to network: 10.98.2.10/32:
+2023-06-25 10:14:37,953 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.2.10/32 into list of host
+2023-06-25 10:14:37,968 INFO TEST_HOST_PING(77)     10.98.2.10 is DOWN!
+2023-06-25 10:14:37,968 INFO main(50)     Time to ping all host: 0.01499795913696289
+2023-06-25 10:14:37,969 INFO main(51)     List of alive host:: []
+2023-06-25 10:14:37,969 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-25 11:11:33,645 INFO main(40)     List of received arguments {'networkAddress': '10.98.2.10/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-25 11:11:33,646 INFO main(42)     Connecting to network: 10.98.2.10/32:
+2023-06-25 11:11:33,646 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.2.10/32 into list of host
+2023-06-25 11:11:35,661 INFO TEST_HOST_PING(74)     10.98.2.10 is UP!
+2023-06-25 11:11:35,662 INFO main(50)     Time to ping all host: 2.015889883041382
+2023-06-25 11:11:35,662 INFO main(51)     List of alive host:: ['10.98.2.10']
+2023-06-25 11:11:35,663 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-25 11:11:35,664 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-06-25 11:11:35,664 INFO main(59)     The host can be ping but doesn't have host name: 10.98.2.10, using IP address as hostname
+2023-06-25 11:17:48,737 INFO main(40)     List of received arguments {'networkAddress': '10.98.2.10/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-25 11:17:48,738 INFO main(42)     Connecting to network: 10.98.2.10/32:
+2023-06-25 11:17:48,738 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.2.10/32 into list of host
+2023-06-25 11:17:50,754 INFO TEST_HOST_PING(74)     10.98.2.10 is UP!
+2023-06-25 11:17:50,755 INFO main(50)     Time to ping all host: 2.0172932147979736
+2023-06-25 11:17:50,756 INFO main(51)     List of alive host:: ['10.98.2.10']
+2023-06-25 11:17:50,756 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-25 11:17:50,757 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-06-25 11:17:50,757 INFO main(59)     The host can be ping but doesn't have host name: 10.98.2.10, using IP address as hostname

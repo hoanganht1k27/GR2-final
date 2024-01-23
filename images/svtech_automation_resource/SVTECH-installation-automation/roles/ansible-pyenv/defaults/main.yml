@@ -1,0 +1,49 @@
+---
+# defaults file for pyenv
+# pyenv_root: "/root/.pyenv"
+# pyenv_repo: https://github.com/pyenv/pyenv.git
+# pyenv_version: v1.2.11
+# pyenv_update: no
+pyenv_is_dependencies_installed: yes
+# pyenv_rc_path: "/root/.bash_profile"
+python_versions:
+- 3.6.5
+- 3.7.2
+virtualenv_name:
+- automation36
+- automation37
+
+pyenv_debian_build_dependencies:
+- make
+- build-essential
+- libssl-dev
+- zlib1g-dev
+- libbz2-dev
+- libreadline-dev
+- libsqlite3-dev
+- wget
+- curl
+- llvm
+- libncurses5-dev
+- libncursesw5-dev
+- xz-utils
+- tk-dev
+pyenv_redhat_build_dependencies:
+- gcc
+- zlib-devel
+- bzip2
+- bzip2-devel
+- readline-devel
+- sqlite
+- sqlite-devel
+- openssl-devel
+- xz
+- xz-devel
+- libffi-devel
+- findutils 
+pyenv_darwin_build_dependencies:
+- readline
+# - xz
+pyenv_darwin_additional_build_dependencies: []
+pyenv_redhat_additional_build_dependencies: []
+pyenv_debian_additional_build_dependencies: []

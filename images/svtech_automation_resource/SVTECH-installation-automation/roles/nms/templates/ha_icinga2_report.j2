@@ -1,0 +1,23 @@
+- !!python/object:icinga2_report.datasource.icinga2_livestatus.Icinga2LiveStatus
+  host: {{ VIP }}:6559
+  name: LiveStatus
+  status: true
+- !!python/object:icinga2_report.datasource.icinga2_live_attributes.Icinga2LiveAttributeDatasource
+  host: {{ VIP }}:5666
+  name: Icinga2LiveStatus
+  password: {{ api_password }}
+  status: true
+  username: {{ api_user }}
+- !!python/object:icinga2_report.datasource.influx.InfluxDatasource
+  database: influxdb_nms
+  host: {{ VIP }}:8087
+  name: InfluxdbDatasource
+  password: {{ influxdb_password }}
+  username: {{ influxdb_user }}
+- !!python/object:icinga2_report.datasource.icinga2_live_attributes.Icinga2LiveAttributeDatasource
+  host: {{ VIP }}:5666
+  name: adapter
+  password: {{ api_password }}
+  status: true
+  username: {{ api_user }}
+

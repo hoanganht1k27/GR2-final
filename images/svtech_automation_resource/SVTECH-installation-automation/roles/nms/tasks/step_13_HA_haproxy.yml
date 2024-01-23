@@ -1,0 +1,46 @@
+---
+# Wrote by Hoang Anh Tu
+  - name: HAPROXY - HA INSTALLATION [STEP 01] - Install IUS Repository
+    yum:
+      #name: https://rhel7.iuscommunity.org/ius-release.rpm
+      name: https://repo.ius.io/ius-release-el7.rpm
+      state: latest
+
+  - name: HAPROXY - HA INSTALLATION [STEP 02] - Install haproxy
+    yum:
+      name: "{{ item.package }}"
+      state: latest
+    with_items: 
+      - "{{ haproxy_yum }}"
+
+  - name: HAPROXY - HA CONFIGURATION [STEP 03] - Configurate haproxy
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0775
+      backup: true
+    with_items:
+      - { src: "{{ role_path }}/templates/haproxy.j2", dest: "/etc/haproxy/haproxy.cfg" }
+
+  - name: HAPROXY - HA INSTALLATION [STEP 04] - Remove IUS Repository
+    yum:
+      name: ius-release-2-1.el7.ius.noarch
+      state: removed
+
+  - name: HAPROXY - HA INSTALLATION [STEP 05] - Restart haproxy on Primary Node
+    service:
+      name: haproxy
+      state: restarted
+      enabled: yes
+    when:
+      - role == "primary"
+
+  - name: HAPROXY - HA INSTALLATION [STEP 06] - Restart haproxy on Backup Node
+    service:
+      name: haproxy
+      state: restarted
+      enabled: yes
+    when:
+      - role == "backup"

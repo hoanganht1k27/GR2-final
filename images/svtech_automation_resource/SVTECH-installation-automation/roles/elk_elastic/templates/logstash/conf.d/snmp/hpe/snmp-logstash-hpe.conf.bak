@@ -1,0 +1,145 @@
+input {
+  snmp {
+    hosts => {{ es_master_http }}
+              { host => "udp:10.98.11.2/161" community => "public" version => "2c"}
+#              { host => "udp:10.98.11.1/161" community => "public" version => "2c"}
+              # { host => "udp:10.98.11.7/161" community => "public" version => "2c"}
+             ]
+    add_field => {host => "%{[@metadata][host_protocol]}:%{[@metadata][host_address]}/%{[@metadata][host_port]},%{[@metadata][host_community]}"}
+    add_field => {host_address => "%{[@metadata][host_address]}"}
+    add_field => {host_community => "%{[@metadata][host_community]}"}
+    tables =>  [
+                 { "name" => "ilo_nic" "columns" => ["1.3.6.1.4.1.232.9.2.5.1.1.14"] },
+                 { "name" => "fan" "columns" => ["1.3.6.1.4.1.232.6.2.6.7.1.3.0", "1.3.6.1.4.1.232.6.2.6.7.1.4.0", "1.3.6.1.4.1.232.6.2.6.7.1.6.0", "1.3.6.1.4.1.232.6.2.6.7.1.9.0"] },
+                 { "name" => "temp" "columns" => ["1.3.6.1.4.1.232.6.2.6.8.1.3.0", "1.3.6.1.4.1.232.6.2.6.8.1.7.0", "1.3.6.1.4.1.232.6.2.6.8.1.4.0", "1.3.6.1.4.1.232.6.2.6.8.1.5.0", "1.3.6.1.4.1.232.6.2.6.8.1.6.0"] },
+                 { "name" => "cpu" "columns" => ["1.3.6.1.4.1.232.1.2.2.1.1.3", "1.3.6.1.4.1.232.1.2.2.1.1.4", "1.3.6.1.4.1.232.1.2.2.1.1.6", "1.3.6.1.4.1.232.1.2.2.1.1.25", "1.3.6.1.4.1.232.1.2.2.1.1.26"] },
+                 { "name" => "logical_drive" "columns" => ["1.3.6.1.4.1.232.3.2.3.1.1.1.0", "1.3.6.1.4.1.232.3.2.3.1.1.3.0", "1.3.6.1.4.1.232.3.2.3.1.1.9.0", "1.3.6.1.4.1.232.3.2.3.1.1.4.0", "1.3.6.1.4.1.232.3.2.3.1.1.11.0"] },
+                 { "name" => "drive" "columns" => ["1.3.6.1.4.1.232.3.2.5.1.1.64.0", "1.3.6.1.4.1.232.3.2.5.1.1.3.0", "1.3.6.1.4.1.232.3.2.5.1.1.45.0", "1.3.6.1.4.1.232.3.2.5.1.1.6.0", "1.3.6.1.4.1.232.3.2.5.1.1.37.0"] },
+                 { "name" => "memory" "columns" => ["1.3.6.1.4.1.232.6.2.14.13.1.13", "1.3.6.1.4.1.232.6.2.14.13.1.10", "1.3.6.1.4.1.232.6.2.14.13.1.6", "1.3.6.1.4.1.232.6.2.14.13.1.19", "1.3.6.1.4.1.232.6.2.14.13.1.20"] }
+               ]
+    interval => 30
+    tags => HPE_snmp_alert
+  }
+}
+
+filter {
+  if "HPE_snmp_alert" in [tags] {
+    mutate {
+      rename => { "[ilo_nic][0][iso.org.dod.internet.private.enterprises.232.9.2.5.1.1.14]" => "ilo_fqdn" }
+      remove_field => ["ilo_nic"]
+    }
+
+    ruby {
+      id => "HPE-SNMP-ruby-01"
+      code => '
+        event.set("[@metadata][tables_name]", ["fan", "temp", "cpu", "memory", "logical_drive", "drive"])
+        result = Array.new
+        event.get("[@metadata][tables_name]").each { |key|
+          i = event.get(key)
+          result = result + i
+          event.remove(key)
+        }
+        event.set("[@metadata][result]", result)
+      '
+    }
+
+    split {
+      id => "HPE-SNMP-split"
+      field => "[@metadata][result]"
+    }
+
+    ruby {
+      id => "HPE-SNMP-ruby-02"
+      code => '
+        file = File.open("/etc/logstash/dictionary/HPE_oid_mapping.txt", "r")
+        data = file.readlines
+        mapping_data = []
+        data.each{ |item|
+          data_split = item.split("=")
+          mapping_data << { "name" => data_split[0], "oid" => data_split[1].sub("\r\n", "").sub("\n", "") }
+        }
+        get_name = ""
+        index_value = ""
+        event.get("[@metadata][result]").each { |key, value|
+          if (key =~ /iso.org/)
+            compare_key = key.gsub(/\.\d+$/, "")
+            mapping_data.each { |item|
+              if (item["oid"] == key)
+                get_name = item["name"].gsub(/\..*/, "")
+                event.set(item["name"].gsub(/\w+\./, ""), value)
+                event.remove(key)
+              end
+            }
+          end
+          if (key =~ /index/)
+            index_value = value
+          end
+
+        }
+        event.set("index", get_name + "_index_" + index_value)
+      '
+    }
+ 
+    # HPE - TRANSLATE FAN OID DESC #
+    if "fan" in [@metadata][tables_name] {
+      if ([fan_condition]) { translate { source => "[fan_condition]" target => "[fan_condition_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/fan_condition.yml" } }
+      if ([fan_locale]) { translate { source => "[fan_locale]" target => "[fan_locale_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/fan_locale.yml" } }
+      if ([fan_present_1]) { translate { source => "[fan_present_1]" target => "[fan_present_1_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/fan_present_1.yml" } }
+      if ([fan_present_2]) { translate { source => "[fan_present_2]" target => "[fan_present_2_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/fan_present_2.yml" } }
+      if ([fan_speed]) { translate { source => "[fan_speed]" target => "[fan_speed_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/fan_speed.yml" } }
+    }
+
+    # HPE - TRANSLATE TEMP OID DESC #
+    if "temp" in [@metadata][tables_name] {
+      if ([temperature_sensor_locale]) { translate { source => "[temperature_sensor_locale]" target => "[temperature_sensor_locale_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/temperature_sensor_locale.yml" } }
+      if ([threshold_type]) { translate { source => "[threshold_type]" target => "[threshold_type_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/threshold_type.yml" } }
+      if ([temperaturecondition]) { translate { source => "[temperaturecondition]" target => "[temperaturecondition_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/temperaturecondition.yml" } }
+    }
+
+    # HPE - TRANSLATE CPU OID DESC #
+    if "cpu" in [@metadata][tables_name] {
+      if ([cpu_status]) { translate { source => "[cpu_status]" target => "[cpu_status_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/cpu_status.yml" } }
+      if ([cpu_power_status]) { translate { source => "[cpu_power_status]" target => "[cpu_power_status_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/cpu_power_status.yml" } }
+    }
+
+    # HPE - TRANSLATE LOGICAL DRIVE  OID DESC #
+    if "logical_drive" in [@metadata][tables_name] {
+      if ([logical_drive_fault_tolerance]) { translate { source => "[logical_drive_fault_tolerance]" target => "[logical_drive_fault_tolerance_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/logical_drive_fault_tolerance.yml" } }
+      if ([logical_drive_status]) { translate { source => "[logical_drive_status]" target => "[logical_drive_status_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/logical_drive_status.yml" } }
+      if ([logical_drive_condition]) { translate { source => "[logical_drive_condition]" target => "[logical_drive_condition_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/logical_drive_condition.yml" } }
+    }
+
+    # HPE - TRANSLATE DRIVE OID DESC # 
+    if "drive" in [@metadata][tables_name] {
+      if ([drive_status]) { translate { source => "[drive_status]" target => "[drive_status_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/drive_status.yml" } }
+      if ([drive_condition]) { translate { source => "[drive_condition]" target => "[drive_condition_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/drive_condition.yml" } }
+    }
+
+    # HPE - TRANSLATE MEMORY OID DESC #
+    if "memory" in [@metadata][tables_name] {
+      if "NOT AVAILABLE" in [part_number] { 
+         drop{}
+      }
+      if ([memory_status]) { translate { source => "[memory_status]" target => "[memory_status_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/memory_status.yml" } }
+      if ([memory_condition]) { translate { source => "[memory_condition]" target => "[memory_condition_desc]" exact => true dictionary_path => "/etc/logstash/dictionary/hpe/memory_condition.yml" } }
+    }
+  }
+}
+
+
+output {
+#  stdout {
+#    codec => rubydebug
+#  }
+
+  if "HPE_snmp_alert" in [tags] {
+    elasticsearch {
+      index => "snmp-hpe"
+      hosts => {{ es_master_http }}
+      cacert => "/etc/logstash/certs/{{ inventory_hostname }}.pem"
+      user => "{{ beats.logstash.logstash_writer.username }}"
+      password => "{{ beats.logstash.logstash_writer.password }}"
+      ssl_certificate_verification => false
+    }
+  }
+}

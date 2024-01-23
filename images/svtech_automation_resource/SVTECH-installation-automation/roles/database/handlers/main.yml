@@ -1,0 +1,40 @@
+---
+#Handlers for Services
+  - name: Restart SSH
+    service: 
+      name: sshd
+      state: restarted
+      enabled: yes
+
+  - name: Restart Rsyslog 
+    service: 
+      name: rsyslog
+      state: restarted
+      enabled: yes
+
+  - name: Restart NTP
+    service: 
+      name: ntpd
+      state: restarted
+      enabled: yes
+
+  - name: Restart Iptables
+    service: 
+      name: iptables 
+      state: restarted
+      enabled: yes
+
+  - name: Restart MariaDB
+    service: 
+      name: mariadb
+      state: restarted
+      enabled: yes
+
+  - name: Start MariaDB
+    service: 
+      name: mariadb
+      state: started
+      enabled: yes
+
+  - name: Bootstrap MariaDB
+    command: galera_new_cluster

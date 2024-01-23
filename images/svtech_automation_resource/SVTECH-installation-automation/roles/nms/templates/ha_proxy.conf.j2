@@ -1,0 +1,34 @@
+<Location "/report">
+        RequestHeader set Host "http://{{ VIP }}/report"
+        ProxyPass "http://127.0.0.1:8889" connectiontimeout=600 timeout=600 Keepalive=On
+</Location>
+
+<Location "/grafana">
+{% if htpasswd_auth is defined and htpasswd_auth == true %}
+        AuthType Basic
+        AuthName GrafanaAuthProxy
+        AuthBasicProvider file
+        AuthUserFile /etc/thruk/htpasswd
+        Require valid-user
+
+        RewriteEngine On
+        RewriteRule .* - [E=PROXY_USER:%{LA-U:REMOTE_USER},NS]
+        RequestHeader set X-WEBAUTH-USER "%{PROXY_USER}e"
+
+        RequestHeader unset Authorization
+
+        ProxyPass "http://127.0.0.1:3001" connectiontimeout=600 timeout=600 Keepalive=On
+{% else %}
+        ProxyPass "http://127.0.0.1:3001" connectiontimeout=600 timeout=600 Keepalive=On
+{% endif %}
+</Location>
+
+<Location "/grafana/send_request">
+        ProxyPass "http://127.0.0.1:8889"
+        ProxyPassReverse "http://127.0.0.1:8889"
+</Location>
+
+<Location "/rundeck">
+        ProxyPass http://localhost:4440/rundeck
+        ProxyPassReverse http://localhost:4440/rundeck
+</Location>

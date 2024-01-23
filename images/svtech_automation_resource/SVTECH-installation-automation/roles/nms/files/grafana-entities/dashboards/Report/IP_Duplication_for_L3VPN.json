@@ -1,0 +1,2384 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 48,
+  "iteration": 1629425100139,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "junos_tableview",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select * from ip_duplication inner join (\nselect ip_address from ip_duplication group by ip_address having count(ip_address) > 1\n) dup on  dup.ip_address = ip_duplication.ip_address and dup.ip_address != \"None\"\nwhere ip_duplication.instance_name = $instance_name\norder by ip_duplication.ip_address",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "IP Duplication for each L3VPN instance",
+      "type": "table"
+    },
+    {
+      "datasource": "junos_tableview",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select * from ip_duplication inner join (\nselect ip_address from ip_duplication group by ip_address having count(ip_address) > 1\n) dup on  dup.ip_address = ip_duplication.ip_address and dup.ip_address != \"None\"\norder by ip_duplication.ip_address",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Full IP Duplication For All L3VPN",
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 25,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": "3G",
+          "value": [
+            "3G"
+          ]
+        },
+        "datasource": "junos_tableview",
+        "definition": "select instance_name from ip_duplication group by instance_name ",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance name",
+        "multi": true,
+        "name": "instance_name",
+        "options": [
+          {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "11_llkt_interior_matolapolice",
+            "value": "11_llkt_interior_matolapolice"
+          },
+          {
+            "selected": false,
+            "text": "11_llkt_interior_olofpalme",
+            "value": "11_llkt_interior_olofpalme"
+          },
+          {
+            "selected": true,
+            "text": "3G",
+            "value": "3G"
+          },
+          {
+            "selected": false,
+            "text": "4G-CPUP",
+            "value": "4G-CPUP"
+          },
+          {
+            "selected": false,
+            "text": "4G-OAM",
+            "value": "4G-OAM"
+          },
+          {
+            "selected": false,
+            "text": "ftth-test",
+            "value": "ftth-test"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_AMERICO_ASSANE",
+            "value": "FTTH_AMERICO_ASSANE"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_AMERICO_ASSANE_ADAMUGI",
+            "value": "FTTH_AMERICO_ASSANE_ADAMUGI"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_AMREEN_JAN_MAHOMED",
+            "value": "FTTH_AMREEN_JAN_MAHOMED"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_ASSUMANE_HENRIQUES",
+            "value": "FTTH_ASSUMANE_HENRIQUES"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_BAU",
+            "value": "FTTH_BAU"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_BIWAS_CATERING",
+            "value": "FTTH_BIWAS_CATERING"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_CAB080_ARMANDO_VEFUINA_PEDRO",
+            "value": "FTTH_CAB080_ARMANDO_VEFUINA_PEDRO"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_CAB144_JANUARIO_BENTO",
+            "value": "FTTH_CAB144_JANUARIO_BENTO"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_CETA_SARL_SEDE",
+            "value": "FTTH_CETA_SARL_SEDE"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_CONSELHO_MUNICIPAL",
+            "value": "FTTH_CONSELHO_MUNICIPAL"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_COOPERACAO_PORTUGUESA",
+            "value": "FTTH_COOPERACAO_PORTUGUESA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_DIOGO_MARTIN_MOREIRA",
+            "value": "FTTH_DIOGO_MARTIN_MOREIRA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_ECO_DSTOR_DISTRIBUITON",
+            "value": "FTTH_ECO_DSTOR_DISTRIBUITON"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_ECO_INSTITUTO_VAHOCHA",
+            "value": "FTTH_ECO_INSTITUTO_VAHOCHA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_ECO_NORTH_INTER_SCHOOL",
+            "value": "FTTH_ECO_NORTH_INTER_SCHOOL"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_ELIZABETE",
+            "value": "FTTH_ELIZABETE"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_FH_ASSOCIATION",
+            "value": "FTTH_FH_ASSOCIATION"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_FH_BERTILING_LOGISTICS",
+            "value": "FTTH_FH_BERTILING_LOGISTICS"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_GOVERNO_DISTRITO",
+            "value": "FTTH_GOVERNO_DISTRITO"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_JDI_CONSULTORES_LDA",
+            "value": "FTTH_JDI_CONSULTORES_LDA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_KARIBU_LDA",
+            "value": "FTTH_KARIBU_LDA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_KING_MARINE",
+            "value": "FTTH_KING_MARINE"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_MMP_SERVICE_CENTER",
+            "value": "FTTH_MMP_SERVICE_CENTER"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_OCEAN_RESIDENCIAL_LDA",
+            "value": "FTTH_OCEAN_RESIDENCIAL_LDA"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_OFFICE_CONSTRUYOSO_MOZAMBIQUE",
+            "value": "FTTH_OFFICE_CONSTRUYOSO_MOZAMBIQUE"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_OFFICE_OSSAILI_TEREK",
+            "value": "FTTH_OFFICE_OSSAILI_TEREK"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_OSSOFO_ARNALDO_SEGUNDO",
+            "value": "FTTH_OSSOFO_ARNALDO_SEGUNDO"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_PEDRO_BERNARDO_TUALUF",
+            "value": "FTTH_PEDRO_BERNARDO_TUALUF"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_PENTA_OCEAN_CONSTRUCTION",
+            "value": "FTTH_PENTA_OCEAN_CONSTRUCTION"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_RESIDENCIAL_UP",
+            "value": "FTTH_RESIDENCIAL_UP"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_RODIN_NIKOLAY",
+            "value": "FTTH_RODIN_NIKOLAY"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_SERVICO_DISTRITAL",
+            "value": "FTTH_SERVICO_DISTRITAL"
+          },
+          {
+            "selected": false,
+            "text": "FTTH_WILTON_LUIS",
+            "value": "FTTH_WILTON_LUIS"
+          },
+          {
+            "selected": false,
+            "text": "Gb",
+            "value": "Gb"
+          },
+          {
+            "selected": false,
+            "text": "HUB_SWITCH_TSS",
+            "value": "HUB_SWITCH_TSS"
+          },
+          {
+            "selected": false,
+            "text": "HUB_SWITCH_TSS_01",
+            "value": "HUB_SWITCH_TSS_01"
+          },
+          {
+            "selected": false,
+            "text": "HUB_SWITCH_TSS_02",
+            "value": "HUB_SWITCH_TSS_02"
+          },
+          {
+            "selected": false,
+            "text": "HUB_SWITCH_TSS_03",
+            "value": "HUB_SWITCH_TSS_03"
+          },
+          {
+            "selected": false,
+            "text": "HUB_SWITCH_TSS_04",
+            "value": "HUB_SWITCH_TSS_04"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_BIZTEL",
+            "value": "IPLL_BIZTEL"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_CAB003_RENCO_MOZAMBIQUE_LDA",
+            "value": "IPLL_CAB003_RENCO_MOZAMBIQUE_LDA"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_CAB012_MINEDH",
+            "value": "IPLL_CAB012_MINEDH"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_CAPINHAMDJDO_MARIA",
+            "value": "IPLL_CAPINHAMDJDO_MARIA"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_CDN_NAC251",
+            "value": "IPLL_CDN_NAC251"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_INTEGRATED_STEEL_MILLS",
+            "value": "IPLL_INTEGRATED_STEEL_MILLS"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_KENTZ_ENGINEERS_CONSTRUCT",
+            "value": "IPLL_KENTZ_ENGINEERS_CONSTRUCT"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_Rafael_Hotel",
+            "value": "IPLL_Rafael_Hotel"
+          },
+          {
+            "selected": false,
+            "text": "IPLL_WILTON_LUIS",
+            "value": "IPLL_WILTON_LUIS"
+          },
+          {
+            "selected": false,
+            "text": "L2VPN-PLC",
+            "value": "L2VPN-PLC"
+          },
+          {
+            "selected": false,
+            "text": "L2VPN_MCT_MAC011-MAC032",
+            "value": "L2VPN_MCT_MAC011-MAC032"
+          },
+          {
+            "selected": false,
+            "text": "L2VPN_MCT_MAP062-MAC032_HQ2",
+            "value": "L2VPN_MCT_MAP062-MAC032_HQ2"
+          },
+          {
+            "selected": false,
+            "text": "L3LL_1Mpbs_CAB127_ARCO_IRIS",
+            "value": "L3LL_1Mpbs_CAB127_ARCO_IRIS"
+          },
+          {
+            "selected": false,
+            "text": "L3LL_1Mpbs_CAB127_ESCOLA_INFANTIL_DE_PEMBA",
+            "value": "L3LL_1Mpbs_CAB127_ESCOLA_INFANTIL_DE_PEMBA"
+          },
+          {
+            "selected": false,
+            "text": "L3LL_CAB013_2Mbps_UCM",
+            "value": "L3LL_CAB013_2Mbps_UCM"
+          },
+          {
+            "selected": false,
+            "text": "LIQUID_SA",
+            "value": "LIQUID_SA"
+          },
+          {
+            "selected": false,
+            "text": "MCT_HEAD_OFFICE_TO_MALUANA",
+            "value": "MCT_HEAD_OFFICE_TO_MALUANA"
+          },
+          {
+            "selected": false,
+            "text": "MOVITEL_HOUSE",
+            "value": "MOVITEL_HOUSE"
+          },
+          {
+            "selected": false,
+            "text": "MOZIX_MOZAMBIQUE",
+            "value": "MOZIX_MOZAMBIQUE"
+          },
+          {
+            "selected": false,
+            "text": "MVT-VOD_SIP-P2P_MAP",
+            "value": "MVT-VOD_SIP-P2P_MAP"
+          },
+          {
+            "selected": false,
+            "text": "MVT-VOD_SIP-P2P_NAM",
+            "value": "MVT-VOD_SIP-P2P_NAM"
+          },
+          {
+            "selected": false,
+            "text": "NMS_L2SW",
+            "value": "NMS_L2SW"
+          },
+          {
+            "selected": false,
+            "text": "NMS_SOLAR",
+            "value": "NMS_SOLAR"
+          },
+          {
+            "selected": false,
+            "text": "ONMS_MONITORING",
+            "value": "ONMS_MONITORING"
+          },
+          {
+            "selected": false,
+            "text": "PCCW_TEST_MAP091",
+            "value": "PCCW_TEST_MAP091"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_bancoprocredit_map",
+            "value": "PLC_11_llkt_bancoprocredit_map"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_ecobank_atm_gare",
+            "value": "PLC_11_llkt_ecobank_atm_gare"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_ecobank_malhapsene",
+            "value": "PLC_11_llkt_ecobank_malhapsene"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_ecobank_namcidade",
+            "value": "PLC_11_llkt_ecobank_namcidade"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llKt_ecobank_sofdondo",
+            "value": "PLC_11_llKt_ecobank_sofdondo"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_ecobank_sofesturo",
+            "value": "PLC_11_llkt_ecobank_sofesturo"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_interior_laulane",
+            "value": "PLC_11_llkt_interior_laulane"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_interior_matolacomando",
+            "value": "PLC_11_llkt_interior_matolacomando"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_interior_michafutene",
+            "value": "PLC_11_llkt_interior_michafutene"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_interior_montada",
+            "value": "PLC_11_llkt_interior_montada"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_llkt_procredit_gaza",
+            "value": "PLC_11_llkt_procredit_gaza"
+          },
+          {
+            "selected": false,
+            "text": "PLC_11_plc_itelplus23",
+            "value": "PLC_11_plc_itelplus23"
+          },
+          {
+            "selected": false,
+            "text": "PLC_13_plc_itelplus1",
+            "value": "PLC_13_plc_itelplus1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_1Mbps_Bollore",
+            "value": "PLC_1Mbps_Bollore"
+          },
+          {
+            "selected": false,
+            "text": "PLC_200Mbps_13_plc_startimes1",
+            "value": "PLC_200Mbps_13_plc_startimes1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_8Mbps_Biztel_Limitada",
+            "value": "PLC_8Mbps_Biztel_Limitada"
+          },
+          {
+            "selected": false,
+            "text": "PLC_99FM",
+            "value": "PLC_99FM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_9FM",
+            "value": "PLC_9FM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_AERECOM",
+            "value": "PLC_AERECOM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_APN_MINT",
+            "value": "PLC_APN_MINT"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ARECOM3",
+            "value": "PLC_ARECOM3"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ARECOM9",
+            "value": "PLC_ARECOM9"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_25_SETEMBRO_MAPUTO",
+            "value": "PLC_ATM_25_SETEMBRO_MAPUTO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_AVENIDA",
+            "value": "PLC_ATM_AVENIDA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_BAIXA",
+            "value": "PLC_ATM_BAIXA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_Cabo",
+            "value": "PLC_ATM_Cabo"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_CORREIOS",
+            "value": "PLC_ATM_CORREIOS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_CPD_CEDSIF",
+            "value": "PLC_ATM_CPD_CEDSIF"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_DA",
+            "value": "PLC_ATM_DA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_DEL_PEMBA",
+            "value": "PLC_ATM_DEL_PEMBA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_Lichinga_NIA",
+            "value": "PLC_ATM_Lichinga_NIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_MAC",
+            "value": "PLC_ATM_MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_MAC_ATM_P1",
+            "value": "PLC_ATM_MAC_ATM_P1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_MANGANHELAS",
+            "value": "PLC_ATM_MANGANHELAS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_MOZAMBIQUE",
+            "value": "PLC_ATM_MOZAMBIQUE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_NOVO_Edif",
+            "value": "PLC_ATM_NOVO_Edif"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_QUISSICO_INH",
+            "value": "PLC_ATM_QUISSICO_INH"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_TIMORLESTE",
+            "value": "PLC_ATM_TIMORLESTE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_TIMOR_DGA",
+            "value": "PLC_ATM_TIMOR_DGA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_TO_MAC118",
+            "value": "PLC_ATM_TO_MAC118"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_UGC_BEIRA",
+            "value": "PLC_ATM_UGC_BEIRA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_XAI_XAI",
+            "value": "PLC_ATM_XAI_XAI"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ATM_ZAM174",
+            "value": "PLC_ATM_ZAM174"
+          },
+          {
+            "selected": false,
+            "text": "PLC_AUTORIDADE_TRIBUTARIA",
+            "value": "PLC_AUTORIDADE_TRIBUTARIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Autoridade_TributNomearia_Mocambique",
+            "value": "PLC_Autoridade_TributNomearia_Mocambique"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BANCO_DE_MOCAMBIQUE",
+            "value": "PLC_BANCO_DE_MOCAMBIQUE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Banco_Moza",
+            "value": "PLC_Banco_Moza"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BANCO_OPORTUNIDADE",
+            "value": "PLC_BANCO_OPORTUNIDADE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BANCO_PROCREDIT",
+            "value": "PLC_BANCO_PROCREDIT"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Banco_unico",
+            "value": "PLC_Banco_unico"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BAYPORT",
+            "value": "PLC_BAYPORT"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BAYPORT_01",
+            "value": "PLC_BAYPORT_01"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BCI",
+            "value": "PLC_BCI"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BCI1",
+            "value": "PLC_BCI1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BCI_Call_Center",
+            "value": "PLC_BCI_Call_Center"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BCI_Emola",
+            "value": "PLC_BCI_Emola"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BCI_Emola_Link2",
+            "value": "PLC_BCI_Emola_Link2"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_ALTO_GINGONE",
+            "value": "PLC_BIM_ALTO_GINGONE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_BANK",
+            "value": "PLC_BIM_BANK"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_BANK_INHAMBANE",
+            "value": "PLC_BIM_BANK_INHAMBANE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_BANK_SOFALA",
+            "value": "PLC_BIM_BANK_SOFALA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_CORPORATE",
+            "value": "PLC_BIM_CORPORATE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_GAZ",
+            "value": "PLC_BIM_GAZ"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Bim_MOC",
+            "value": "PLC_Bim_MOC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_NACALA",
+            "value": "PLC_BIM_NACALA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_NAM",
+            "value": "PLC_BIM_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_NIA",
+            "value": "PLC_BIM_NIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_Quedas_Chimoio",
+            "value": "PLC_BIM_Quedas_Chimoio"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BIM_TETE",
+            "value": "PLC_BIM_TETE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BOLLORE_AFRICA_1085",
+            "value": "PLC_BOLLORE_AFRICA_1085"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Bollore_Africa_Logistic",
+            "value": "PLC_Bollore_Africa_Logistic"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BOLLORE_AFRICA_LOGISTICS",
+            "value": "PLC_BOLLORE_AFRICA_LOGISTICS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Bollore_Beira_SOF017",
+            "value": "PLC_Bollore_Beira_SOF017"
+          },
+          {
+            "selected": false,
+            "text": "PLC_BRIDGE_SHIPPING_MOZAMBIQUE",
+            "value": "PLC_BRIDGE_SHIPPING_MOZAMBIQUE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Byte_system",
+            "value": "PLC_Byte_system"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Caixa_comunitaria_microfinancas",
+            "value": "PLC_Caixa_comunitaria_microfinancas"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CDM_ZAM",
+            "value": "PLC_CDM_ZAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CEDSIF",
+            "value": "PLC_CEDSIF"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CEDSIF_MOAMBA",
+            "value": "PLC_CEDSIF_MOAMBA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Cervejas_De_Moambique_Zambezia",
+            "value": "PLC_Cervejas_De_Moambique_Zambezia"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CERVEJAS_DE_MOCAMBIQUE_SOF174_TET071",
+            "value": "PLC_CERVEJAS_DE_MOCAMBIQUE_SOF174_TET071"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CMCM",
+            "value": "PLC_CMCM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CMC_AFRICA",
+            "value": "PLC_CMC_AFRICA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CMC_AFRICA_AUSTRAL",
+            "value": "PLC_CMC_AFRICA_AUSTRAL"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CMC_MAIN",
+            "value": "PLC_CMC_MAIN"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CONSELHO",
+            "value": "PLC_CONSELHO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Cooperativa_De_Poupanca_E_Credito",
+            "value": "PLC_Cooperativa_De_Poupanca_E_Credito"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CPRD-INAGE",
+            "value": "PLC_CPRD-INAGE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_CRISTOVAO_EBNEZER_DOS_SANTOS",
+            "value": "PLC_CRISTOVAO_EBNEZER_DOS_SANTOS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_DCPOWER_Monitor",
+            "value": "PLC_DCPOWER_Monitor"
+          },
+          {
+            "selected": false,
+            "text": "PLC_DCPOWER_MONITORING",
+            "value": "PLC_DCPOWER_MONITORING"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Direccao_Nacional_Gestao_Recursos_Hidricos",
+            "value": "PLC_Direccao_Nacional_Gestao_Recursos_Hidricos"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Direcc_Nac_de_Gest_Recur_Hidri",
+            "value": "PLC_Direcc_Nac_de_Gest_Recur_Hidri"
+          },
+          {
+            "selected": false,
+            "text": "PLC_DIREC_NACION_GESTA_RECUR_HIDRIC",
+            "value": "PLC_DIREC_NACION_GESTA_RECUR_HIDRIC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_DWDM_MONITOR",
+            "value": "PLC_DWDM_MONITOR"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK",
+            "value": "PLC_ECOBANK"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK_700",
+            "value": "PLC_ECOBANK_700"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK_ANGOCHE",
+            "value": "PLC_ECOBANK_ANGOCHE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ecobank_atm_baixa1",
+            "value": "PLC_Ecobank_atm_baixa1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ecobank_atm_cine700",
+            "value": "PLC_Ecobank_atm_cine700"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK_ATM_ZONA_VERDE",
+            "value": "PLC_ECOBANK_ATM_ZONA_VERDE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ecobank_chockwe",
+            "value": "PLC_ecobank_chockwe"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ecobank_industrias",
+            "value": "PLC_ecobank_industrias"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ecobank_machava_hosp",
+            "value": "PLC_ecobank_machava_hosp"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ecobank_mahotas",
+            "value": "PLC_ecobank_mahotas"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK_MANHICA_MAP",
+            "value": "PLC_ECOBANK_MANHICA_MAP"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECOBANK_MAP-GAZ",
+            "value": "PLC_ECOBANK_MAP-GAZ"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ecobank_Nkobe",
+            "value": "PLC_Ecobank_Nkobe"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ecobank_Peixe",
+            "value": "PLC_Ecobank_Peixe"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EcoBank_Xipamanine_ATM",
+            "value": "PLC_EcoBank_Xipamanine_ATM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ECO_ATM_XIPAMANINE",
+            "value": "PLC_ECO_ATM_XIPAMANINE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Eco_Bank",
+            "value": "PLC_Eco_Bank"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Eco_Bank_Macurungo",
+            "value": "PLC_Eco_Bank_Macurungo"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM",
+            "value": "PLC_EDM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_CAB",
+            "value": "PLC_EDM_CAB"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_INHAMBANE",
+            "value": "PLC_EDM_INHAMBANE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_INSOLUTION",
+            "value": "PLC_EDM_INSOLUTION"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_Link",
+            "value": "PLC_EDM_Link"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_MAPUTO",
+            "value": "PLC_EDM_MAPUTO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_MAQNAG",
+            "value": "PLC_EDM_MAQNAG"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_MOC",
+            "value": "PLC_EDM_MOC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_NAC",
+            "value": "PLC_EDM_NAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_NACARROA",
+            "value": "PLC_EDM_NACARROA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_NIA",
+            "value": "PLC_EDM_NIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_SUBSTACAO",
+            "value": "PLC_EDM_SUBSTACAO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_TEST_GAZ004_MAC_EDM",
+            "value": "PLC_EDM_TEST_GAZ004_MAC_EDM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_TETE",
+            "value": "PLC_EDM_TETE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_UD",
+            "value": "PLC_EDM_UD"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_ZAMBEZIA",
+            "value": "PLC_EDM_ZAMBEZIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_EDM_ZIMPETO",
+            "value": "PLC_EDM_ZIMPETO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ematum",
+            "value": "PLC_Ematum"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Empresa_Desenvolvimento_Maputo_Sul_Ep",
+            "value": "PLC_Empresa_Desenvolvimento_Maputo_Sul_Ep"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Eyazs_Imperium_Lda",
+            "value": "PLC_Eyazs_Imperium_Lda"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAF_COBRANCA_MAXIXE",
+            "value": "PLC_FIPAF_COBRANCA_MAXIXE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG",
+            "value": "PLC_FIPAG"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_1385",
+            "value": "PLC_FIPAG_1385"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_DONDOF",
+            "value": "PLC_FIPAG_DONDOF"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_ESTALEIRO",
+            "value": "PLC_FIPAG_ESTALEIRO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_GAZ",
+            "value": "PLC_FIPAG_GAZ"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_GONDOLA",
+            "value": "PLC_FIPAG_GONDOLA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FiPAG_Josina_Machel",
+            "value": "PLC_FiPAG_Josina_Machel"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_LOJA_MANICA_SHOPPING",
+            "value": "PLC_FIPAG_LOJA_MANICA_SHOPPING"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_MAN007-MAN013",
+            "value": "PLC_FIPAG_MAN007-MAN013"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_MANGA",
+            "value": "PLC_FIPAG_MANGA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_MANGAF",
+            "value": "PLC_FIPAG_MANGAF"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Fipag_NAM",
+            "value": "PLC_Fipag_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_SOALPO_MAN060",
+            "value": "PLC_FIPAG_SOALPO_MAN060"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FIPAG_TO_SOF053",
+            "value": "PLC_FIPAG_TO_SOF053"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FOR_DCN_HEAD_OFFICE_1392",
+            "value": "PLC_FOR_DCN_HEAD_OFFICE_1392"
+          },
+          {
+            "selected": false,
+            "text": "PLC_For_MAC010_FTTH_Test",
+            "value": "PLC_For_MAC010_FTTH_Test"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FOR_MAC010_TO_NEW_NOC_P13",
+            "value": "PLC_FOR_MAC010_TO_NEW_NOC_P13"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FOR_MAC010_TO_NEW_NOC_SW01",
+            "value": "PLC_FOR_MAC010_TO_NEW_NOC_SW01"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Fundacao_Ariel_Glaser",
+            "value": "PLC_Fundacao_Ariel_Glaser"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Fundacao_Ariel_Glaser_Contra_Sida_Pediatrico",
+            "value": "PLC_Fundacao_Ariel_Glaser_Contra_Sida_Pediatrico"
+          },
+          {
+            "selected": false,
+            "text": "PLC_FUNDACAO_MANHICA",
+            "value": "PLC_FUNDACAO_MANHICA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Gateway_Communications_Mozambique",
+            "value": "PLC_Gateway_Communications_Mozambique"
+          },
+          {
+            "selected": false,
+            "text": "PLC_HCB",
+            "value": "PLC_HCB"
+          },
+          {
+            "selected": false,
+            "text": "PLC_HUB_CABO_INTRA",
+            "value": "PLC_HUB_CABO_INTRA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INAM_INSTITUTO",
+            "value": "PLC_INAM_INSTITUTO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INAM_MAC194",
+            "value": "PLC_INAM_MAC194"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INSS_MAPUTOSW_INSS01",
+            "value": "PLC_INSS_MAPUTOSW_INSS01"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INSS_NAMPULA",
+            "value": "PLC_INSS_NAMPULA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INSTITUTO_INDUSTRIAL",
+            "value": "PLC_INSTITUTO_INDUSTRIAL"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Intermetal_Sa",
+            "value": "PLC_Intermetal_Sa"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_INSOLUTION_MAP087_MAC_IS",
+            "value": "PLC_INTERNET_INSOLUTION_MAP087_MAC_IS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SHOWROOM_MANGA",
+            "value": "PLC_INTERNET_SHOWROOM_MANGA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Internet_Solution",
+            "value": "PLC_Internet_Solution"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_CAB-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_CAB-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_MAP-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_MAP-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_NAC-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_NAC-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_NAM-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_NAM-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_SOF-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_SOF-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_BACKBONE_TET-MAC",
+            "value": "PLC_INTERNET_SOLUTION_BACKBONE_TET-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_CAB-MAC",
+            "value": "PLC_INTERNET_SOLUTION_CAB-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_internet_Solution_main",
+            "value": "PLC_internet_Solution_main"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTERNET_SOLUTION_NAC-MAC",
+            "value": "PLC_INTERNET_SOLUTION_NAC-MAC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_intic_maluana",
+            "value": "PLC_intic_maluana"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTRA_BELL_EQUIPMENT",
+            "value": "PLC_INTRA_BELL_EQUIPMENT"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTRA_BP_BEIRA",
+            "value": "PLC_INTRA_BP_BEIRA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_INTRA_TETE",
+            "value": "PLC_INTRA_TETE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_IS_AGG_USSD",
+            "value": "PLC_IS_AGG_USSD"
+          },
+          {
+            "selected": false,
+            "text": "PLC_IS_BACKBONE_SOF-MAC_IS",
+            "value": "PLC_IS_BACKBONE_SOF-MAC_IS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_IS_INTRA_BACKBONE_NAM-MAP_HOTEL_GIRASSOL",
+            "value": "PLC_IS_INTRA_BACKBONE_NAM-MAP_HOTEL_GIRASSOL"
+          },
+          {
+            "selected": false,
+            "text": "PLC_ITELPLUS",
+            "value": "PLC_ITELPLUS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Kenmare_Moma_Processing",
+            "value": "PLC_Kenmare_Moma_Processing"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Kenmar_Moma_Processing",
+            "value": "PLC_Kenmar_Moma_Processing"
+          },
+          {
+            "selected": false,
+            "text": "PLC_KFMM2",
+            "value": "PLC_KFMM2"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Kingdom_Tv",
+            "value": "PLC_Kingdom_Tv"
+          },
+          {
+            "selected": false,
+            "text": "PLC_LETSEGO",
+            "value": "PLC_LETSEGO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MAC_TELEDATA",
+            "value": "PLC_MAC_TELEDATA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MAC_Teledata_SOF",
+            "value": "PLC_MAC_Teledata_SOF"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MATRIX_GROUP",
+            "value": "PLC_MATRIX_GROUP"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCEL_MOVITEL_SOF044_Shared",
+            "value": "PLC_MCEL_MOVITEL_SOF044_Shared"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT1Gbps",
+            "value": "PLC_MCT1Gbps"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT4Gbps",
+            "value": "PLC_MCT4Gbps"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_ACAD_MIL_UNIV_NAM001",
+            "value": "PLC_MCT_ACAD_MIL_UNIV_NAM001"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_Backbone",
+            "value": "PLC_MCT_Backbone"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_BACKBONE_NIA088-TET005",
+            "value": "PLC_MCT_BACKBONE_NIA088-TET005"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_Intic_Mozix",
+            "value": "PLC_MCT_Intic_Mozix"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_IS_MANICA_UNIVER_SOFALA",
+            "value": "PLC_MCT_IS_MANICA_UNIVER_SOFALA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_MANJACAZE_GAZA_UP_HT",
+            "value": "PLC_MCT_MANJACAZE_GAZA_UP_HT"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_MAP_UP_NAM",
+            "value": "PLC_MCT_MAP_UP_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_NAM001-MAC006_BACKBONE",
+            "value": "PLC_MCT_NAM001-MAC006_BACKBONE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_NIASSA",
+            "value": "PLC_MCT_NIASSA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_NOUTH",
+            "value": "PLC_MCT_NOUTH"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_SEACOM_UBUNTU",
+            "value": "PLC_MCT_SEACOM_UBUNTU"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MCT_SOF_UP_NAM",
+            "value": "PLC_MCT_SOF_UP_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Media_mais11_llkt_mediamais_tmt",
+            "value": "PLC_Media_mais11_llkt_mediamais_tmt"
+          },
+          {
+            "selected": false,
+            "text": "PLC_METALUZ",
+            "value": "PLC_METALUZ"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Millennium_BIM",
+            "value": "PLC_Millennium_BIM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MINED_Instituto",
+            "value": "PLC_MINED_Instituto"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MINISTERIO_DO_INTERIOR",
+            "value": "PLC_MINISTERIO_DO_INTERIOR"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ministerio_Do_Interior_MAC006",
+            "value": "PLC_Ministerio_Do_Interior_MAC006"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MINISTERIO_INTERIOR",
+            "value": "PLC_MINISTERIO_INTERIOR"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Ministerio_Interior2",
+            "value": "PLC_Ministerio_Interior2"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MINISTRY_JUSTICE",
+            "value": "PLC_MINISTRY_JUSTICE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MINT_11_llkt_Mint_Aerodromo_Mocim",
+            "value": "PLC_MINT_11_llkt_Mint_Aerodromo_Mocim"
+          },
+          {
+            "selected": false,
+            "text": "PLC_mint_cedsif",
+            "value": "PLC_mint_cedsif"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MIRAMAR",
+            "value": "PLC_MIRAMAR"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MOCCOM_FERRAGENS",
+            "value": "PLC_MOCCOM_FERRAGENS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MOZTEL",
+            "value": "PLC_MOZTEL"
+          },
+          {
+            "selected": false,
+            "text": "PLC_MSC_SOFALA",
+            "value": "PLC_MSC_SOFALA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NACIONAL_METEREOLOGIA",
+            "value": "PLC_NACIONAL_METEREOLOGIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Nampula_Eyazs",
+            "value": "PLC_Nampula_Eyazs"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Nam_Teledata",
+            "value": "PLC_Nam_Teledata"
+          },
+          {
+            "selected": false,
+            "text": "PLC_New_Beach_House",
+            "value": "PLC_New_Beach_House"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_1376",
+            "value": "PLC_NEW_NOC_1376"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_1379",
+            "value": "PLC_NEW_NOC_1379"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_1380",
+            "value": "PLC_NEW_NOC_1380"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_MOVITEL_3003",
+            "value": "PLC_NEW_NOC_MOVITEL_3003"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_MOVITEL_3004",
+            "value": "PLC_NEW_NOC_MOVITEL_3004"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NEW_NOC_MOVITEL_3008",
+            "value": "PLC_NEW_NOC_MOVITEL_3008"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NMS_MICROWARE",
+            "value": "PLC_NMS_MICROWARE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_NOC_MOVITEL_1410",
+            "value": "PLC_NOC_MOVITEL_1410"
+          },
+          {
+            "selected": false,
+            "text": "PLC_PCCW",
+            "value": "PLC_PCCW"
+          },
+          {
+            "selected": false,
+            "text": "PLC_PCCW_NAC288-MAC118",
+            "value": "PLC_PCCW_NAC288-MAC118"
+          },
+          {
+            "selected": false,
+            "text": "PLC_PS_VPN_Interprise_IS",
+            "value": "PLC_PS_VPN_Interprise_IS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_QinQ_BIM_CAB",
+            "value": "PLC_QinQ_BIM_CAB"
+          },
+          {
+            "selected": false,
+            "text": "PLC_QinQ_BIM_NIA",
+            "value": "PLC_QinQ_BIM_NIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Radio_99fm",
+            "value": "PLC_Radio_99fm"
+          },
+          {
+            "selected": false,
+            "text": "PLC_RADIO_99FM01",
+            "value": "PLC_RADIO_99FM01"
+          },
+          {
+            "selected": false,
+            "text": "PLC_RADIO_99FM02",
+            "value": "PLC_RADIO_99FM02"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Radio_Mocambique",
+            "value": "PLC_Radio_Mocambique"
+          },
+          {
+            "selected": false,
+            "text": "PLC_SIMO_BIM_MAC002-MAC005",
+            "value": "PLC_SIMO_BIM_MAC002-MAC005"
+          },
+          {
+            "selected": false,
+            "text": "PLC_SIMO_MAC060-MAP108",
+            "value": "PLC_SIMO_MAC060-MAP108"
+          },
+          {
+            "selected": false,
+            "text": "PLC_SIMO_MOZABANCO",
+            "value": "PLC_SIMO_MOZABANCO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_SIMO_MOZABANCO_1MBPS_MAC118",
+            "value": "PLC_SIMO_MOZABANCO_1MBPS_MAC118"
+          },
+          {
+            "selected": false,
+            "text": "PLC_SIMO_POS",
+            "value": "PLC_SIMO_POS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_STANDARDBANNK_VAS_SERVICE",
+            "value": "PLC_STANDARDBANNK_VAS_SERVICE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_STANDARD_BANK",
+            "value": "PLC_STANDARD_BANK"
+          },
+          {
+            "selected": false,
+            "text": "PLC_STANDART_BANK",
+            "value": "PLC_STANDART_BANK"
+          },
+          {
+            "selected": false,
+            "text": "PLC_STANDART_BANK_2",
+            "value": "PLC_STANDART_BANK_2"
+          },
+          {
+            "selected": false,
+            "text": "PLC_StarTimes",
+            "value": "PLC_StarTimes"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Starttimes",
+            "value": "PLC_Starttimes"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Strong_Live_Sociedade_Unipessoal_Lda",
+            "value": "PLC_Strong_Live_Sociedade_Unipessoal_Lda"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_BM",
+            "value": "PLC_TELEDATA_BM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Teledata_De_Mocambique",
+            "value": "PLC_Teledata_De_Mocambique"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_MAC172_TO_NAM282",
+            "value": "PLC_TELEDATA_MAC172_TO_NAM282"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_MAP_NAM",
+            "value": "PLC_TELEDATA_MAP_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Teledata_Mocambique_MAN161",
+            "value": "PLC_Teledata_Mocambique_MAN161"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_NAC_NAM",
+            "value": "PLC_TELEDATA_NAC_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_PEMBA_NAMPULA",
+            "value": "PLC_TELEDATA_PEMBA_NAMPULA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDATA_TO_INH001",
+            "value": "PLC_TELEDATA_TO_INH001"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TELEDETA_NIA-NAM",
+            "value": "PLC_TELEDETA_NIA-NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TEST",
+            "value": "PLC_TEST"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TSS_CONNECTION_NAM168",
+            "value": "PLC_TSS_CONNECTION_NAM168"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TSS_CONNECTION_ZAM023",
+            "value": "PLC_TSS_CONNECTION_ZAM023"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TSS_TEST_NEW_NOC",
+            "value": "PLC_TSS_TEST_NEW_NOC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TST_TEST_SOF095",
+            "value": "PLC_TST_TEST_SOF095"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TVCABO_TET241",
+            "value": "PLC_TVCABO_TET241"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TVC_MOZABANCO",
+            "value": "PLC_TVC_MOZABANCO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TVC_MOZA_MAHOTAS",
+            "value": "PLC_TVC_MOZA_MAHOTAS"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TVM",
+            "value": "PLC_TVM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TV_CABO",
+            "value": "PLC_TV_CABO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TV_CABO_NIA_NAM",
+            "value": "PLC_TV_CABO_NIA_NAM"
+          },
+          {
+            "selected": false,
+            "text": "PLC_TV_Sucesso",
+            "value": "PLC_TV_Sucesso"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Txapita_Mobility_Lda_11_llkt_txapita",
+            "value": "PLC_Txapita_Mobility_Lda_11_llkt_txapita"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UDM_25_SETEMBRO",
+            "value": "PLC_UDM_25_SETEMBRO"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UEM_FACULDADE",
+            "value": "PLC_UEM_FACULDADE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UEM_Faculdade_de_Engenharia",
+            "value": "PLC_UEM_Faculdade_de_Engenharia"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UEM_FACULDADE_DE_VETERINARIA",
+            "value": "PLC_UEM_FACULDADE_DE_VETERINARIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Uem_faculdade_de_VETERINARIA_JUNTA",
+            "value": "PLC_Uem_faculdade_de_VETERINARIA_JUNTA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UEM_REITORIA",
+            "value": "PLC_UEM_REITORIA"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UNDER_SCORE",
+            "value": "PLC_UNDER_SCORE"
+          },
+          {
+            "selected": false,
+            "text": "PLC_Universidade_Eduardo_Mondlane",
+            "value": "PLC_Universidade_Eduardo_Mondlane"
+          },
+          {
+            "selected": false,
+            "text": "PLC_UNIVERSIDADE_EDUA_MOND",
+            "value": "PLC_UNIVERSIDADE_EDUA_MOND"
+          },
+          {
+            "selected": false,
+            "text": "PLC_VIDEO_CALL_NEW_NOC",
+            "value": "PLC_VIDEO_CALL_NEW_NOC"
+          },
+          {
+            "selected": false,
+            "text": "PLC_WEBMASTER_JAT1",
+            "value": "PLC_WEBMASTER_JAT1"
+          },
+          {
+            "selected": false,
+            "text": "PLC_WEB_MACHAVA_SOCIMOL",
+            "value": "PLC_WEB_MACHAVA_SOCIMOL"
+          },
+          {
+            "selected": false,
+            "text": "PLC_WEB_ZONA_VERDE",
+            "value": "PLC_WEB_ZONA_VERDE"
+          },
+          {
+            "selected": false,
+            "text": "POWER_CUBE",
+            "value": "POWER_CUBE"
+          },
+          {
+            "selected": false,
+            "text": "routing-instances",
+            "value": "routing-instances"
+          },
+          {
+            "selected": false,
+            "text": "Socremo_Microbanco_Sa",
+            "value": "Socremo_Microbanco_Sa"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RCNA04",
+            "value": "SW-3G-RCNA04"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RNC03",
+            "value": "SW-3G-RNC03"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RNC05",
+            "value": "SW-3G-RNC05"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RNC06",
+            "value": "SW-3G-RNC06"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RNC07",
+            "value": "SW-3G-RNC07"
+          },
+          {
+            "selected": false,
+            "text": "SW-3G-RNC2600",
+            "value": "SW-3G-RNC2600"
+          },
+          {
+            "selected": false,
+            "text": "SW-Gb-BCMP12",
+            "value": "SW-Gb-BCMP12"
+          },
+          {
+            "selected": false,
+            "text": "SW-PTP",
+            "value": "SW-PTP"
+          },
+          {
+            "selected": false,
+            "text": "TEST_BSS_MAC010",
+            "value": "TEST_BSS_MAC010"
+          },
+          {
+            "selected": false,
+            "text": "TO_NEW_PLC_TEST",
+            "value": "TO_NEW_PLC_TEST"
+          },
+          {
+            "selected": false,
+            "text": "VIBA_MONITOR",
+            "value": "VIBA_MONITOR"
+          },
+          {
+            "selected": false,
+            "text": "VIDEO_CAB_OFFICE",
+            "value": "VIDEO_CAB_OFFICE"
+          },
+          {
+            "selected": false,
+            "text": "Video_Conference_GAZ_Branch_3rd-Line",
+            "value": "Video_Conference_GAZ_Branch_3rd-Line"
+          },
+          {
+            "selected": false,
+            "text": "Video_Conference_GAZ_office_2",
+            "value": "Video_Conference_GAZ_office_2"
+          },
+          {
+            "selected": false,
+            "text": "VIDEO_DEFENCE_MAIN",
+            "value": "VIDEO_DEFENCE_MAIN"
+          },
+          {
+            "selected": false,
+            "text": "VRF_PSCS_CPUP",
+            "value": "VRF_PSCS_CPUP"
+          },
+          {
+            "selected": false,
+            "text": "WHITE_TSS_ME_NODEB",
+            "value": "WHITE_TSS_ME_NODEB"
+          }
+        ],
+        "query": "select instance_name from ip_duplication group by instance_name ",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "junos_tableview",
+        "definition": "select `ip_address` from ip_duplication where instance_name = $instance_name group by `ip_address` having count(`ip_address`) >1",
+        "hide": 2,
+        "includeAll": true,
+        "label": "IP Duplication",
+        "multi": true,
+        "name": "ip_dup",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "172.16.32.246",
+            "value": "172.16.32.246"
+          },
+          {
+            "selected": false,
+            "text": "172.16.4.102",
+            "value": "172.16.4.102"
+          },
+          {
+            "selected": false,
+            "text": "172.16.97.150",
+            "value": "172.16.97.150"
+          },
+          {
+            "selected": false,
+            "text": "172.16.97.222",
+            "value": "172.16.97.222"
+          },
+          {
+            "selected": false,
+            "text": "172.16.98.206",
+            "value": "172.16.98.206"
+          },
+          {
+            "selected": false,
+            "text": "172.16.98.222",
+            "value": "172.16.98.222"
+          },
+          {
+            "selected": false,
+            "text": "172.18.1.110",
+            "value": "172.18.1.110"
+          },
+          {
+            "selected": false,
+            "text": "172.18.100.190",
+            "value": "172.18.100.190"
+          },
+          {
+            "selected": false,
+            "text": "172.18.130.150",
+            "value": "172.18.130.150"
+          },
+          {
+            "selected": false,
+            "text": "172.18.133.94",
+            "value": "172.18.133.94"
+          },
+          {
+            "selected": false,
+            "text": "172.18.160.158",
+            "value": "172.18.160.158"
+          },
+          {
+            "selected": false,
+            "text": "172.18.161.38",
+            "value": "172.18.161.38"
+          },
+          {
+            "selected": false,
+            "text": "172.18.162.198",
+            "value": "172.18.162.198"
+          },
+          {
+            "selected": false,
+            "text": "172.18.162.214",
+            "value": "172.18.162.214"
+          },
+          {
+            "selected": false,
+            "text": "172.18.162.222",
+            "value": "172.18.162.222"
+          },
+          {
+            "selected": false,
+            "text": "172.18.162.230",
+            "value": "172.18.162.230"
+          },
+          {
+            "selected": false,
+            "text": "172.18.163.254",
+            "value": "172.18.163.254"
+          },
+          {
+            "selected": false,
+            "text": "172.18.163.46",
+            "value": "172.18.163.46"
+          },
+          {
+            "selected": false,
+            "text": "172.18.163.54",
+            "value": "172.18.163.54"
+          },
+          {
+            "selected": false,
+            "text": "172.18.163.6",
+            "value": "172.18.163.6"
+          },
+          {
+            "selected": false,
+            "text": "172.18.163.78",
+            "value": "172.18.163.78"
+          },
+          {
+            "selected": false,
+            "text": "172.18.164.22",
+            "value": "172.18.164.22"
+          },
+          {
+            "selected": false,
+            "text": "172.18.164.30",
+            "value": "172.18.164.30"
+          },
+          {
+            "selected": false,
+            "text": "172.18.164.6",
+            "value": "172.18.164.6"
+          },
+          {
+            "selected": false,
+            "text": "172.18.164.70",
+            "value": "172.18.164.70"
+          },
+          {
+            "selected": false,
+            "text": "172.18.192.6",
+            "value": "172.18.192.6"
+          },
+          {
+            "selected": false,
+            "text": "172.18.3.86",
+            "value": "172.18.3.86"
+          },
+          {
+            "selected": false,
+            "text": "172.18.33.182",
+            "value": "172.18.33.182"
+          },
+          {
+            "selected": false,
+            "text": "172.18.33.222",
+            "value": "172.18.33.222"
+          },
+          {
+            "selected": false,
+            "text": "172.18.35.174",
+            "value": "172.18.35.174"
+          },
+          {
+            "selected": false,
+            "text": "172.18.35.86",
+            "value": "172.18.35.86"
+          },
+          {
+            "selected": false,
+            "text": "172.18.64.102",
+            "value": "172.18.64.102"
+          },
+          {
+            "selected": false,
+            "text": "172.18.96.174",
+            "value": "172.18.96.174"
+          },
+          {
+            "selected": false,
+            "text": "172.18.96.86",
+            "value": "172.18.96.86"
+          },
+          {
+            "selected": false,
+            "text": "172.18.97.46",
+            "value": "172.18.97.46"
+          },
+          {
+            "selected": false,
+            "text": "172.18.98.14",
+            "value": "172.18.98.14"
+          },
+          {
+            "selected": false,
+            "text": "172.18.98.238",
+            "value": "172.18.98.238"
+          },
+          {
+            "selected": false,
+            "text": "172.18.98.254",
+            "value": "172.18.98.254"
+          },
+          {
+            "selected": false,
+            "text": "172.18.98.38",
+            "value": "172.18.98.38"
+          },
+          {
+            "selected": false,
+            "text": "172.18.98.6",
+            "value": "172.18.98.6"
+          },
+          {
+            "selected": false,
+            "text": "172.18.99.118",
+            "value": "172.18.99.118"
+          },
+          {
+            "selected": false,
+            "text": "172.18.99.126",
+            "value": "172.18.99.126"
+          },
+          {
+            "selected": false,
+            "text": "172.18.99.190",
+            "value": "172.18.99.190"
+          },
+          {
+            "selected": false,
+            "text": "172.18.99.30",
+            "value": "172.18.99.30"
+          },
+          {
+            "selected": false,
+            "text": "None",
+            "value": "None"
+          }
+        ],
+        "query": "select `ip_address` from ip_duplication where instance_name = $instance_name group by `ip_address` having count(`ip_address`) >1",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "IP Duplication for L3VPN",
+  "uid": "ip_duplication",
+  "version": 10
+}

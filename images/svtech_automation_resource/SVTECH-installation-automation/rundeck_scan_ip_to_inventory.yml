@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+
+  vars:
+    venv: False
+    rundeck: False
+    ansible_python_interpreter: "{{ '/opt/.pyenv/versions/3.6.5/envs/automation36/bin/python' if (venv == True) else '/usr/bin/env python' }}"
+
+    community: "public"
+    subnet: "10.98.12.29/32"
+    inventory_dest_file: "/tmp/inventory_dest_file"
+    destination_inventory_group_name: "scanned_hosts"
+
+    log_dir: "./logs"
+    log_prefix: "scanIP"
+    log_timestamp: "%Y_%m_%d"
+    log_surfix: ""
+    log_level: "INFO"
+  #tasks:
+  #  - name: Debug
+  #    debug:
+  #      var: subnet
+  roles:
+    - role: subnet_to_dynamic_inventory

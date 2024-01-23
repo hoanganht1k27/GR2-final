@@ -1,0 +1,73 @@
+---
+ChassisPowerTable:
+    rpc: get-power-usage-information
+    item: //power-usage-information/power-usage-item
+    key: name
+    view: _ChassisPower_view
+_ChassisPower_view:
+    fields:
+        state: state
+        ACInputState: ac-input-detail/ac-input
+        DCInputState: dc-input-detail/dc-input
+        DCInputRefState: dc-input-detail/reference-voltage
+        DCOutputPower: dc-output-detail/dc-power
+        DCOutputCurrent: dc-output-detail/dc-current
+        DCOutputLoad: dc-output-detail/dc-load
+
+Routing_EngineTable:
+    rpc: get-route-engine-information
+    item: //route-engine
+    key: slot
+    view: Routing_Engine_view
+Routing_Engine_view:
+    fields:
+        slot: slot
+        state: mastership-state
+        status: status
+        serial_number: serial-number
+        re_model: model
+
+PICStatusTable:
+    rpc: get-pic-information
+    item: //fpc/pic
+    key:
+        - ../slot
+        - pic-slot
+    view: _PICStatus_view
+_PICStatus_view:
+    fields:
+        fpc_slot: ../slot
+        pic_slot: pic-slot
+        pic_state: pic-state
+        pic_type: pic-type
+
+
+
+FPC_EnviromentTable:
+    rpc: get-environment-fpc-information
+    item: //environment-component-item
+    view: _FPC_Enviroment_view
+_FPC_Enviroment_view:
+    fields:
+        state: state
+        temperature_Intake_String: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Intake')]/../temperature
+        temperature_Intake: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Intake')]/../temperature/@celsius
+
+        temperature_Exhaust_A_String: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Exhaust A')]/../temperature
+        temperature_Exhaust_A: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Exhaust A')]/../temperature/@celsius
+
+        temperature_Exhaust_B_String: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Exhaust B')]/../temperature
+        temperature_Exhaust_B: //environment-component-item/temperature-reading/temperature-name[contains(text(),'Exhaust B')]/../temperature/@celsius
+UnusedPhysicalInterfaceTable:
+    rpc: get-interface-information
+    args:
+        interface_name: "*e-*" 
+    item: //interface-information/physical-interface[not(logical-interface) and not(description)and oper-status = 'down' ]
+    key:
+        - name
+    view: _UnusedPhysicalInterfaceStatus_view
+_UnusedPhysicalInterfaceStatus_view:
+    fields:
+        name: name
+        link-mode: link-level-type
+        sonet-mode: sonet-mode

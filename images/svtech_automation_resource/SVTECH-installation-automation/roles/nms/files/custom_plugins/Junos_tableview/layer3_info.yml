@@ -1,0 +1,22 @@
+
+LogicalInterfaceTable:
+    rpc: get-interface-information
+    args:
+        interface_name: "*e-*" 
+    item: //physical-interface/logical-interface
+    key: name
+    view: _LogicalInterface_view
+_LogicalInterface_view:
+    fields:
+        physical_description: ../description
+        logical_description: description
+        admin_status: ../admin-status
+        operaional_status: ../oper-status
+        snmp_index: snmp-index
+        physical_interface: ../name
+        ip_address: address-family[address-family-name ='inet']/interface-address/ifa-local
+        ip_network: address-family[address-family-name ='inet']/interface-address/ifa-destination
+        vlan_tag: link-address
+
+
+

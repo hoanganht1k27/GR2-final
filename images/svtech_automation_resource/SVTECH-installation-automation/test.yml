@@ -1,0 +1,9 @@
+- hosts: localhost
+  vars:
+    name: anh
+    username: "toi la {{ name }}"
+  tasks:
+    - name: Test 1
+      debug: 
+        var: username
+

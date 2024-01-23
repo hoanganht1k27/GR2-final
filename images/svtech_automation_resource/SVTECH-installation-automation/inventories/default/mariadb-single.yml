@@ -1,0 +1,27 @@
+all:
+  children:
+    single:
+      hosts:
+        db-01:
+          ansible_host: 192.168.100.21
+          IP: 192.168.100.21
+          server_id: 1
+      vars:
+        gtid_domain: 1
+
+  vars:
+    prefix: "production"
+    ansible_ssh_user: "root"
+    ansible_ssh_port: 22
+    admin_user: "juniper"
+    admin_password: "juniper@123"
+    timezone: "Asia/Ho_Chi_Minh"
+
+    ### MariaDB Variables ###
+    mariadb_version: "10.5"
+    auto_gen_password: "false"
+    mariadb_root_password: "juniper@123"
+    mariadb_port: 3306
+    innodb_buffer_pool_size_percent: 50
+    unix_socket_path: /var/lib/mysql/mysql.sock
+    data_dir: /var/lib/mysql

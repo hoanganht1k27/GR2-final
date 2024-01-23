@@ -1,0 +1,76 @@
+#{% for index in {{ beats.index_list}}  %}
+#{{hostvars[host].IP}} {{ hostvars[host].inventory_hostname }}
+#{% endfor %}
+curl -XPUT -H "Content-Type: application/json" -k -u elastic:{{ elastic_password }} "https://localhost:{{http_port}}/_template/{{ index }}?include_type_name" -d '
+{
+  "order": 1,
+  "index_patterns": [
+    "{{ index }}*"
+  ],
+  "settings": {
+    "index": {
+      "lifecycle": {
+        "name": "{{ index }}",
+        "rollover_alias": "{{ index }}"
+      },
+      "codec": "best_compression",
+      "mapping": {
+        "total_fields": {
+          "limit": "10000"
+        }
+      },
+      "refresh_interval": "5s",
+      "number_of_shards": "3",
+      "max_docvalue_fields_search": "200",
+      "number_of_replicas": "1"
+    }
+  },
+  "aliases": {},
+  "mappings": {
+    "_doc": {
+      "_source": {
+        "excludes": [],
+        "includes": [],
+        "enabled": true
+      },
+      "dynamic": true,
+      "numeric_detection": false,
+      "date_detection": false,
+      "dynamic_templates": [
+        {
+          "fields": {
+            "path_match": "fields.*",
+            "mapping": {
+              "type": "keyword"
+            },
+            "match_mapping_type": "string"
+          }
+        },
+        {
+          "kibana.log.meta": {
+            "path_match": "kibana.log.meta.*",
+            "mapping": {
+              "type": "keyword"
+            },
+            "match_mapping_type": "string"
+          }
+        },
+        {
+          "strings_as_keyword": {
+            "mapping": {
+              "ignore_above": 1024,
+              "type": "keyword"
+            },
+            "match_mapping_type": "string"
+          }
+        }
+      ],
+      "properties": {
+        "@timestamp": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
+'

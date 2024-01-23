@@ -1,0 +1,39 @@
+- hosts: localhost
+  name: Write pve exporter to prometheus config
+  connection: local
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+      pve_exporter_list_file_name: "{{ rundeck_pve_exporter_list_file_name }}"
+      pve_exporter_config_file_path: "{{ rundeck_pve_exporter_config_file_path }}"
+    cli_vars_value:
+      ansible_user: juniper
+      ansible_ssh_pass: juniper@123
+      pve_exporter_list_file_name: /tmp/list_proxmox_name
+      pve_exporter_config_file_path: /home/rundeck/filebase/file_pve.yml
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"
+
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    pve_exporter_list_file_name: "{{ variable_list.pve_exporter_list_file_name }}"
+    pve_exporter_config_file_path: "{{ variable_list.pve_exporter_config_file_path }}" 
+  tasks:
+    - name: WRITE PROXMOX HOST TO PROMETHEUS [Step 01] - Get list host file name
+      set_fact:
+        list_host_file_path: "{{ lookup('file', pve_exporter_list_file_name) }}"
+    - name: WRITE PROXMOX HOST TO PROMETHEUS [Step 02] - Read list host
+      set_fact:
+        file_contents: "{{ lookup('file', list_host_file_path).splitlines() }}"
+    - name: Debug
+      debug:
+        var: file_contents
+    - name: WRITE PROXMOX HOST TO PROMETHEUS [Step 03] - Write host to prometheus
+      lineinfile:
+        insertafter: "- targets:"
+        line: "  - {{ item }}"
+        path: "{{ pve_exporter_config_file_path }}"
+      loop: "{{ file_contents }}"

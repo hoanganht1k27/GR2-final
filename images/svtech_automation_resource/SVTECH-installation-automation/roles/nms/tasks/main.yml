@@ -1,0 +1,89 @@
+---
+# tasks file for icinga2
+
+- include: step_01_iptables.yml
+
+- include: step_01_HA_iptables.yml
+  when:
+    - HA == "true"
+- include: step_02_required_repo.yml
+
+- include: step_03_dependencies.yml
+
+- include: github.yml
+
+- include: step_04_install_influxdb.yml
+
+# use sqllite for Grafana's user db, for lightweight usage
+- include: step_05_HA_install_mariadb.yml
+
+- include: step_06_install_grafana.yml
+
+- include: step_07_install_icinga.yml
+  when:
+    - HA == "false"
+
+- include: step_08_install_nagvis.yml
+  when:
+    - HA == "false"
+
+- include: step_09_install_thruk.yml
+  when:
+    - HA == "false"
+
+- include: step_07_HA_install_icinga.yml
+  when:
+    - HA == "true"
+
+- include: step_08_HA_install_nagvis.yml
+  when:
+    - HA == "true"
+
+- include: step_09_HA_install_thruk.yml
+  when:
+    - HA == "true"
+
+- include: step_10_install_icinga2_report.yml
+
+- include: step_11_install_icinga2_repo.yml
+#- include: step_11_install_icinga2_ui.yml
+
+- include: step_12_HA_keepalived.yml
+  when:
+    - HA == "true"
+
+- include: step_13_HA_haproxy.yml
+  when:
+    - HA == "true"
+
+- include: step_14_rundeck.yml
+  when:
+    - HA == "false"
+
+- include: step_14_HA_rundeck.yml
+  when:
+    - HA == "true"
+
+- include: step_15_HA_wizzy.yml
+  when:
+    - HA == "true"
+
+- include: step_15_wizzy.yml
+  when:
+    - HA == "false"
+
+
+- include: step_16_addition_toolkits.yml
+  when:
+    - HA == "false"
+
+- include: step_16_HA_addition_toolkits.yml
+  when:
+    - HA == "true"
+
+- include: step_17_gitlist.yml
+
+- include: step_18_HA_syncthing.yml
+  when:
+    - HA == "true"
+

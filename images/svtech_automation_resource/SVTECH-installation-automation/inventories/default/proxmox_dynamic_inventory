@@ -1,0 +1,49 @@
+nms-01-k8s-10.98.2.3 ansible_host=10.98.2.3
+k8s-testing-ubuntu-10.98.1.33 ansible_host=10.98.1.33
+lab02-ansible-10.98.12.37 ansible_host=10.98.12.37
+K8s-01-10.98.0.218 ansible_host=10.98.0.218
+pnetlab-10.98.12.222 ansible_host=10.98.12.222
+nms-02-k8s-10.98.2.4 ansible_host=10.98.2.4
+nmaa-01-10.98.1.31 ansible_host=10.98.1.31
+ansible-controller-10.98.12.28 ansible_host=10.98.12.28
+kafka-10.98.12.232 ansible_host=10.98.12.232
+tacgui-10.98.0.178 ansible_host=10.98.0.178
+BngBlaster-10.98.100.15 ansible_host=10.98.100.15
+kafka-10.98.12.231 ansible_host=10.98.12.231
+lab-monitoring-10.98.12.32 ansible_host=10.98.12.32
+centos-10.98.12.22 ansible_host=10.98.12.22
+centos7-10.98.12.17 ansible_host=10.98.12.17
+ansible-target-10.98.12.29 ansible_host=10.98.12.29
+centos-10.98.12.26 ansible_host=10.98.12.26
+zookeeper-10.98.12.227 ansible_host=10.98.12.227
+ansible-server-10.98.2.10 ansible_host=10.98.2.10
+nms-03-k8s-10.98.2.5 ansible_host=10.98.2.5
+longhorn-standalone-10.98.2.7 ansible_host=10.98.2.7
+ha-prometheus03-10.98.12.33 ansible_host=10.98.12.33
+worker02-k8s-10.98.12.36 ansible_host=10.98.12.36
+centos-10.98.12.25 ansible_host=10.98.12.25
+K8s-02-10.98.0.219 ansible_host=10.98.0.219
+lab03-ansible-10.98.12.38 ansible_host=10.98.12.38
+ansible-target-10.98.12.223 ansible_host=10.98.12.223
+zookeeper-10.98.12.229 ansible_host=10.98.12.229
+centos-10.98.12.27 ansible_host=10.98.12.27
+k8s-testing-CentOS-10.98.1.32 ansible_host=10.98.1.32
+zookeeper-10.98.12.228 ansible_host=10.98.12.228
+lab01-ansible-10.98.12.34 ansible_host=10.98.12.34
+lab-monitoring-02-10.98.12.31 ansible_host=10.98.12.31
+nginx-grafana-10.98.12.30 ansible_host=10.98.12.30
+ansible-target-10.98.12.224 ansible_host=10.98.12.224
+lab-ansible-10.98.12.35 ansible_host=10.98.12.35
+kafka-10.98.12.233 ansible_host=10.98.12.233
+kafka-10.98.12.225 ansible_host=10.98.12.225
+k8s-dev-10.98.8.1 ansible_host=10.98.8.1
+K8s-03-10.98.0.220 ansible_host=10.98.0.220
+AL-10.99.250.116 ansible_host=10.99.250.116
+lab01-rpki-10.98.12.40 ansible_host=10.98.12.40
+lab02-rpki-10.98.12.41 ansible_host=10.98.12.41
+tuong-test
+184
+asda
+hkjhjk
+177
+pve

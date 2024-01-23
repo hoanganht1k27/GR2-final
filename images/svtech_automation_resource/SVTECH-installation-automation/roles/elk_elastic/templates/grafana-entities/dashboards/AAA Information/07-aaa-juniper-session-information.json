@@ -1,0 +1,863 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1627544244992,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Elasticsearch-Metric",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "content": "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.back {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n}\n\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n.button {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n  float: right;\n  margin:2px\n}\n\n.clicked {\n  display: inline-block;\n  background-color: white;\n  border: none;\n  color: grey;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid grey;\n  font-weight: bold;\n  margin:2px;\n  float: right;\n}\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n\n</style>\n</head>\n<body>\n\n<button class=\"button\" style=\"vertical-align:middle\" onclick=\"window.open('/grafana/d/menu/menu?orgId=1', '_self')\"><span>BACK TO MENU</span></button>\n\n</body>\n</html>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": " ",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "datasource": "Elasticsearch-Metric",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Concurrent Sesion on BRAS",
+      "type": "row"
+    },
+    {
+      "alignNumbersToRightEnabled": true,
+      "columnAliases": [],
+      "columnFiltersEnabled": false,
+      "columnWidthHints": [],
+      "columns": [],
+      "compactRowsEnabled": true,
+      "datasource": "MySQL_Juniper_session",
+      "datatablePagingType": "simple_numbers",
+      "datatableTheme": "basic_theme",
+      "emptyData": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 12,
+        "w": 9,
+        "x": 0,
+        "y": 4
+      },
+      "hoverEnabled": true,
+      "id": 3,
+      "infoEnabled": true,
+      "lengthChangeEnabled": true,
+      "orderColumnEnabled": true,
+      "pagingTypes": [
+        {
+          "$$hashKey": "object:114",
+          "text": "Page number buttons only",
+          "value": "numbers"
+        },
+        {
+          "$$hashKey": "object:115",
+          "text": "'Previous' and 'Next' buttons only",
+          "value": "simple"
+        },
+        {
+          "$$hashKey": "object:116",
+          "text": "'Previous' and 'Next' buttons, plus page numbers",
+          "value": "simple_numbers"
+        },
+        {
+          "$$hashKey": "object:117",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+          "value": "full"
+        },
+        {
+          "$$hashKey": "object:118",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+          "value": "full_numbers"
+        },
+        {
+          "$$hashKey": "object:119",
+          "text": "'First' and 'Last' buttons, plus page numbers",
+          "value": "first_last_numbers"
+        }
+      ],
+      "panelHeight": 402,
+      "pluginVersion": "7.4.3",
+      "repeat": null,
+      "repeatDirection": "h",
+      "rowNumbersEnabled": false,
+      "rowsPerPage": 10,
+      "scroll": false,
+      "scrollHeight": "default",
+      "searchEnabled": true,
+      "searchHighlightingEnabled": true,
+      "showCellBorders": true,
+      "showHeader": true,
+      "showRowBorders": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "sortByColumns": [
+        {
+          "$$hashKey": "object:52",
+          "columnData": 0,
+          "sortMethod": "desc"
+        }
+      ],
+      "sortByColumnsData": [
+        [
+          1,
+          "desc"
+        ]
+      ],
+      "stripedRowsEnabled": true,
+      "styles": [
+        {
+          "$$hashKey": "object:55",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "splitPattern": "/ /",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "rawQuery": true,
+          "rawSql": "select Sbr_NasName,count(Sbr_UserName) as session_number from Sbr_CurrentSessions group by Sbr_NasName order by count(Sbr_UserName) desc limit ${limit} ;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "Sbr_TotalBytesInRegistered"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "Sbr_CdrAccounts",
+          "timeColumn": "Sbr_AccStartTimeUTC",
+          "timeColumnType": "timestamp",
+          "timeField": "@timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "themeOptions": {
+        "dark": "./styles/dark.scss",
+        "light": "./styles/light.scss"
+      },
+      "themes": [
+        {
+          "$$hashKey": "object:89",
+          "disabled": false,
+          "text": "Basic",
+          "value": "basic_theme"
+        },
+        {
+          "$$hashKey": "object:90",
+          "disabled": true,
+          "text": "Bootstrap",
+          "value": "bootstrap_theme"
+        },
+        {
+          "$$hashKey": "object:91",
+          "disabled": true,
+          "text": "Foundation",
+          "value": "foundation_theme"
+        },
+        {
+          "$$hashKey": "object:92",
+          "disabled": true,
+          "text": "ThemeRoller",
+          "value": "themeroller_theme"
+        }
+      ],
+      "title": "Concurrent session per Bras",
+      "transform": "table",
+      "type": "briangann-datatable-panel"
+    },
+    {
+      "datasource": "Elasticsearch-SQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 50,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "graph": false,
+              "legend": false,
+              "tooltip": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "dash": [
+                40,
+                10
+              ],
+              "fill": "dash"
+            },
+            "lineWidth": 1,
+            "pointSize": 10,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "always",
+            "spanNulls": true
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 15,
+        "x": 9,
+        "y": 4
+      },
+      "hideTimeOverride": false,
+      "id": 6,
+      "interval": "5m",
+      "options": {
+        "graph": {},
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "sum"
+          ],
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltipOptions": {
+          "mode": "multi"
+        }
+      },
+      "pluginVersion": "7.4.3",
+      "repeat": null,
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "sql.metrics.string.brasname",
+              "id": "2",
+              "settings": {
+                "min_doc_count": "1",
+                "order": "desc",
+                "orderBy": "_count",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "1",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "1",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "sql.metrics.numeric.usercount",
+              "hide": false,
+              "id": "1",
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "query": "metricset.name: query sql.metrics.string.brasname = \"[[bras]]\"",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Session History ",
+      "transformations": [],
+      "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "datasource": "Elasticsearch-Metric",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 12,
+      "panels": [
+        {
+          "alignNumbersToRightEnabled": true,
+          "columnAliases": [],
+          "columnFiltersEnabled": true,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": true,
+          "datasource": "MySQL_Juniper_session",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 14
+          },
+          "hoverEnabled": true,
+          "id": 2,
+          "infoEnabled": true,
+          "lengthChangeEnabled": false,
+          "orderColumnEnabled": true,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:76",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:77",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:78",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:79",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:80",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:81",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 250,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": true,
+          "rowsPerPage": 20,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": true,
+          "searchHighlightingEnabled": true,
+          "showCellBorders": true,
+          "showHeader": true,
+          "showRowBorders": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:52",
+              "columnData": 0,
+              "sortMethod": "desc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              1,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": true,
+          "styles": [
+            {
+              "$$hashKey": "object:54",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "/.*Time/",
+              "type": "date"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "id": "2",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "format": "table",
+              "group": [],
+              "hide": false,
+              "metricColumn": "none",
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "",
+              "rawQuery": true,
+              "rawSql": "select conv(hex(Sbr_UniqueSessionId),16,10) as Sbr_UniqueSessionId,INET_NTOA(Sbr_Ipv4Address) as Sbr_Ipv4Address,Sbr_SessionState,${field:csv} from Sbr_CurrentSessions limit $limit",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "Sbr_TotalBytesInRegistered"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "table": "Sbr_CdrAccounts",
+              "timeColumn": "Sbr_AccStartTimeUTC",
+              "timeColumnType": "timestamp",
+              "timeField": "@timestamp",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:51",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:52",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:53",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:54",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "title": "Concurrent Session Detail",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "INET_NTOA(Sbr_Ipv4Address)": "Sbr_Ipv4Address",
+                  "Sbr_UniqueSessionId": ""
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        }
+      ],
+      "title": "Concurrent Session Detail",
+      "type": "row"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "AAA"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": "User Filter",
+        "name": "user_filter",
+        "options": [
+          {
+            "selected": false,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "MySQL_Juniper_session",
+        "definition": "select Sbr_NasName from Sbr_CurrentSessions limit 120",
+        "description": null,
+        "error": {
+          "config": {
+            "data": {
+              "from": "1627533434267",
+              "queries": [
+                {
+                  "datasourceId": 28,
+                  "format": "table",
+                  "rawSql": "select Sbr_NasName from Sbr_CurrentSessions limit 120",
+                  "refId": "bras"
+                }
+              ],
+              "to": "1627544234267"
+            },
+            "headers": {
+              "X-Grafana-Org-Id": 1
+            },
+            "hideFromInspector": false,
+            "method": "POST",
+            "retry": 0,
+            "url": "api/tsdb/query"
+          },
+          "data": {
+            "message": "query failed - please inspect Grafana server log for details",
+            "results": {
+              "bras": {
+                "dataframes": null,
+                "error": "query failed - please inspect Grafana server log for details",
+                "meta": {
+                  "executedQueryString": "select Sbr_NasName from Sbr_CurrentSessions limit 120"
+                },
+                "refId": "bras",
+                "series": null,
+                "tables": null
+              }
+            }
+          },
+          "message": "query failed - please inspect Grafana server log for details",
+          "status": 400,
+          "statusText": "Bad Request"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "BRAS",
+        "multi": true,
+        "name": "bras",
+        "options": [],
+        "query": "select Sbr_NasName from Sbr_CurrentSessions limit 120",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "MySQL_Juniper_session",
+        "definition": "SELECT `COLUMN_NAME` \nFROM `INFORMATION_SCHEMA`.`COLUMNS` \nWHERE `TABLE_SCHEMA`='SteelBeltedRadius' \n    AND `TABLE_NAME`='Sbr_CurrentSessions';",
+        "description": null,
+        "error": {
+          "config": {
+            "data": {
+              "from": "1627533434269",
+              "queries": [
+                {
+                  "datasourceId": 28,
+                  "format": "table",
+                  "rawSql": "SELECT `COLUMN_NAME` \nFROM `INFORMATION_SCHEMA`.`COLUMNS` \nWHERE `TABLE_SCHEMA`='SteelBeltedRadius' \n    AND `TABLE_NAME`='Sbr_CurrentSessions';",
+                  "refId": "field"
+                }
+              ],
+              "to": "1627544234269"
+            },
+            "headers": {
+              "X-Grafana-Org-Id": 1
+            },
+            "hideFromInspector": false,
+            "method": "POST",
+            "retry": 0,
+            "url": "api/tsdb/query"
+          },
+          "data": {
+            "message": "query failed - please inspect Grafana server log for details",
+            "results": {
+              "field": {
+                "dataframes": null,
+                "error": "query failed - please inspect Grafana server log for details",
+                "meta": {
+                  "executedQueryString": "SELECT `COLUMN_NAME` \nFROM `INFORMATION_SCHEMA`.`COLUMNS` \nWHERE `TABLE_SCHEMA`='SteelBeltedRadius' \n    AND `TABLE_NAME`='Sbr_CurrentSessions';"
+                },
+                "refId": "field",
+                "series": null,
+                "tables": null
+              }
+            }
+          },
+          "message": "query failed - please inspect Grafana server log for details",
+          "status": 400,
+          "statusText": "Bad Request"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Display Field",
+        "multi": true,
+        "name": "field",
+        "options": [],
+        "query": "SELECT `COLUMN_NAME` \nFROM `INFORMATION_SCHEMA`.`COLUMNS` \nWHERE `TABLE_SCHEMA`='SteelBeltedRadius' \n    AND `TABLE_NAME`='Sbr_CurrentSessions';",
+        "refresh": 1,
+        "regex": ".*[^Sbr_UniqueSessionId].*[^Sbr_Ipv4Address].*[^Sbr_SessionState].*",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "10",
+          "value": "10"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Limit Query",
+        "multi": false,
+        "name": "limit",
+        "options": [
+          {
+            "selected": true,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "100",
+            "value": "100"
+          },
+          {
+            "selected": false,
+            "text": "1000",
+            "value": "1000"
+          },
+          {
+            "selected": false,
+            "text": "10000",
+            "value": "10000"
+          }
+        ],
+        "query": "10,100,1000,10000",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": null,
+        "error": null,
+        "hide": 2,
+        "label": "Client Port",
+        "name": "client_port",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "07 - AAA - Juniper Session Information",
+  "uid": "07-aaa-juniper-session-information"
+}

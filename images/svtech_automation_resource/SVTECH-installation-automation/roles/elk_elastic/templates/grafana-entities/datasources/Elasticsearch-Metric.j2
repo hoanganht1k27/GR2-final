@@ -1,0 +1,25 @@
+{
+  "uid": "lJJ-EzwMk",
+  "orgId": 1,
+  "name": "Elasticsearch-Metric",
+  "type": "elasticsearch",
+  "typeLogoUrl": "public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg",
+  "access": "proxy",
+  "url": "https://localhost:{{ http_port }}",
+  "basicAuthUser": "elastic",
+  "secureJsonData": {
+    "basicAuthPassword": "{{ elastic_password }}"
+  },
+  "database": "metricbeat*",
+  "basicAuth": true,
+  "isDefault": true,
+  "jsonData": {
+    "esVersion": 70,
+    "logLevelField": "",
+    "logMessageField": "",
+    "maxConcurrentShardRequests": 5,
+    "timeField": "@timestamp",
+    "tlsSkipVerify": true
+  },
+  "readOnly": true
+}

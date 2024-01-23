@@ -1,0 +1,126 @@
+all:
+  children:
+    elastic:
+      hosts:
+        Elasticsearch-Metro:
+          ansible_host: 10.98.10.172 
+          IP: 10.98.10.172 
+          node_master: true 
+          node_data: true 
+          node_ingest: true
+          es_mem_size: "2g"
+          gen_cert: true
+      vars:
+        cluster_name: "aaa"
+        ### Elastic's SSL Variables ###
+        keystore_file: "elastic-certificates.p12"
+        truststore_file: "elastic-certificates.p12"
+        api_basic_auth_password: "juniper@123"
+        keystore_password: ""
+        ca_password: ""
+        elastic_password: "juniper@123"
+        apm_system_password: "juniper@123"
+        kibana_system_password: "juniper@123"
+        logstash_system_password: "juniper@123"
+        beats_system_password: "juniper@123"
+        remote_monitoring_user: "juniper@123"
+
+    single:
+      hosts:
+        Elasticsearch-Metro:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+          server_id: 1
+      vars:
+        gtid_domain: 1
+
+   
+    ### KIBANA HOSTS ###
+    kibana:
+      hosts:
+        Elasticsearch-Metro:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+          kibana: true 
+      vars:
+          kibana_port: 5601
+    #####################
+
+    ### LOGSTASH HOSTS ###
+    logstash:
+      hosts:
+        Elasticsearch-Metro:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172
+    #####################
+
+    ### BEAT HOSTS ###
+    beat:
+      hosts:
+        Elasticsearch-Metro:
+          ansible_host: 10.98.10.172
+          IP: 10.98.10.172    
+    ##################
+
+#=============================================
+  vars:
+    prefix: "production"
+    ansible_ssh_user: "root"
+    ansible_ssh_port: 22
+    admin_user: "juniper"
+    admin_password: "juniper@123"
+    timezone: "Asia/Ho_Chi_Minh"
+
+    ### Elastic Stack Variables ###
+    version: "7.16.2"
+    http_port: "9200"
+    transport_port: "9300"
+    app_group: "EMS"
+    ### BEAT Variables ###
+    beats:
+      ## System Module Variables ##
+      system_reload_period: "30s"
+      ## Index List ##
+      index_list:
+        - "metricbeat"
+        - "filebeat"
+        - "natcom-log"
+        - "movitel-log"
+        - "metfone-log"
+        - "unitel-log"
+        - "junos-log"
+      ## MYSQL Module Variables ##
+      mysql:
+        db_period: "30s"
+        host: "127.0.0.1"
+        port: "3306"
+        monitor_username: "monitor"
+        monitor_password: "monitor@aaa"
+        error_log_path: "/var/log/mysql/error.log"
+        slow_log_path: "/var/log/mysql/slow.log"
+
+      ## LOGSTASH Variables ###
+      logstash:
+        listen_port:
+          metricbeat: "5044"
+          filebeat: "5045"
+          radiuslog: "5045"
+        logstash_writer:
+          username: "logstash"
+          password: "juniper@123"
+
+    ## Grafana Variables
+    organization: "viettelnet-hlc"
+    grafana_database: "grafana"
+    grafana_database_user: "grafana"
+    grafana_database_password: "juniper@123"
+    grafana_admin_user: "admin"
+    grafana_admin_password: "juniper@123"
+
+    ### MariaDB Variables ###
+    mariadb_version: "10.5"
+    auto_gen_password: "false"
+    mariadb_root_password: "juniper@123"
+    innodb_buffer_pool_size_percent: 50
+    data_dir: /var/lib/mysql
+    port: 3306

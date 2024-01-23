@@ -1,0 +1,734 @@
+2023-06-07 10:53:55,400 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 10:53:55,400 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 10:53:55,401 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 10:53:57,413 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 10:53:57,414 INFO main(50)     Time to ping all host: 2.0131702423095703
+2023-06-07 10:53:57,414 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 10:53:57,415 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 10:53:59,420 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 10:53:59,420 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 11:31:11,799 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 11:31:11,799 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 11:31:11,800 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 11:31:13,823 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 11:31:13,824 INFO main(50)     Time to ping all host: 2.024791955947876
+2023-06-07 11:31:13,825 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 11:31:13,825 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 11:31:15,829 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 11:31:15,830 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 11:35:14,299 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 11:35:14,300 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 11:35:14,300 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 11:35:16,340 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 11:35:16,341 INFO main(50)     Time to ping all host: 2.040863037109375
+2023-06-07 11:35:16,341 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 11:35:16,342 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 11:35:18,345 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 11:35:18,346 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 11:38:11,699 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 11:38:11,699 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 11:38:11,700 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 11:38:13,726 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 11:38:13,727 INFO main(50)     Time to ping all host: 2.027773141860962
+2023-06-07 11:38:13,728 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 11:38:13,728 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 11:38:15,732 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 11:38:15,733 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 11:39:44,734 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 11:39:44,735 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 11:39:44,735 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 11:39:46,749 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 11:39:46,751 INFO main(50)     Time to ping all host: 2.0156655311584473
+2023-06-07 11:39:46,751 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 11:39:46,751 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 11:39:48,755 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 11:39:48,755 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 12:23:50,405 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 12:23:50,406 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 12:23:50,406 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 12:23:52,442 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 12:23:52,444 INFO main(50)     Time to ping all host: 2.0378918647766113
+2023-06-07 12:23:52,447 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 12:23:52,447 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 12:23:54,450 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 12:23:54,450 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 12:38:06,124 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 12:38:06,124 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 12:38:06,124 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 12:38:08,143 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 12:38:08,144 INFO main(50)     Time to ping all host: 2.0198850631713867
+2023-06-07 12:38:08,144 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 12:38:08,144 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 12:38:10,150 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 12:38:10,150 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 13:58:41,495 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': None, 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 13:58:41,495 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 13:58:41,496 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 13:58:43,515 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 13:58:43,516 INFO main(50)     Time to ping all host: 2.020263195037842
+2023-06-07 13:58:43,516 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 13:58:43,517 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 13:58:45,524 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 13:58:45,525 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 14:00:46,324 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:00:46,324 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 14:00:46,324 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 14:00:48,336 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 14:00:48,337 INFO main(50)     Time to ping all host: 2.012963056564331
+2023-06-07 14:00:48,338 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 14:00:48,338 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:00:50,343 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:00:50,344 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 14:05:24,531 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': None, 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:05:24,532 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 14:05:24,532 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 14:05:26,543 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 14:05:26,546 INFO main(50)     Time to ping all host: 2.0146312713623047
+2023-06-07 14:05:26,547 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 14:05:26,547 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:05:28,549 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:05:28,550 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 14:25:16,613 INFO main(40)     List of received arguments {'networkAddress': '192.168.10.0/24', 'community': 'public', 'output_dir': None, 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:25:16,614 INFO main(42)     Connecting to network: 192.168.10.0/24:
+2023-06-07 14:25:16,614 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 192.168.10.0/24 into list of host
+2023-06-07 14:25:19,689 INFO TEST_HOST_PING(77)     192.168.10.1 is DOWN!
+2023-06-07 14:25:22,755 INFO TEST_HOST_PING(77)     192.168.10.7 is DOWN!
+2023-06-07 14:25:25,789 INFO TEST_HOST_PING(77)     192.168.10.8 is DOWN!
+2023-06-07 14:25:28,673 INFO TEST_HOST_PING(77)     192.168.10.3 is DOWN!
+2023-06-07 14:25:28,677 INFO TEST_HOST_PING(77)     192.168.10.5 is DOWN!
+2023-06-07 14:25:28,683 INFO TEST_HOST_PING(77)     192.168.10.2 is DOWN!
+2023-06-07 14:25:28,686 INFO TEST_HOST_PING(77)     192.168.10.4 is DOWN!
+2023-06-07 14:25:28,696 INFO TEST_HOST_PING(77)     192.168.10.6 is DOWN!
+2023-06-07 14:25:28,826 INFO TEST_HOST_PING(77)     192.168.10.9 is DOWN!
+2023-06-07 14:25:31,717 INFO TEST_HOST_PING(77)     192.168.10.10 is DOWN!
+2023-06-07 14:25:31,717 INFO TEST_HOST_PING(77)     192.168.10.11 is DOWN!
+2023-06-07 14:25:31,856 INFO TEST_HOST_PING(77)     192.168.10.15 is DOWN!
+2023-06-07 14:25:33,900 INFO TEST_HOST_PING(74)     192.168.10.18 is UP!
+2023-06-07 14:25:34,757 INFO TEST_HOST_PING(77)     192.168.10.16 is DOWN!
+2023-06-07 14:25:34,760 INFO TEST_HOST_PING(77)     192.168.10.17 is DOWN!
+2023-06-07 14:25:36,932 INFO TEST_HOST_PING(77)     192.168.10.19 is DOWN!
+2023-06-07 14:25:37,793 INFO TEST_HOST_PING(77)     192.168.10.21 is DOWN!
+2023-06-07 14:25:37,794 INFO TEST_HOST_PING(77)     192.168.10.20 is DOWN!
+2023-06-07 14:25:39,978 INFO TEST_HOST_PING(77)     192.168.10.22 is DOWN!
+2023-06-07 14:25:40,715 INFO TEST_HOST_PING(77)     192.168.10.13 is DOWN!
+2023-06-07 14:25:40,720 INFO TEST_HOST_PING(77)     192.168.10.14 is DOWN!
+2023-06-07 14:25:40,723 INFO TEST_HOST_PING(77)     192.168.10.12 is DOWN!
+2023-06-07 14:25:40,824 INFO TEST_HOST_PING(77)     192.168.10.24 is DOWN!
+2023-06-07 14:25:40,824 INFO TEST_HOST_PING(77)     192.168.10.23 is DOWN!
+2023-06-07 14:25:43,013 INFO TEST_HOST_PING(77)     192.168.10.25 is DOWN!
+2023-06-07 14:25:43,853 INFO TEST_HOST_PING(77)     192.168.10.29 is DOWN!
+2023-06-07 14:25:43,854 INFO TEST_HOST_PING(77)     192.168.10.30 is DOWN!
+2023-06-07 14:25:46,044 INFO TEST_HOST_PING(77)     192.168.10.31 is DOWN!
+2023-06-07 14:25:46,885 INFO TEST_HOST_PING(77)     192.168.10.33 is DOWN!
+2023-06-07 14:25:46,888 INFO TEST_HOST_PING(77)     192.168.10.32 is DOWN!
+2023-06-07 14:25:49,078 INFO TEST_HOST_PING(77)     192.168.10.34 is DOWN!
+2023-06-07 14:25:49,925 INFO TEST_HOST_PING(77)     192.168.10.36 is DOWN!
+2023-06-07 14:25:49,929 INFO TEST_HOST_PING(77)     192.168.10.35 is DOWN!
+2023-06-07 14:25:52,126 INFO TEST_HOST_PING(77)     192.168.10.37 is DOWN!
+2023-06-07 14:25:52,732 INFO TEST_HOST_PING(77)     192.168.10.26 is DOWN!
+2023-06-07 14:25:52,735 INFO TEST_HOST_PING(77)     192.168.10.27 is DOWN!
+2023-06-07 14:25:52,738 INFO TEST_HOST_PING(77)     192.168.10.28 is DOWN!
+2023-06-07 14:25:52,965 INFO TEST_HOST_PING(77)     192.168.10.38 is DOWN!
+2023-06-07 14:25:52,970 INFO TEST_HOST_PING(77)     192.168.10.39 is DOWN!
+2023-06-07 14:25:55,174 INFO TEST_HOST_PING(77)     192.168.10.40 is DOWN!
+2023-06-07 14:25:55,765 INFO TEST_HOST_PING(77)     192.168.10.42 is DOWN!
+2023-06-07 14:25:55,772 INFO TEST_HOST_PING(77)     192.168.10.43 is DOWN!
+2023-06-07 14:25:56,004 INFO TEST_HOST_PING(77)     192.168.10.44 is DOWN!
+2023-06-07 14:25:56,013 INFO TEST_HOST_PING(77)     192.168.10.45 is DOWN!
+2023-06-07 14:25:58,206 INFO TEST_HOST_PING(77)     192.168.10.46 is DOWN!
+2023-06-07 14:25:58,814 INFO TEST_HOST_PING(77)     192.168.10.48 is DOWN!
+2023-06-07 14:25:58,820 INFO TEST_HOST_PING(77)     192.168.10.47 is DOWN!
+2023-06-07 14:25:59,037 INFO TEST_HOST_PING(77)     192.168.10.49 is DOWN!
+2023-06-07 14:25:59,045 INFO TEST_HOST_PING(77)     192.168.10.50 is DOWN!
+2023-06-07 14:26:01,238 INFO TEST_HOST_PING(77)     192.168.10.51 is DOWN!
+2023-06-07 14:26:01,864 INFO TEST_HOST_PING(77)     192.168.10.53 is DOWN!
+2023-06-07 14:26:01,869 INFO TEST_HOST_PING(77)     192.168.10.52 is DOWN!
+2023-06-07 14:26:02,075 INFO TEST_HOST_PING(77)     192.168.10.54 is DOWN!
+2023-06-07 14:26:02,093 INFO TEST_HOST_PING(77)     192.168.10.55 is DOWN!
+2023-06-07 14:26:04,275 INFO TEST_HOST_PING(77)     192.168.10.56 is DOWN!
+2023-06-07 14:26:04,755 INFO TEST_HOST_PING(77)     192.168.10.41 is DOWN!
+2023-06-07 14:26:04,906 INFO TEST_HOST_PING(77)     192.168.10.57 is DOWN!
+2023-06-07 14:26:04,916 INFO TEST_HOST_PING(77)     192.168.10.58 is DOWN!
+2023-06-07 14:26:05,119 INFO TEST_HOST_PING(77)     192.168.10.59 is DOWN!
+2023-06-07 14:26:05,137 INFO TEST_HOST_PING(77)     192.168.10.60 is DOWN!
+2023-06-07 14:26:07,338 INFO TEST_HOST_PING(77)     192.168.10.61 is DOWN!
+2023-06-07 14:26:07,824 INFO TEST_HOST_PING(77)     192.168.10.62 is DOWN!
+2023-06-07 14:26:07,955 INFO TEST_HOST_PING(77)     192.168.10.63 is DOWN!
+2023-06-07 14:26:07,974 INFO TEST_HOST_PING(77)     192.168.10.64 is DOWN!
+2023-06-07 14:26:08,154 INFO TEST_HOST_PING(77)     192.168.10.65 is DOWN!
+2023-06-07 14:26:09,378 INFO TEST_HOST_PING(74)     192.168.10.67 is UP!
+2023-06-07 14:26:10,854 INFO TEST_HOST_PING(77)     192.168.10.68 is DOWN!
+2023-06-07 14:26:10,995 INFO TEST_HOST_PING(77)     192.168.10.69 is DOWN!
+2023-06-07 14:26:11,004 INFO TEST_HOST_PING(77)     192.168.10.70 is DOWN!
+2023-06-07 14:26:11,193 INFO TEST_HOST_PING(77)     192.168.10.71 is DOWN!
+2023-06-07 14:26:12,413 INFO TEST_HOST_PING(77)     192.168.10.72 is DOWN!
+2023-06-07 14:26:13,882 INFO TEST_HOST_PING(77)     192.168.10.73 is DOWN!
+2023-06-07 14:26:14,022 INFO TEST_HOST_PING(77)     192.168.10.74 is DOWN!
+2023-06-07 14:26:14,034 INFO TEST_HOST_PING(77)     192.168.10.75 is DOWN!
+2023-06-07 14:26:14,223 INFO TEST_HOST_PING(77)     192.168.10.76 is DOWN!
+2023-06-07 14:26:15,447 INFO TEST_HOST_PING(77)     192.168.10.77 is DOWN!
+2023-06-07 14:26:15,917 INFO TEST_HOST_PING(74)     192.168.10.78 is UP!
+2023-06-07 14:26:17,055 INFO TEST_HOST_PING(77)     192.168.10.79 is DOWN!
+2023-06-07 14:26:17,064 INFO TEST_HOST_PING(77)     192.168.10.80 is DOWN!
+2023-06-07 14:26:17,156 INFO TEST_HOST_PING(77)     192.168.10.66 is DOWN!
+2023-06-07 14:26:17,253 INFO TEST_HOST_PING(77)     192.168.10.81 is DOWN!
+2023-06-07 14:26:18,485 INFO TEST_HOST_PING(77)     192.168.10.82 is DOWN!
+2023-06-07 14:26:18,954 INFO TEST_HOST_PING(77)     192.168.10.83 is DOWN!
+2023-06-07 14:26:20,098 INFO TEST_HOST_PING(77)     192.168.10.84 is DOWN!
+2023-06-07 14:26:20,104 INFO TEST_HOST_PING(77)     192.168.10.85 is DOWN!
+2023-06-07 14:26:20,194 INFO TEST_HOST_PING(77)     192.168.10.86 is DOWN!
+2023-06-07 14:26:20,284 INFO TEST_HOST_PING(77)     192.168.10.87 is DOWN!
+2023-06-07 14:26:20,527 INFO TEST_HOST_PING(74)     192.168.10.88 is UP!
+2023-06-07 14:26:21,988 INFO TEST_HOST_PING(77)     192.168.10.89 is DOWN!
+2023-06-07 14:26:23,136 INFO TEST_HOST_PING(77)     192.168.10.90 is DOWN!
+2023-06-07 14:26:23,140 INFO TEST_HOST_PING(77)     192.168.10.91 is DOWN!
+2023-06-07 14:26:23,234 INFO TEST_HOST_PING(77)     192.168.10.92 is DOWN!
+2023-06-07 14:26:23,314 INFO TEST_HOST_PING(77)     192.168.10.93 is DOWN!
+2023-06-07 14:26:23,565 INFO TEST_HOST_PING(77)     192.168.10.94 is DOWN!
+2023-06-07 14:26:25,025 INFO TEST_HOST_PING(77)     192.168.10.95 is DOWN!
+2023-06-07 14:26:25,351 INFO TEST_HOST_PING(74)     192.168.10.99 is UP!
+2023-06-07 14:26:26,163 INFO TEST_HOST_PING(77)     192.168.10.96 is DOWN!
+2023-06-07 14:26:26,172 INFO TEST_HOST_PING(77)     192.168.10.97 is DOWN!
+2023-06-07 14:26:26,262 INFO TEST_HOST_PING(77)     192.168.10.98 is DOWN!
+2023-06-07 14:26:26,607 INFO TEST_HOST_PING(77)     192.168.10.100 is DOWN!
+2023-06-07 14:26:27,063 INFO TEST_HOST_PING(74)     192.168.10.101 is UP!
+2023-06-07 14:26:29,197 INFO TEST_HOST_PING(77)     192.168.10.103 is DOWN!
+2023-06-07 14:26:29,204 INFO TEST_HOST_PING(77)     192.168.10.104 is DOWN!
+2023-06-07 14:26:29,294 INFO TEST_HOST_PING(77)     192.168.10.105 is DOWN!
+2023-06-07 14:26:29,638 INFO TEST_HOST_PING(77)     192.168.10.106 is DOWN!
+2023-06-07 14:26:30,107 INFO TEST_HOST_PING(77)     192.168.10.107 is DOWN!
+2023-06-07 14:26:32,237 INFO TEST_HOST_PING(77)     192.168.10.108 is DOWN!
+2023-06-07 14:26:32,243 INFO TEST_HOST_PING(77)     192.168.10.109 is DOWN!
+2023-06-07 14:26:32,322 INFO TEST_HOST_PING(77)     192.168.10.110 is DOWN!
+2023-06-07 14:26:32,674 INFO TEST_HOST_PING(77)     192.168.10.111 is DOWN!
+2023-06-07 14:26:33,145 INFO TEST_HOST_PING(77)     192.168.10.112 is DOWN!
+2023-06-07 14:26:35,265 INFO TEST_HOST_PING(77)     192.168.10.113 is DOWN!
+2023-06-07 14:26:35,285 INFO TEST_HOST_PING(77)     192.168.10.114 is DOWN!
+2023-06-07 14:26:35,354 INFO TEST_HOST_PING(77)     192.168.10.115 is DOWN!
+2023-06-07 14:26:35,703 INFO TEST_HOST_PING(77)     192.168.10.116 is DOWN!
+2023-06-07 14:26:36,178 INFO TEST_HOST_PING(77)     192.168.10.117 is DOWN!
+2023-06-07 14:26:37,369 INFO TEST_HOST_PING(77)     192.168.10.102 is DOWN!
+2023-06-07 14:26:38,293 INFO TEST_HOST_PING(77)     192.168.10.118 is DOWN!
+2023-06-07 14:26:38,324 INFO TEST_HOST_PING(77)     192.168.10.119 is DOWN!
+2023-06-07 14:26:38,387 INFO TEST_HOST_PING(77)     192.168.10.120 is DOWN!
+2023-06-07 14:26:38,738 INFO TEST_HOST_PING(77)     192.168.10.121 is DOWN!
+2023-06-07 14:26:39,214 INFO TEST_HOST_PING(77)     192.168.10.122 is DOWN!
+2023-06-07 14:26:40,403 INFO TEST_HOST_PING(77)     192.168.10.123 is DOWN!
+2023-06-07 14:26:41,323 INFO TEST_HOST_PING(77)     192.168.10.124 is DOWN!
+2023-06-07 14:26:41,364 INFO TEST_HOST_PING(77)     192.168.10.125 is DOWN!
+2023-06-07 14:26:41,414 INFO TEST_HOST_PING(77)     192.168.10.126 is DOWN!
+2023-06-07 14:26:41,775 INFO TEST_HOST_PING(77)     192.168.10.127 is DOWN!
+2023-06-07 14:26:42,246 INFO TEST_HOST_PING(77)     192.168.10.128 is DOWN!
+2023-06-07 14:26:43,433 INFO TEST_HOST_PING(77)     192.168.10.129 is DOWN!
+2023-06-07 14:26:44,352 INFO TEST_HOST_PING(77)     192.168.10.130 is DOWN!
+2023-06-07 14:26:44,393 INFO TEST_HOST_PING(77)     192.168.10.131 is DOWN!
+2023-06-07 14:26:44,445 INFO TEST_HOST_PING(77)     192.168.10.132 is DOWN!
+2023-06-07 14:26:44,807 INFO TEST_HOST_PING(77)     192.168.10.133 is DOWN!
+2023-06-07 14:26:45,275 INFO TEST_HOST_PING(77)     192.168.10.134 is DOWN!
+2023-06-07 14:26:46,465 INFO TEST_HOST_PING(77)     192.168.10.135 is DOWN!
+2023-06-07 14:26:47,389 INFO TEST_HOST_PING(77)     192.168.10.136 is DOWN!
+2023-06-07 14:26:47,426 INFO TEST_HOST_PING(77)     192.168.10.137 is DOWN!
+2023-06-07 14:26:47,476 INFO TEST_HOST_PING(77)     192.168.10.138 is DOWN!
+2023-06-07 14:26:47,865 INFO TEST_HOST_PING(77)     192.168.10.139 is DOWN!
+2023-06-07 14:26:48,313 INFO TEST_HOST_PING(77)     192.168.10.140 is DOWN!
+2023-06-07 14:26:49,496 INFO TEST_HOST_PING(77)     192.168.10.141 is DOWN!
+2023-06-07 14:26:50,433 INFO TEST_HOST_PING(77)     192.168.10.142 is DOWN!
+2023-06-07 14:26:50,460 INFO TEST_HOST_PING(77)     192.168.10.143 is DOWN!
+2023-06-07 14:26:50,523 INFO TEST_HOST_PING(77)     192.168.10.144 is DOWN!
+2023-06-07 14:26:50,904 INFO TEST_HOST_PING(77)     192.168.10.145 is DOWN!
+2023-06-07 14:26:51,343 INFO TEST_HOST_PING(77)     192.168.10.146 is DOWN!
+2023-06-07 14:26:52,536 INFO TEST_HOST_PING(77)     192.168.10.147 is DOWN!
+2023-06-07 14:26:53,464 INFO TEST_HOST_PING(77)     192.168.10.148 is DOWN!
+2023-06-07 14:26:53,499 INFO TEST_HOST_PING(77)     192.168.10.149 is DOWN!
+2023-06-07 14:26:53,554 INFO TEST_HOST_PING(77)     192.168.10.150 is DOWN!
+2023-06-07 14:26:53,934 INFO TEST_HOST_PING(77)     192.168.10.151 is DOWN!
+2023-06-07 14:26:54,377 INFO TEST_HOST_PING(77)     192.168.10.152 is DOWN!
+2023-06-07 14:26:55,567 INFO TEST_HOST_PING(77)     192.168.10.153 is DOWN!
+2023-06-07 14:26:56,508 INFO TEST_HOST_PING(77)     192.168.10.154 is DOWN!
+2023-06-07 14:26:56,533 INFO TEST_HOST_PING(77)     192.168.10.155 is DOWN!
+2023-06-07 14:26:56,594 INFO TEST_HOST_PING(77)     192.168.10.156 is DOWN!
+2023-06-07 14:26:56,964 INFO TEST_HOST_PING(77)     192.168.10.157 is DOWN!
+2023-06-07 14:26:57,414 INFO TEST_HOST_PING(77)     192.168.10.158 is DOWN!
+2023-06-07 14:26:58,594 INFO TEST_HOST_PING(77)     192.168.10.159 is DOWN!
+2023-06-07 14:26:59,537 INFO TEST_HOST_PING(77)     192.168.10.160 is DOWN!
+2023-06-07 14:26:59,565 INFO TEST_HOST_PING(77)     192.168.10.161 is DOWN!
+2023-06-07 14:26:59,625 INFO TEST_HOST_PING(77)     192.168.10.162 is DOWN!
+2023-06-07 14:26:59,996 INFO TEST_HOST_PING(77)     192.168.10.163 is DOWN!
+2023-06-07 14:27:00,450 INFO TEST_HOST_PING(77)     192.168.10.164 is DOWN!
+2023-06-07 14:27:01,623 INFO TEST_HOST_PING(77)     192.168.10.165 is DOWN!
+2023-06-07 14:27:02,594 INFO TEST_HOST_PING(77)     192.168.10.167 is DOWN!
+2023-06-07 14:27:02,665 INFO TEST_HOST_PING(77)     192.168.10.168 is DOWN!
+2023-06-07 14:27:03,035 INFO TEST_HOST_PING(77)     192.168.10.169 is DOWN!
+2023-06-07 14:27:03,483 INFO TEST_HOST_PING(77)     192.168.10.170 is DOWN!
+2023-06-07 14:27:04,658 INFO TEST_HOST_PING(77)     192.168.10.171 is DOWN!
+2023-06-07 14:27:05,622 INFO TEST_HOST_PING(77)     192.168.10.172 is DOWN!
+2023-06-07 14:27:05,695 INFO TEST_HOST_PING(77)     192.168.10.173 is DOWN!
+2023-06-07 14:27:06,076 INFO TEST_HOST_PING(77)     192.168.10.174 is DOWN!
+2023-06-07 14:27:06,513 INFO TEST_HOST_PING(77)     192.168.10.175 is DOWN!
+2023-06-07 14:27:07,697 INFO TEST_HOST_PING(77)     192.168.10.176 is DOWN!
+2023-06-07 14:27:08,654 INFO TEST_HOST_PING(77)     192.168.10.177 is DOWN!
+2023-06-07 14:27:08,725 INFO TEST_HOST_PING(77)     192.168.10.178 is DOWN!
+2023-06-07 14:27:09,105 INFO TEST_HOST_PING(77)     192.168.10.179 is DOWN!
+2023-06-07 14:27:09,545 INFO TEST_HOST_PING(77)     192.168.10.180 is DOWN!
+2023-06-07 14:27:10,737 INFO TEST_HOST_PING(77)     192.168.10.181 is DOWN!
+2023-06-07 14:27:11,557 INFO TEST_HOST_PING(77)     192.168.10.166 is DOWN!
+2023-06-07 14:27:11,685 INFO TEST_HOST_PING(77)     192.168.10.182 is DOWN!
+2023-06-07 14:27:11,753 INFO TEST_HOST_PING(77)     192.168.10.183 is DOWN!
+2023-06-07 14:27:12,135 INFO TEST_HOST_PING(77)     192.168.10.184 is DOWN!
+2023-06-07 14:27:12,574 INFO TEST_HOST_PING(77)     192.168.10.185 is DOWN!
+2023-06-07 14:27:13,764 INFO TEST_HOST_PING(77)     192.168.10.186 is DOWN!
+2023-06-07 14:27:14,585 INFO TEST_HOST_PING(77)     192.168.10.187 is DOWN!
+2023-06-07 14:27:14,715 INFO TEST_HOST_PING(77)     192.168.10.188 is DOWN!
+2023-06-07 14:27:14,785 INFO TEST_HOST_PING(77)     192.168.10.189 is DOWN!
+2023-06-07 14:27:15,164 INFO TEST_HOST_PING(77)     192.168.10.190 is DOWN!
+2023-06-07 14:27:15,613 INFO TEST_HOST_PING(77)     192.168.10.191 is DOWN!
+2023-06-07 14:27:16,794 INFO TEST_HOST_PING(77)     192.168.10.192 is DOWN!
+2023-06-07 14:27:17,617 INFO TEST_HOST_PING(77)     192.168.10.193 is DOWN!
+2023-06-07 14:27:17,747 INFO TEST_HOST_PING(77)     192.168.10.194 is DOWN!
+2023-06-07 14:27:17,817 INFO TEST_HOST_PING(77)     192.168.10.195 is DOWN!
+2023-06-07 14:27:18,194 INFO TEST_HOST_PING(77)     192.168.10.196 is DOWN!
+2023-06-07 14:27:18,649 INFO TEST_HOST_PING(77)     192.168.10.197 is DOWN!
+2023-06-07 14:27:19,825 INFO TEST_HOST_PING(77)     192.168.10.198 is DOWN!
+2023-06-07 14:27:20,235 INFO TEST_HOST_PING(74)     192.168.10.202 is UP!
+2023-06-07 14:27:20,654 INFO TEST_HOST_PING(77)     192.168.10.199 is DOWN!
+2023-06-07 14:27:20,786 INFO TEST_HOST_PING(77)     192.168.10.200 is DOWN!
+2023-06-07 14:27:20,863 INFO TEST_HOST_PING(77)     192.168.10.201 is DOWN!
+2023-06-07 14:27:22,869 INFO TEST_HOST_PING(77)     192.168.10.204 is DOWN!
+2023-06-07 14:27:23,276 INFO TEST_HOST_PING(77)     192.168.10.205 is DOWN!
+2023-06-07 14:27:23,684 INFO TEST_HOST_PING(77)     192.168.10.206 is DOWN!
+2023-06-07 14:27:23,815 INFO TEST_HOST_PING(77)     192.168.10.207 is DOWN!
+2023-06-07 14:27:23,898 INFO TEST_HOST_PING(77)     192.168.10.208 is DOWN!
+2023-06-07 14:27:25,331 INFO TEST_HOST_PING(74)     192.168.10.210 is UP!
+2023-06-07 14:27:25,734 INFO TEST_HOST_PING(74)     192.168.10.211 is UP!
+2023-06-07 14:27:25,910 INFO TEST_HOST_PING(77)     192.168.10.209 is DOWN!
+2023-06-07 14:27:25,939 INFO TEST_HOST_PING(74)     192.168.10.213 is UP!
+2023-06-07 14:27:26,856 INFO TEST_HOST_PING(77)     192.168.10.212 is DOWN!
+2023-06-07 14:27:27,372 INFO TEST_HOST_PING(74)     192.168.10.214 is UP!
+2023-06-07 14:27:28,765 INFO TEST_HOST_PING(77)     192.168.10.215 is DOWN!
+2023-06-07 14:27:28,953 INFO TEST_HOST_PING(77)     192.168.10.216 is DOWN!
+2023-06-07 14:27:28,983 INFO TEST_HOST_PING(77)     192.168.10.217 is DOWN!
+2023-06-07 14:27:29,896 INFO TEST_HOST_PING(77)     192.168.10.218 is DOWN!
+2023-06-07 14:27:30,404 INFO TEST_HOST_PING(77)     192.168.10.219 is DOWN!
+2023-06-07 14:27:30,674 INFO TEST_HOST_PING(77)     192.168.10.203 is DOWN!
+2023-06-07 14:27:31,500 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': None, 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:27:31,500 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 14:27:31,500 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 14:27:31,806 INFO TEST_HOST_PING(77)     192.168.10.220 is DOWN!
+2023-06-07 14:27:31,984 INFO TEST_HOST_PING(77)     192.168.10.221 is DOWN!
+2023-06-07 14:27:32,016 INFO TEST_HOST_PING(77)     192.168.10.222 is DOWN!
+2023-06-07 14:27:32,941 INFO TEST_HOST_PING(77)     192.168.10.223 is DOWN!
+2023-06-07 14:27:33,436 INFO TEST_HOST_PING(77)     192.168.10.224 is DOWN!
+2023-06-07 14:27:33,510 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 14:27:33,512 INFO main(50)     Time to ping all host: 2.011770009994507
+2023-06-07 14:27:33,512 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 14:27:33,512 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:27:33,716 INFO TEST_HOST_PING(77)     192.168.10.225 is DOWN!
+2023-06-07 14:27:34,837 INFO TEST_HOST_PING(77)     192.168.10.226 is DOWN!
+2023-06-07 14:27:35,032 INFO TEST_HOST_PING(77)     192.168.10.227 is DOWN!
+2023-06-07 14:27:35,047 INFO TEST_HOST_PING(77)     192.168.10.228 is DOWN!
+2023-06-07 14:27:35,518 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:35,518 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 14:27:35,984 INFO TEST_HOST_PING(77)     192.168.10.229 is DOWN!
+2023-06-07 14:27:36,468 INFO TEST_HOST_PING(77)     192.168.10.230 is DOWN!
+2023-06-07 14:27:36,744 INFO TEST_HOST_PING(77)     192.168.10.231 is DOWN!
+2023-06-07 14:27:37,877 INFO TEST_HOST_PING(77)     192.168.10.232 is DOWN!
+2023-06-07 14:27:38,065 INFO TEST_HOST_PING(77)     192.168.10.233 is DOWN!
+2023-06-07 14:27:38,083 INFO TEST_HOST_PING(77)     192.168.10.234 is DOWN!
+2023-06-07 14:27:39,013 INFO TEST_HOST_PING(77)     192.168.10.235 is DOWN!
+2023-06-07 14:27:39,505 INFO TEST_HOST_PING(77)     192.168.10.236 is DOWN!
+2023-06-07 14:27:39,775 INFO TEST_HOST_PING(77)     192.168.10.237 is DOWN!
+2023-06-07 14:27:40,905 INFO TEST_HOST_PING(77)     192.168.10.238 is DOWN!
+2023-06-07 14:27:41,094 INFO TEST_HOST_PING(77)     192.168.10.239 is DOWN!
+2023-06-07 14:27:41,115 INFO TEST_HOST_PING(77)     192.168.10.240 is DOWN!
+2023-06-07 14:27:42,044 INFO TEST_HOST_PING(77)     192.168.10.241 is DOWN!
+2023-06-07 14:27:42,533 INFO TEST_HOST_PING(77)     192.168.10.242 is DOWN!
+2023-06-07 14:27:42,805 INFO TEST_HOST_PING(77)     192.168.10.243 is DOWN!
+2023-06-07 14:27:43,935 INFO TEST_HOST_PING(77)     192.168.10.244 is DOWN!
+2023-06-07 14:27:44,124 INFO TEST_HOST_PING(77)     192.168.10.245 is DOWN!
+2023-06-07 14:27:44,145 INFO TEST_HOST_PING(77)     192.168.10.246 is DOWN!
+2023-06-07 14:27:45,073 INFO TEST_HOST_PING(77)     192.168.10.247 is DOWN!
+2023-06-07 14:27:45,565 INFO TEST_HOST_PING(77)     192.168.10.248 is DOWN!
+2023-06-07 14:27:45,837 INFO TEST_HOST_PING(77)     192.168.10.249 is DOWN!
+2023-06-07 14:27:46,178 INFO TEST_HOST_PING(74)     192.168.10.252 is UP!
+2023-06-07 14:27:46,965 INFO TEST_HOST_PING(77)     192.168.10.250 is DOWN!
+2023-06-07 14:27:47,152 INFO TEST_HOST_PING(77)     192.168.10.251 is DOWN!
+2023-06-07 14:27:48,104 INFO TEST_HOST_PING(77)     192.168.10.253 is DOWN!
+2023-06-07 14:27:48,595 INFO TEST_HOST_PING(77)     192.168.10.254 is DOWN!
+2023-06-07 14:27:48,596 INFO main(50)     Time to ping all host: 151.98190355300903
+2023-06-07 14:27:48,596 INFO main(51)     List of alive host:: ['192.168.10.18', '192.168.10.67', '192.168.10.78', '192.168.10.88', '192.168.10.99', '192.168.10.101', '192.168.10.202', '192.168.10.210', '192.168.10.211', '192.168.10.213', '192.168.10.214', '192.168.10.252']
+2023-06-07 14:27:48,596 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:27:48,663 INFO main(62)     Appending IP 192.168.10.18 and hostname XT4300-TANG-5
+2023-06-07 14:27:48,716 INFO main(62)     Appending IP 192.168.10.67 and hostname NPIEF909A
+2023-06-07 14:27:48,769 INFO main(62)     Appending IP 192.168.10.78 and hostname BRN3C2AF410D67F
+2023-06-07 14:27:48,920 INFO main(62)     Appending IP 192.168.10.88 and hostname HP45414C
+2023-06-07 14:27:48,982 INFO main(62)     Appending IP 192.168.10.99 and hostname NPI071C1D
+2023-06-07 14:27:49,046 INFO main(62)     Appending IP 192.168.10.101 and hostname NPI0E4C96
+2023-06-07 14:27:51,050 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:51,051 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.202, using IP address as hostname
+2023-06-07 14:27:53,054 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:53,055 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.210, using IP address as hostname
+2023-06-07 14:27:55,062 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:55,062 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.211, using IP address as hostname
+2023-06-07 14:27:55,129 INFO main(62)     Appending IP 192.168.10.213 and hostname T3B-SW1820-24G
+2023-06-07 14:27:57,133 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:57,134 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.214, using IP address as hostname
+2023-06-07 14:27:59,138 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:27:59,138 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.252, using IP address as hostname
+2023-06-07 14:28:19,385 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': None, 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:28:19,386 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 14:28:19,386 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 14:28:21,401 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 14:28:21,404 INFO main(50)     Time to ping all host: 2.0180203914642334
+2023-06-07 14:28:21,404 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 14:28:21,404 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:28:23,409 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:28:23,409 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 14:51:09,726 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 14:51:09,726 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 14:51:09,727 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 14:51:11,743 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 14:51:11,745 INFO main(50)     Time to ping all host: 2.0185787677764893
+2023-06-07 14:51:11,746 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 14:51:11,747 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 14:51:13,750 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 14:51:13,751 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:14:43,927 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:14:43,928 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:14:43,928 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:14:45,939 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:14:45,941 INFO main(50)     Time to ping all host: 2.0129873752593994
+2023-06-07 15:14:45,941 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:14:45,941 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:14:47,946 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:14:47,946 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:17:31,783 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:17:31,783 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:17:31,783 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:17:33,794 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:17:33,795 INFO main(50)     Time to ping all host: 2.0112411975860596
+2023-06-07 15:17:33,795 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:17:33,796 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:17:35,799 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:17:35,799 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:22:18,356 INFO main(40)     List of received arguments {'networkAddress': '192.168.10.0/24', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:22:18,356 INFO main(42)     Connecting to network: 192.168.10.0/24:
+2023-06-07 15:22:18,356 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 192.168.10.0/24 into list of host
+2023-06-07 15:22:30,383 INFO TEST_HOST_PING(77)     192.168.10.1 is DOWN!
+2023-06-07 15:22:30,386 INFO TEST_HOST_PING(77)     192.168.10.3 is DOWN!
+2023-06-07 15:22:30,388 INFO TEST_HOST_PING(77)     192.168.10.2 is DOWN!
+2023-06-07 15:22:30,397 INFO TEST_HOST_PING(77)     192.168.10.5 is DOWN!
+2023-06-07 15:22:30,401 INFO TEST_HOST_PING(77)     192.168.10.6 is DOWN!
+2023-06-07 15:22:30,418 INFO TEST_HOST_PING(77)     192.168.10.4 is DOWN!
+2023-06-07 15:22:42,399 INFO TEST_HOST_PING(77)     192.168.10.9 is DOWN!
+2023-06-07 15:22:42,405 INFO TEST_HOST_PING(77)     192.168.10.7 is DOWN!
+2023-06-07 15:22:42,408 INFO TEST_HOST_PING(77)     192.168.10.10 is DOWN!
+2023-06-07 15:22:42,410 INFO TEST_HOST_PING(77)     192.168.10.8 is DOWN!
+2023-06-07 15:22:42,429 INFO TEST_HOST_PING(77)     192.168.10.11 is DOWN!
+2023-06-07 15:22:42,453 INFO TEST_HOST_PING(77)     192.168.10.12 is DOWN!
+2023-06-07 15:22:44,501 INFO TEST_HOST_PING(74)     192.168.10.18 is UP!
+2023-06-07 15:22:47,538 INFO TEST_HOST_PING(77)     192.168.10.19 is DOWN!
+2023-06-07 15:22:50,572 INFO TEST_HOST_PING(77)     192.168.10.20 is DOWN!
+2023-06-07 15:22:53,618 INFO TEST_HOST_PING(77)     192.168.10.21 is DOWN!
+2023-06-07 15:22:54,427 INFO TEST_HOST_PING(77)     192.168.10.14 is DOWN!
+2023-06-07 15:22:54,430 INFO TEST_HOST_PING(77)     192.168.10.15 is DOWN!
+2023-06-07 15:22:54,434 INFO TEST_HOST_PING(77)     192.168.10.13 is DOWN!
+2023-06-07 15:22:54,442 INFO TEST_HOST_PING(77)     192.168.10.16 is DOWN!
+2023-06-07 15:22:54,450 INFO TEST_HOST_PING(77)     192.168.10.17 is DOWN!
+2023-06-07 15:22:56,657 INFO TEST_HOST_PING(77)     192.168.10.22 is DOWN!
+2023-06-07 15:22:57,465 INFO TEST_HOST_PING(77)     192.168.10.25 is DOWN!
+2023-06-07 15:22:57,475 INFO TEST_HOST_PING(77)     192.168.10.23 is DOWN!
+2023-06-07 15:22:59,692 INFO TEST_HOST_PING(77)     192.168.10.28 is DOWN!
+2023-06-07 15:23:00,501 INFO TEST_HOST_PING(77)     192.168.10.29 is DOWN!
+2023-06-07 15:23:00,522 INFO TEST_HOST_PING(77)     192.168.10.30 is DOWN!
+2023-06-07 15:23:02,727 INFO TEST_HOST_PING(77)     192.168.10.31 is DOWN!
+2023-06-07 15:23:03,545 INFO TEST_HOST_PING(77)     192.168.10.32 is DOWN!
+2023-06-07 15:23:03,557 INFO TEST_HOST_PING(77)     192.168.10.33 is DOWN!
+2023-06-07 15:23:05,765 INFO TEST_HOST_PING(77)     192.168.10.34 is DOWN!
+2023-06-07 15:23:06,453 INFO TEST_HOST_PING(77)     192.168.10.26 is DOWN!
+2023-06-07 15:23:06,464 INFO TEST_HOST_PING(77)     192.168.10.24 is DOWN!
+2023-06-07 15:23:06,471 INFO TEST_HOST_PING(77)     192.168.10.27 is DOWN!
+2023-06-07 15:23:06,576 INFO TEST_HOST_PING(77)     192.168.10.35 is DOWN!
+2023-06-07 15:23:06,585 INFO TEST_HOST_PING(77)     192.168.10.36 is DOWN!
+2023-06-07 15:23:08,796 INFO TEST_HOST_PING(77)     192.168.10.37 is DOWN!
+2023-06-07 15:23:09,485 INFO TEST_HOST_PING(77)     192.168.10.38 is DOWN!
+2023-06-07 15:23:09,605 INFO TEST_HOST_PING(77)     192.168.10.41 is DOWN!
+2023-06-07 15:23:09,616 INFO TEST_HOST_PING(77)     192.168.10.42 is DOWN!
+2023-06-07 15:23:11,834 INFO TEST_HOST_PING(77)     192.168.10.43 is DOWN!
+2023-06-07 15:23:12,521 INFO TEST_HOST_PING(77)     192.168.10.44 is DOWN!
+2023-06-07 15:23:12,637 INFO TEST_HOST_PING(77)     192.168.10.45 is DOWN!
+2023-06-07 15:23:12,645 INFO TEST_HOST_PING(77)     192.168.10.46 is DOWN!
+2023-06-07 15:23:14,865 INFO TEST_HOST_PING(77)     192.168.10.47 is DOWN!
+2023-06-07 15:23:15,567 INFO TEST_HOST_PING(77)     192.168.10.48 is DOWN!
+2023-06-07 15:23:15,669 INFO TEST_HOST_PING(77)     192.168.10.49 is DOWN!
+2023-06-07 15:23:15,688 INFO TEST_HOST_PING(77)     192.168.10.50 is DOWN!
+2023-06-07 15:23:17,896 INFO TEST_HOST_PING(77)     192.168.10.51 is DOWN!
+2023-06-07 15:23:18,474 INFO TEST_HOST_PING(77)     192.168.10.39 is DOWN!
+2023-06-07 15:23:18,485 INFO TEST_HOST_PING(77)     192.168.10.40 is DOWN!
+2023-06-07 15:23:18,607 INFO TEST_HOST_PING(77)     192.168.10.52 is DOWN!
+2023-06-07 15:23:18,707 INFO TEST_HOST_PING(77)     192.168.10.53 is DOWN!
+2023-06-07 15:23:18,716 INFO TEST_HOST_PING(77)     192.168.10.54 is DOWN!
+2023-06-07 15:23:20,927 INFO TEST_HOST_PING(77)     192.168.10.55 is DOWN!
+2023-06-07 15:23:21,519 INFO TEST_HOST_PING(77)     192.168.10.56 is DOWN!
+2023-06-07 15:23:21,527 INFO TEST_HOST_PING(77)     192.168.10.57 is DOWN!
+2023-06-07 15:23:21,636 INFO TEST_HOST_PING(77)     192.168.10.58 is DOWN!
+2023-06-07 15:23:21,741 INFO TEST_HOST_PING(77)     192.168.10.59 is DOWN!
+2023-06-07 15:23:21,745 INFO TEST_HOST_PING(77)     192.168.10.60 is DOWN!
+2023-06-07 15:23:23,967 INFO TEST_HOST_PING(77)     192.168.10.61 is DOWN!
+2023-06-07 15:23:24,550 INFO TEST_HOST_PING(77)     192.168.10.62 is DOWN!
+2023-06-07 15:23:24,561 INFO TEST_HOST_PING(77)     192.168.10.63 is DOWN!
+2023-06-07 15:23:24,680 INFO TEST_HOST_PING(77)     192.168.10.64 is DOWN!
+2023-06-07 15:23:24,789 INFO TEST_HOST_PING(77)     192.168.10.65 is DOWN!
+2023-06-07 15:23:26,010 INFO TEST_HOST_PING(74)     192.168.10.67 is UP!
+2023-06-07 15:23:27,598 INFO TEST_HOST_PING(77)     192.168.10.69 is DOWN!
+2023-06-07 15:23:27,612 INFO TEST_HOST_PING(77)     192.168.10.68 is DOWN!
+2023-06-07 15:23:27,720 INFO TEST_HOST_PING(77)     192.168.10.70 is DOWN!
+2023-06-07 15:23:27,842 INFO TEST_HOST_PING(77)     192.168.10.71 is DOWN!
+2023-06-07 15:23:27,948 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:23:27,948 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:23:27,949 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:23:29,050 INFO TEST_HOST_PING(77)     192.168.10.72 is DOWN!
+2023-06-07 15:23:29,973 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:23:29,974 INFO main(50)     Time to ping all host: 2.0253748893737793
+2023-06-07 15:23:29,974 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:23:29,974 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:23:30,649 INFO TEST_HOST_PING(77)     192.168.10.73 is DOWN!
+2023-06-07 15:23:30,660 INFO TEST_HOST_PING(77)     192.168.10.74 is DOWN!
+2023-06-07 15:23:30,772 INFO TEST_HOST_PING(77)     192.168.10.75 is DOWN!
+2023-06-07 15:23:30,875 INFO TEST_HOST_PING(77)     192.168.10.76 is DOWN!
+2023-06-07 15:23:31,980 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:23:31,981 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:23:32,111 INFO TEST_HOST_PING(77)     192.168.10.77 is DOWN!
+2023-06-07 15:23:32,696 INFO TEST_HOST_PING(74)     192.168.10.78 is UP!
+2023-06-07 15:23:33,697 INFO TEST_HOST_PING(77)     192.168.10.79 is DOWN!
+2023-06-07 15:23:33,771 INFO TEST_HOST_PING(77)     192.168.10.66 is DOWN!
+2023-06-07 15:23:33,806 INFO TEST_HOST_PING(77)     192.168.10.80 is DOWN!
+2023-06-07 15:23:33,906 INFO TEST_HOST_PING(77)     192.168.10.81 is DOWN!
+2023-06-07 15:23:35,155 INFO TEST_HOST_PING(77)     192.168.10.82 is DOWN!
+2023-06-07 15:23:35,740 INFO TEST_HOST_PING(77)     192.168.10.83 is DOWN!
+2023-06-07 15:23:36,736 INFO TEST_HOST_PING(77)     192.168.10.84 is DOWN!
+2023-06-07 15:23:36,817 INFO TEST_HOST_PING(77)     192.168.10.85 is DOWN!
+2023-06-07 15:23:36,849 INFO TEST_HOST_PING(77)     192.168.10.86 is DOWN!
+2023-06-07 15:23:36,937 INFO TEST_HOST_PING(77)     192.168.10.87 is DOWN!
+2023-06-07 15:23:37,193 INFO TEST_HOST_PING(74)     192.168.10.88 is UP!
+2023-06-07 15:23:38,770 INFO TEST_HOST_PING(77)     192.168.10.89 is DOWN!
+2023-06-07 15:23:39,770 INFO TEST_HOST_PING(77)     192.168.10.90 is DOWN!
+2023-06-07 15:23:39,849 INFO TEST_HOST_PING(77)     192.168.10.91 is DOWN!
+2023-06-07 15:23:39,877 INFO TEST_HOST_PING(77)     192.168.10.92 is DOWN!
+2023-06-07 15:23:39,966 INFO TEST_HOST_PING(77)     192.168.10.93 is DOWN!
+2023-06-07 15:23:40,226 INFO TEST_HOST_PING(77)     192.168.10.94 is DOWN!
+2023-06-07 15:23:41,798 INFO TEST_HOST_PING(77)     192.168.10.95 is DOWN!
+2023-06-07 15:23:42,000 INFO TEST_HOST_PING(74)     192.168.10.99 is UP!
+2023-06-07 15:23:42,798 INFO TEST_HOST_PING(77)     192.168.10.96 is DOWN!
+2023-06-07 15:23:42,881 INFO TEST_HOST_PING(77)     192.168.10.97 is DOWN!
+2023-06-07 15:23:42,908 INFO TEST_HOST_PING(77)     192.168.10.98 is DOWN!
+2023-06-07 15:23:43,257 INFO TEST_HOST_PING(77)     192.168.10.100 is DOWN!
+2023-06-07 15:23:43,846 INFO TEST_HOST_PING(74)     192.168.10.101 is UP!
+2023-06-07 15:23:45,825 INFO TEST_HOST_PING(77)     192.168.10.103 is DOWN!
+2023-06-07 15:23:45,915 INFO TEST_HOST_PING(77)     192.168.10.104 is DOWN!
+2023-06-07 15:23:45,952 INFO TEST_HOST_PING(77)     192.168.10.105 is DOWN!
+2023-06-07 15:23:46,298 INFO TEST_HOST_PING(77)     192.168.10.106 is DOWN!
+2023-06-07 15:23:46,885 INFO TEST_HOST_PING(77)     192.168.10.107 is DOWN!
+2023-06-07 15:23:48,870 INFO TEST_HOST_PING(77)     192.168.10.108 is DOWN!
+2023-06-07 15:23:48,954 INFO TEST_HOST_PING(77)     192.168.10.109 is DOWN!
+2023-06-07 15:23:48,997 INFO TEST_HOST_PING(77)     192.168.10.110 is DOWN!
+2023-06-07 15:23:49,343 INFO TEST_HOST_PING(77)     192.168.10.111 is DOWN!
+2023-06-07 15:23:49,917 INFO TEST_HOST_PING(77)     192.168.10.112 is DOWN!
+2023-06-07 15:23:51,906 INFO TEST_HOST_PING(77)     192.168.10.113 is DOWN!
+2023-06-07 15:23:52,002 INFO TEST_HOST_PING(77)     192.168.10.114 is DOWN!
+2023-06-07 15:23:52,027 INFO TEST_HOST_PING(77)     192.168.10.115 is DOWN!
+2023-06-07 15:23:52,399 INFO TEST_HOST_PING(77)     192.168.10.116 is DOWN!
+2023-06-07 15:23:52,955 INFO TEST_HOST_PING(77)     192.168.10.117 is DOWN!
+2023-06-07 15:23:54,016 INFO TEST_HOST_PING(77)     192.168.10.102 is DOWN!
+2023-06-07 15:23:54,946 INFO TEST_HOST_PING(77)     192.168.10.118 is DOWN!
+2023-06-07 15:23:55,046 INFO TEST_HOST_PING(77)     192.168.10.119 is DOWN!
+2023-06-07 15:23:55,064 INFO TEST_HOST_PING(77)     192.168.10.120 is DOWN!
+2023-06-07 15:23:55,435 INFO TEST_HOST_PING(77)     192.168.10.121 is DOWN!
+2023-06-07 15:23:55,987 INFO TEST_HOST_PING(77)     192.168.10.122 is DOWN!
+2023-06-07 15:23:57,046 INFO TEST_HOST_PING(77)     192.168.10.123 is DOWN!
+2023-06-07 15:23:57,986 INFO TEST_HOST_PING(77)     192.168.10.124 is DOWN!
+2023-06-07 15:23:58,074 INFO TEST_HOST_PING(77)     192.168.10.125 is DOWN!
+2023-06-07 15:23:58,107 INFO TEST_HOST_PING(77)     192.168.10.126 is DOWN!
+2023-06-07 15:23:58,467 INFO TEST_HOST_PING(77)     192.168.10.127 is DOWN!
+2023-06-07 15:23:59,017 INFO TEST_HOST_PING(77)     192.168.10.128 is DOWN!
+2023-06-07 15:24:00,085 INFO TEST_HOST_PING(77)     192.168.10.129 is DOWN!
+2023-06-07 15:24:01,016 INFO TEST_HOST_PING(77)     192.168.10.130 is DOWN!
+2023-06-07 15:24:01,106 INFO TEST_HOST_PING(77)     192.168.10.131 is DOWN!
+2023-06-07 15:24:01,149 INFO TEST_HOST_PING(77)     192.168.10.132 is DOWN!
+2023-06-07 15:24:01,507 INFO TEST_HOST_PING(77)     192.168.10.133 is DOWN!
+2023-06-07 15:24:02,048 INFO TEST_HOST_PING(77)     192.168.10.134 is DOWN!
+2023-06-07 15:24:03,127 INFO TEST_HOST_PING(77)     192.168.10.135 is DOWN!
+2023-06-07 15:24:04,045 INFO TEST_HOST_PING(77)     192.168.10.136 is DOWN!
+2023-06-07 15:24:04,136 INFO TEST_HOST_PING(77)     192.168.10.137 is DOWN!
+2023-06-07 15:24:04,190 INFO TEST_HOST_PING(77)     192.168.10.138 is DOWN!
+2023-06-07 15:24:04,545 INFO TEST_HOST_PING(77)     192.168.10.139 is DOWN!
+2023-06-07 15:24:05,085 INFO TEST_HOST_PING(77)     192.168.10.140 is DOWN!
+2023-06-07 15:24:06,158 INFO TEST_HOST_PING(77)     192.168.10.141 is DOWN!
+2023-06-07 15:24:07,076 INFO TEST_HOST_PING(77)     192.168.10.142 is DOWN!
+2023-06-07 15:24:07,165 INFO TEST_HOST_PING(77)     192.168.10.143 is DOWN!
+2023-06-07 15:24:07,226 INFO TEST_HOST_PING(77)     192.168.10.144 is DOWN!
+2023-06-07 15:24:07,587 INFO TEST_HOST_PING(77)     192.168.10.145 is DOWN!
+2023-06-07 15:24:08,116 INFO TEST_HOST_PING(77)     192.168.10.146 is DOWN!
+2023-06-07 15:24:09,195 INFO TEST_HOST_PING(77)     192.168.10.147 is DOWN!
+2023-06-07 15:24:10,105 INFO TEST_HOST_PING(77)     192.168.10.148 is DOWN!
+2023-06-07 15:24:10,196 INFO TEST_HOST_PING(77)     192.168.10.149 is DOWN!
+2023-06-07 15:24:10,266 INFO TEST_HOST_PING(77)     192.168.10.150 is DOWN!
+2023-06-07 15:24:10,617 INFO TEST_HOST_PING(77)     192.168.10.151 is DOWN!
+2023-06-07 15:24:11,148 INFO TEST_HOST_PING(77)     192.168.10.152 is DOWN!
+2023-06-07 15:24:12,227 INFO TEST_HOST_PING(77)     192.168.10.153 is DOWN!
+2023-06-07 15:24:13,137 INFO TEST_HOST_PING(77)     192.168.10.154 is DOWN!
+2023-06-07 15:24:13,227 INFO TEST_HOST_PING(77)     192.168.10.155 is DOWN!
+2023-06-07 15:24:13,295 INFO TEST_HOST_PING(77)     192.168.10.156 is DOWN!
+2023-06-07 15:24:13,647 INFO TEST_HOST_PING(77)     192.168.10.157 is DOWN!
+2023-06-07 15:24:14,176 INFO TEST_HOST_PING(77)     192.168.10.158 is DOWN!
+2023-06-07 15:24:15,256 INFO TEST_HOST_PING(77)     192.168.10.159 is DOWN!
+2023-06-07 15:24:16,168 INFO TEST_HOST_PING(77)     192.168.10.160 is DOWN!
+2023-06-07 15:24:16,258 INFO TEST_HOST_PING(77)     192.168.10.161 is DOWN!
+2023-06-07 15:24:16,327 INFO TEST_HOST_PING(77)     192.168.10.162 is DOWN!
+2023-06-07 15:24:16,678 INFO TEST_HOST_PING(77)     192.168.10.163 is DOWN!
+2023-06-07 15:24:17,208 INFO TEST_HOST_PING(77)     192.168.10.164 is DOWN!
+2023-06-07 15:24:18,285 INFO TEST_HOST_PING(77)     192.168.10.165 is DOWN!
+2023-06-07 15:24:19,205 INFO TEST_HOST_PING(77)     192.168.10.166 is DOWN!
+2023-06-07 15:24:19,285 INFO TEST_HOST_PING(77)     192.168.10.167 is DOWN!
+2023-06-07 15:24:19,358 INFO TEST_HOST_PING(77)     192.168.10.168 is DOWN!
+2023-06-07 15:24:19,707 INFO TEST_HOST_PING(77)     192.168.10.169 is DOWN!
+2023-06-07 15:24:20,246 INFO TEST_HOST_PING(77)     192.168.10.170 is DOWN!
+2023-06-07 15:24:21,316 INFO TEST_HOST_PING(77)     192.168.10.171 is DOWN!
+2023-06-07 15:24:22,253 INFO TEST_HOST_PING(77)     192.168.10.172 is DOWN!
+2023-06-07 15:24:22,316 INFO TEST_HOST_PING(77)     192.168.10.173 is DOWN!
+2023-06-07 15:24:22,398 INFO TEST_HOST_PING(77)     192.168.10.174 is DOWN!
+2023-06-07 15:24:22,736 INFO TEST_HOST_PING(77)     192.168.10.175 is DOWN!
+2023-06-07 15:24:23,282 INFO TEST_HOST_PING(77)     192.168.10.176 is DOWN!
+2023-06-07 15:24:24,359 INFO TEST_HOST_PING(77)     192.168.10.177 is DOWN!
+2023-06-07 15:24:25,297 INFO TEST_HOST_PING(77)     192.168.10.178 is DOWN!
+2023-06-07 15:24:25,345 INFO TEST_HOST_PING(77)     192.168.10.179 is DOWN!
+2023-06-07 15:24:25,429 INFO TEST_HOST_PING(77)     192.168.10.180 is DOWN!
+2023-06-07 15:24:25,769 INFO TEST_HOST_PING(77)     192.168.10.181 is DOWN!
+2023-06-07 15:24:26,327 INFO TEST_HOST_PING(77)     192.168.10.182 is DOWN!
+2023-06-07 15:24:27,397 INFO TEST_HOST_PING(77)     192.168.10.183 is DOWN!
+2023-06-07 15:24:28,344 INFO TEST_HOST_PING(77)     192.168.10.184 is DOWN!
+2023-06-07 15:24:28,380 INFO TEST_HOST_PING(77)     192.168.10.185 is DOWN!
+2023-06-07 15:24:28,461 INFO TEST_HOST_PING(77)     192.168.10.186 is DOWN!
+2023-06-07 15:24:28,809 INFO TEST_HOST_PING(77)     192.168.10.187 is DOWN!
+2023-06-07 15:24:29,359 INFO TEST_HOST_PING(77)     192.168.10.188 is DOWN!
+2023-06-07 15:24:30,426 INFO TEST_HOST_PING(77)     192.168.10.189 is DOWN!
+2023-06-07 15:24:31,382 INFO TEST_HOST_PING(77)     192.168.10.190 is DOWN!
+2023-06-07 15:24:31,408 INFO TEST_HOST_PING(77)     192.168.10.191 is DOWN!
+2023-06-07 15:24:31,496 INFO TEST_HOST_PING(77)     192.168.10.192 is DOWN!
+2023-06-07 15:24:31,846 INFO TEST_HOST_PING(77)     192.168.10.193 is DOWN!
+2023-06-07 15:24:32,397 INFO TEST_HOST_PING(77)     192.168.10.194 is DOWN!
+2023-06-07 15:24:33,457 INFO TEST_HOST_PING(77)     192.168.10.195 is DOWN!
+2023-06-07 15:24:34,431 INFO TEST_HOST_PING(77)     192.168.10.196 is DOWN!
+2023-06-07 15:24:34,459 INFO TEST_HOST_PING(77)     192.168.10.197 is DOWN!
+2023-06-07 15:24:34,539 INFO TEST_HOST_PING(77)     192.168.10.198 is DOWN!
+2023-06-07 15:24:34,879 INFO TEST_HOST_PING(77)     192.168.10.199 is DOWN!
+2023-06-07 15:24:35,425 INFO TEST_HOST_PING(77)     192.168.10.200 is DOWN!
+2023-06-07 15:24:36,473 INFO TEST_HOST_PING(74)     192.168.10.202 is UP!
+2023-06-07 15:24:36,496 INFO TEST_HOST_PING(77)     192.168.10.201 is DOWN!
+2023-06-07 15:24:37,566 INFO TEST_HOST_PING(77)     192.168.10.204 is DOWN!
+2023-06-07 15:24:37,917 INFO TEST_HOST_PING(77)     192.168.10.205 is DOWN!
+2023-06-07 15:24:38,455 INFO TEST_HOST_PING(77)     192.168.10.206 is DOWN!
+2023-06-07 15:24:39,506 INFO TEST_HOST_PING(77)     192.168.10.207 is DOWN!
+2023-06-07 15:24:39,527 INFO TEST_HOST_PING(77)     192.168.10.208 is DOWN!
+2023-06-07 15:24:39,952 INFO TEST_HOST_PING(74)     192.168.10.210 is UP!
+2023-06-07 15:24:40,492 INFO TEST_HOST_PING(74)     192.168.10.211 is UP!
+2023-06-07 15:24:40,596 INFO TEST_HOST_PING(77)     192.168.10.209 is DOWN!
+2023-06-07 15:24:41,564 INFO TEST_HOST_PING(74)     192.168.10.213 is UP!
+2023-06-07 15:24:41,993 INFO TEST_HOST_PING(74)     192.168.10.214 is UP!
+2023-06-07 15:24:42,547 INFO TEST_HOST_PING(77)     192.168.10.212 is DOWN!
+2023-06-07 15:24:43,518 INFO TEST_HOST_PING(77)     192.168.10.215 is DOWN!
+2023-06-07 15:24:43,627 INFO TEST_HOST_PING(77)     192.168.10.216 is DOWN!
+2023-06-07 15:24:44,601 INFO TEST_HOST_PING(77)     192.168.10.217 is DOWN!
+2023-06-07 15:24:45,039 INFO TEST_HOST_PING(77)     192.168.10.218 is DOWN!
+2023-06-07 15:24:45,601 INFO TEST_HOST_PING(77)     192.168.10.219 is DOWN!
+2023-06-07 15:24:46,472 INFO TEST_HOST_PING(77)     192.168.10.203 is DOWN!
+2023-06-07 15:24:46,556 INFO TEST_HOST_PING(77)     192.168.10.220 is DOWN!
+2023-06-07 15:24:46,667 INFO TEST_HOST_PING(77)     192.168.10.221 is DOWN!
+2023-06-07 15:24:47,640 INFO TEST_HOST_PING(77)     192.168.10.222 is DOWN!
+2023-06-07 15:24:48,076 INFO TEST_HOST_PING(77)     192.168.10.223 is DOWN!
+2023-06-07 15:24:48,652 INFO TEST_HOST_PING(77)     192.168.10.224 is DOWN!
+2023-06-07 15:24:49,508 INFO TEST_HOST_PING(77)     192.168.10.225 is DOWN!
+2023-06-07 15:24:49,587 INFO TEST_HOST_PING(77)     192.168.10.226 is DOWN!
+2023-06-07 15:24:49,701 INFO TEST_HOST_PING(77)     192.168.10.227 is DOWN!
+2023-06-07 15:24:50,681 INFO TEST_HOST_PING(77)     192.168.10.228 is DOWN!
+2023-06-07 15:24:51,117 INFO TEST_HOST_PING(77)     192.168.10.229 is DOWN!
+2023-06-07 15:24:51,691 INFO TEST_HOST_PING(77)     192.168.10.230 is DOWN!
+2023-06-07 15:24:52,547 INFO TEST_HOST_PING(77)     192.168.10.231 is DOWN!
+2023-06-07 15:24:52,635 INFO TEST_HOST_PING(77)     192.168.10.232 is DOWN!
+2023-06-07 15:24:52,759 INFO TEST_HOST_PING(77)     192.168.10.233 is DOWN!
+2023-06-07 15:24:53,719 INFO TEST_HOST_PING(77)     192.168.10.234 is DOWN!
+2023-06-07 15:24:54,149 INFO TEST_HOST_PING(77)     192.168.10.235 is DOWN!
+2023-06-07 15:24:54,728 INFO TEST_HOST_PING(77)     192.168.10.236 is DOWN!
+2023-06-07 15:24:55,586 INFO TEST_HOST_PING(77)     192.168.10.237 is DOWN!
+2023-06-07 15:24:55,677 INFO TEST_HOST_PING(77)     192.168.10.238 is DOWN!
+2023-06-07 15:24:56,748 INFO TEST_HOST_PING(77)     192.168.10.240 is DOWN!
+2023-06-07 15:24:57,178 INFO TEST_HOST_PING(77)     192.168.10.241 is DOWN!
+2023-06-07 15:24:57,768 INFO TEST_HOST_PING(77)     192.168.10.242 is DOWN!
+2023-06-07 15:24:58,622 INFO TEST_HOST_PING(77)     192.168.10.243 is DOWN!
+2023-06-07 15:24:58,713 INFO TEST_HOST_PING(77)     192.168.10.244 is DOWN!
+2023-06-07 15:24:59,776 INFO TEST_HOST_PING(77)     192.168.10.245 is DOWN!
+2023-06-07 15:25:00,216 INFO TEST_HOST_PING(77)     192.168.10.246 is DOWN!
+2023-06-07 15:25:00,800 INFO TEST_HOST_PING(77)     192.168.10.247 is DOWN!
+2023-06-07 15:25:01,656 INFO TEST_HOST_PING(77)     192.168.10.248 is DOWN!
+2023-06-07 15:25:01,747 INFO TEST_HOST_PING(77)     192.168.10.249 is DOWN!
+2023-06-07 15:25:02,810 INFO TEST_HOST_PING(77)     192.168.10.250 is DOWN!
+2023-06-07 15:25:02,843 INFO TEST_HOST_PING(74)     192.168.10.252 is UP!
+2023-06-07 15:25:03,248 INFO TEST_HOST_PING(77)     192.168.10.251 is DOWN!
+2023-06-07 15:25:04,686 INFO TEST_HOST_PING(77)     192.168.10.253 is DOWN!
+2023-06-07 15:25:04,776 INFO TEST_HOST_PING(77)     192.168.10.239 is DOWN!
+2023-06-07 15:25:04,779 INFO TEST_HOST_PING(77)     192.168.10.254 is DOWN!
+2023-06-07 15:25:04,780 INFO main(50)     Time to ping all host: 166.42391395568848
+2023-06-07 15:25:04,780 INFO main(51)     List of alive host:: ['192.168.10.18', '192.168.10.67', '192.168.10.78', '192.168.10.88', '192.168.10.99', '192.168.10.101', '192.168.10.202', '192.168.10.210', '192.168.10.211', '192.168.10.213', '192.168.10.214', '192.168.10.252']
+2023-06-07 15:25:04,781 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:25:04,835 INFO main(62)     Appending IP 192.168.10.18 and hostname XT4300-TANG-5
+2023-06-07 15:25:04,892 INFO main(62)     Appending IP 192.168.10.67 and hostname NPIEF909A
+2023-06-07 15:25:04,949 INFO main(62)     Appending IP 192.168.10.78 and hostname BRN3C2AF410D67F
+2023-06-07 15:25:05,092 INFO main(62)     Appending IP 192.168.10.88 and hostname HP45414C
+2023-06-07 15:25:05,147 INFO main(62)     Appending IP 192.168.10.99 and hostname NPI071C1D
+2023-06-07 15:25:05,201 INFO main(62)     Appending IP 192.168.10.101 and hostname NPI0E4C96
+2023-06-07 15:25:07,204 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:25:07,205 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.202, using IP address as hostname
+2023-06-07 15:25:09,208 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:25:09,209 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.210, using IP address as hostname
+2023-06-07 15:25:11,212 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:25:11,212 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.211, using IP address as hostname
+2023-06-07 15:25:11,269 INFO main(62)     Appending IP 192.168.10.213 and hostname T3B-SW1820-24G
+2023-06-07 15:25:13,272 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:25:13,272 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.214, using IP address as hostname
+2023-06-07 15:25:15,274 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:25:15,275 INFO main(59)     The host can be ping but doesn't have host name: 192.168.10.252, using IP address as hostname
+2023-06-07 15:31:31,562 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:31:31,562 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:31:31,562 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:31:33,574 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:31:33,576 INFO main(50)     Time to ping all host: 2.0132484436035156
+2023-06-07 15:31:33,576 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:31:33,576 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:31:35,583 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:31:35,583 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:38:20,851 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:38:20,851 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:38:20,851 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:38:22,865 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:38:22,867 INFO main(50)     Time to ping all host: 2.015721559524536
+2023-06-07 15:38:22,868 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:38:22,869 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:38:24,875 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:38:24,876 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:55:11,639 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:55:11,639 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:55:11,639 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:55:13,669 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:55:13,672 INFO main(50)     Time to ping all host: 2.032904863357544
+2023-06-07 15:55:13,672 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:55:13,672 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:55:15,677 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:55:15,678 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-07 15:58:05,351 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-07 15:58:05,351 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-07 15:58:05,351 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-07 15:58:07,388 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-07 15:58:07,390 INFO main(50)     Time to ping all host: 2.038642406463623
+2023-06-07 15:58:07,390 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-07 15:58:07,390 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-07 15:58:09,396 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-07 15:58:09,396 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname

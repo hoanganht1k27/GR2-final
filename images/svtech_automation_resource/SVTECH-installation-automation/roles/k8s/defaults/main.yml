@@ -1,0 +1,23 @@
+
+master_node_list: "{% set master_node_list = [] %}\
+                  {% for item in hostvars.values() %}\
+                  {% if  item['master']==true  %}\
+                  {{ master_node_list.append(item) }}\
+                  {% endif %}\
+                  {% endfor %}\
+                  {{ master_node_list }}"
+
+init_master_node: "{% for item in hostvars.values() %}\
+                  {% if  item['master']==true and item['init_node'] is defined and item['init_node']==true %}\
+                  {{ item }}\
+                  {% endif %}\
+                  {% endfor %}"
+
+
+others_master_node: "{% set others_master_node = [] %}\
+                    {% for item in hostvars.values() %}\
+                    {% if  item['master']==true and item['init_node'] is not defined %}\
+                    {{ others_master_node.append(item) }}\
+                    {% endif %}\
+                    {% endfor %}\
+                    {{ others_master_node }}"

@@ -1,0 +1,101 @@
+- name: Elasticsearch 01
+  hosts: ES-01
+  roles:
+    - role: ansible-elasticsearch
+  vars:
+    es_version: 6.8.8
+    es_api_host: "10.98.0.161"
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/var/log/elasticsearch"
+    es_config:
+      node.name: "ES-01"
+      cluster.name: "test"
+      # for ES 7 or higher
+      #cluster.initial_master_nodes: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      #discovery.seed_hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      # for lower ES 7
+      discovery.zen.ping.unicast.hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      http.port: 9201
+      transport.port: 9301
+      network.host: 0.0.0.0
+      node.data: true
+      node.master: true
+      bootstrap.memory_lock: true
+    es_scripts: false
+    es_templates: false
+    es_templates_fileglob: "{{ role_path }}/test/integration/files/templates-7.x/default.json"
+    es_version_lock: false
+    es_heap_size: 4g
+    es_api_port: 9201
+    es_xpack_features: []
+#    es_plugins:
+#      - plugin: ingest-attachment
+
+- name: Elasticsearch 02
+  hosts: ES-02
+  roles:
+    - role: ansible-elasticsearch
+  vars:
+    es_version: 6.8.8
+    es_api_host: "10.98.0.162"
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/var/log/elasticsearch"
+    es_config:
+      node.name: "ES-02"
+      cluster.name: "test"
+      # for ES 7 or higher
+      #cluster.initial_master_nodes: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      #discovery.seed_hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      # for lower ES 7
+      discovery.zen.ping.unicast.hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      http.port: 9201
+      transport.port: 9301
+      network.host: 0.0.0.0
+      node.data: true
+      node.master: true
+      bootstrap.memory_lock: true
+    es_scripts: false
+    es_templates: false
+    es_templates_fileglob: "{{ role_path }}/test/integration/files/templates-7.x/default.json"
+    es_version_lock: false
+    es_heap_size: 4g
+    es_api_port: 9201
+    es_xpack_features: []
+#    es_plugins:
+#      - plugin: ingest-attachment
+
+- name: Elasticsearch 03
+  hosts: ES-03
+  roles:
+    - role: ansible-elasticsearch
+  vars:
+    es_version: 6.8.8
+    es_api_host: "10.98.0.162"
+    es_data_dirs:
+      - "/opt/elasticsearch/data"
+    es_log_dir: "/var/log/elasticsearch"
+    es_config:
+      node.name: "ES-03"
+      cluster.name: "test"
+      # for ES 7 or higher
+      #cluster.initial_master_nodes: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      #discovery.seed_hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      # for lower ES 7
+      discovery.zen.ping.unicast.hosts: "10.98.0.161:9301,10.98.0.162:9301,10.98.0.163:9301"
+      http.port: 9201
+      transport.port: 9301
+      network.host: 0.0.0.0
+      node.data: true
+      node.master: true
+      bootstrap.memory_lock: true
+    es_scripts: false
+    es_templates: true
+    es_templates_fileglob: "{{ role_path }}/test/integration/files/templates-7.x/default.json"
+    es_version_lock: false
+    es_heap_size: 4g
+    es_api_port: 9201
+    es_xpack_features: []
+#    es_plugins:
+#      - plugin: ingest-attachment

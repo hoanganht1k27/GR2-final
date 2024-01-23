@@ -1,0 +1,9 @@
+# hoanganht1k27
+---
+- name: Restart Iptables
+  service:
+    name: iptables
+    state: restarted
+    enabled: yes
+
+  

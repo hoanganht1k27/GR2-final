@@ -1,0 +1,66 @@
+---
+  - name: "[Node Exporter] - [Step 1] - Check Iptable command"
+    shell: 'iptables --version'
+    register: iptable_command
+
+  - name: "[Node Exporter] - [Step 2] - Check Iptable command"
+    shell: 'systemctl status iptables | grep -i "inactive" | wc -l'
+    register: iptable_status
+    when: "'command not found' not in iptable_command.stdout"
+
+  - name: "[Node Exporter] - [Step 0] - Check Firewalld Status"
+    shell: 'systemctl is-active firewalld'
+    ignore_errors: true
+    register: firewalld_status
+
+  - name: "[Node Exporter] - [Step 3] - Copy Node Exporter to Nodes"
+    copy:
+      src: "{{ role_path }}/files/exporters/node_exporter"
+      dest: /usr/local/bin/node_exporter
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Node Exporter] - [Step 4] - Copy Node Exporter service"
+    template:
+      src: "{{ role_path }}/templates/node_exporter.j2"
+      dest: /etc/systemd/system/node_exporter.service
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Node Exporter] - [Step 5] - Start and Enable Node Exporter service"
+    systemd:
+      name: node_exporter
+      state: started
+      daemon_reload: yes
+      enabled: yes
+
+  - name: "[Node Exporter] - [Step 6] - Iptables rule - allow port 9100"
+    lineinfile:
+      path: /etc/sysconfig/iptables
+      insertafter: '.*--dport 22.*'
+      line: -A INPUT -p tcp -m state --state NEW -m tcp --dport 9100 -j ACCEPT
+    when:
+      - "iptable_status is defined"
+      - "iptable_status.stdout == '0'"
+
+  - name: "[Node Exporter] - [Step 7] - Restart Iptables"
+    systemd:
+      name: iptables
+      state: restarted
+    when:
+      - "iptable_status is defined"
+      - "iptable_status.stdout == '0'"
+
+  - name: "[Node Exporter] - [Step 8] - Firewall rule - allow port 9100"
+    firewalld:
+      port: 9100/tcp
+      permanent: yes
+      state: enabled
+    when: firewalld_status.stdout == 'active'
+
+  - name: "[Node Exporter] - [Step 9] - Firewall rule - Apply Firewall Rule"
+    shell: "firewall-cmd --reload"
+    when: firewalld_status.stdout == 'active'
+

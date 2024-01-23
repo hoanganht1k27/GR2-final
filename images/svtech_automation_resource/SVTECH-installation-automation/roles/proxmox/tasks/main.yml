@@ -1,0 +1,57 @@
+    - name: PROXMOX [Step 01] - Check where target is proxmox or not
+      shell: "cat /etc/issue | grep Proxmox"
+      register: is_proxmox
+      ignore_errors: true
+    #- name: PROXMOX [Step 02] - Set list host file name
+    #  shell: "echo '{{ pve_exporter_list_file_path }}_{{ ansible_date_time.date }}_{{ ansible_date_time.time }}' > {{ pve_exporter_list_file_name }}"
+    #  delegate_to: localhost
+    #  run_once: true
+    - name: PROXMOX [Step 03] - Get list host file name
+      set_fact:
+        list_host_file_path: "{{ lookup('file', pve_exporter_list_file_name) }}"
+      delegate_to: localhost
+      run_once: true
+    - name: PROXMOX [Step 04] - Get all proxmox host to variable
+      set_fact:
+        list: "{% for host in groups['all'] %}{% if hostvars[host].is_proxmox.failed is defined and hostvars[host].is_proxmox.failed == false %}{{ hostvars[host].ansible_host }},{% endif %}{% endfor %}"
+      delegate_to: localhost
+      run_once: true
+    - name: PROXMOX [Step 05] - Write host to list
+      lineinfile:
+        path: "{{ list_host_file_path }}"
+        line: "{{ item }}"
+        create: true
+        state: present
+      delegate_to: localhost
+      run_once: true
+      loop: "{{ list.split(',') }}"
+    - name: PROXMOX [Step 06] - Add pve monitor group
+      shell: "pveum group add {{ pve_monitor_group }} -comment \"This is group for monitoring\""
+      ignore_errors: yes
+      when: is_proxmox.failed == false
+    - name: PROXMOX [Step 07] - Add PVEAuditor to monitor group
+      shell: "pveum acl modify / -group {{ pve_monitor_group }} -role PVEAuditor"
+      ignore_errors: yes
+      when: is_proxmox.failed == false
+    - name: PROXMOX [Step 08] - Add pve monitor user
+      shell: "pveum user add {{ pve_monitor_user }}@pve -comment \"This user is for monitoring\" -password {{ pve_monitor_user_password }}"
+      ignore_errors: yes
+      when: is_proxmox.failed == false
+    - name: PROXMOX [Step 09] - Add pve monitor user to monitor group
+      shell: "pveum user modify {{ pve_monitor_user }}@pve -group {{ pve_monitor_group }}"
+      ignore_errors: yes
+      when: is_proxmox.failed == false
+    - name: PROXMOX [Step 10] - Read list file content
+      set_fact:
+        file_contents: "{{ lookup('file', pve_exporter_list_file_path).splitlines() }}"
+      delegate_to: localhost
+    #- name: PROXMOX [Step 10] - Debug
+    #  debug:
+    #    var: file_contents
+    #- name: PROXMOX [Step 10] - Write content to prometheus
+    #  lineinfile:
+    #    insertafter: "- targets:"
+    #    line: "  - {{ item }}"
+    #    path: "{{ pve_exporter_config_file_path }}"
+    #  loop: "{{ file_contents }}"
+    #  when: is_prometheus is defined

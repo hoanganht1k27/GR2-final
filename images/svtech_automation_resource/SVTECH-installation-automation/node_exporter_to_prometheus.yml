@@ -1,0 +1,48 @@
+- hosts: localhost
+  name: Write node exporter to prometheus config
+  connection: local
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+      node_exporter_list_file_name: "{{ rundeck_node_exporter_list_file_name }}"
+      node_exporter_config_file_path: "{{ rundeck_node_exporter_config_file_path }}"
+      node_exporter_port: "{{ rundeck_node_exporter_port }}"
+    cli_vars_value:
+      ansible_user: juniper
+      ansible_ssh_pass: juniper@123
+      node_exporter_list_file_name: /tmp/list_node_exporter_name
+      node_exporter_config_file_path: /home/rundeck/file_base/file_sd.yml
+      node_exporter_port: 9100
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"
+
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    node_exporter_list_file_name: "{{ variable_list.node_exporter_list_file_name }}"
+    node_exporter_config_file_path: "{{ variable_list.node_exporter_config_file_path }}"
+    node_exporter_port: "{{ variable_list.node_exporter_port }}"
+    job_options: 'install_exporter'
+    install_exporter_option: 'install_exporter'
+  tasks:
+    - name: Check needed or not
+      fail:
+        msg: 'Playbook is not chosen to run'
+      when: job_options is not search(install_exporter_option)
+    - name: WRITE NODE EXPORTER HOST TO PROMETHEUS [Step 01] - Get list host file name
+      set_fact:
+        list_host_file_path: "{{ lookup('file', node_exporter_list_file_name) }}"
+    - name: WRITE NODE EXPORTER HOST TO PROMETHEUS [Step 02] - Read list host
+      set_fact:
+        file_contents: "{{ lookup('file', list_host_file_path).splitlines() }}"
+    - name: Debug
+      debug:
+        var: file_contents
+    - name: WRITE NODE EXPORTER HOST TO PROMETHEUS [Step 03] - Write host to prometheus
+      lineinfile:
+        insertafter: "- targets:"
+        line: "  - {{ item }}:{{ node_exporter_port }}"
+        path: "{{ node_exporter_config_file_path }}"
+      loop: "{{ file_contents }}"

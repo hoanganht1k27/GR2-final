@@ -1,0 +1,102 @@
+---
+beats_version: "{{ version }}"
+use_repository: true
+beats_add_repository: false
+version_lock: true
+start_service: true
+restart_on_change: true
+#    output_conf : {
+#      "elasticsearch": {
+#         hosts: "[{% for host in groups['elastic'] %}\"{{hostvars[host].ansible_host}}:{{ http_port }}\"{% if not loop.last %}, {% endif %}{% endfor %}]",
+#         index: "filebeat-%{+yyyy.MM}",
+#         username: "elastic",
+#         password: "juniper@123",
+#         ssl.verification_mode: "none",
+#         protocol: "https"
+#         #api_key: id:api_key
+#      }
+#    }
+output_conf: {
+  logstash: {
+    hosts: "[{% for host in groups['logstash'] %}\"{{hostvars[host].ansible_host}}:{{ beats.logstash.listen_port.filebeat }}\"{% if not loop.last %}, {% endif %}{% endfor %}]",
+    loadbalance: true
+  }
+}
+logging_conf: {
+  files: {
+    rotateeverybytes: 10485760
+  },
+  level: "warning"
+}
+default_ilm_policy: "{{ playbook_dir }}/roles/elk_beat/files/ilm_filebeat.json"
+beat: filebeat
+beat_conf:
+  filebeat:
+    inputs: 
+      - type: log
+        enabled: false
+        paths:
+          - /var/logs/*.log
+          #- c:\programdata\elasticsearch\logs\*
+        #exclude_lines: ['^DBG']
+        #include_lines: ['^ERR', '^WARN']
+        #fields:
+        #  level: debug
+        #  review: 1
+
+        #multiline.pattern: ^\[
+        #multiline.negate: false
+        #multiline.match: after
+        
+      - type: filestream
+        enabled: false
+        paths:
+          - /var/log/*.log
+          #- c:\programdata\elasticsearch\logs\*
+        #exclude_lines: ['^DBG']
+        #include_lines: ['^ERR', '^WARN']
+        #prospector.scanner.exclude_files: ['.gz$']
+        #fields:
+        #  level: debug
+        #  review: 1
+
+      - type: log
+        enabled: true
+        recursive_glob.enabled: true
+        paths:
+          - /var/tmp/index_syslog/*/*/*
+        exclude_files: ['\.swp$']
+        fields:
+          type: junos_offlog
+        
+  filebeat.config.modules:
+      path: ${path.config}/modules.d/*.yml
+      reload.enabled: true
+      reload.period: "{{ beats.system_reload_period }}"
+
+  logging.metrics.enabled: false
+      
+  setup.template.settings:
+    index.number_of_shards: 3
+    index.codec: best_compression
+    #"_source.enabled": false
+        
+  setup:
+    ilm:
+      policy_file: /etc/metricbeat/policies/default_ilm.json
+      overwrite: false
+      enabled: auto
+      rollover_alias: "filebeat"
+      pattern: "{now/d}-000001"
+    filebeat.modules:
+      module: system
+
+  setup.template.name: "filebeat"
+  setup.template.pattern: "filebeat*"
+  #  setup.template.fields: "custom_fields.yml"
+  #  setup.template.overwrite: false
+
+  setup.kibana:
+    host: localhost:5601
+    #"space.id":
+    #

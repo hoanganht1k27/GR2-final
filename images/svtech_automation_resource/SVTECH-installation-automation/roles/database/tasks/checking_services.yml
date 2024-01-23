@@ -1,0 +1,4 @@
+---
+- name: "[CHECKING SERVICE] - Populate service facts"
+  service_facts:
+  register: mysql_state

@@ -1,0 +1,94 @@
+---
+# -------------------------------------------------------------------
+# View ISIS adjacency
+# -------------------------------------------------------------------
+# retrieve the neighbors status information; corresponds to:
+# > show isis adjacency
+# -------------------------------------------------------------------
+IsisAdjacencyTable:
+  rpc: get-isis-adjacency-information
+  args:
+    extensive: True
+  item: isis-adjacency
+  key:
+    - interface-name
+    - system-name
+  view: IsisAdjacencyView
+
+IsisAdjacencyView:
+  fields:
+    interface_name: interface-name
+    system_name: system-name
+    level: level
+    adjacency_state: adjacency-state
+    holdtime: holdtime
+    circuit_type: circuit-type
+    ip_address: ip-address
+    interface_priority: interface-priority
+    adjacency_flag: adjacency-flag
+    adjacency_topologies: adjacency-topologies
+    adjacency_restart_capable: adjacency-restart-capable
+    adjacency_advertisement: adjacency-advertisement
+    adjacency_log: _IsisAdjacencyLogTable
+
+_IsisAdjacencyLogTable:
+  item: isis-adjacency-log
+  key: 
+    - adjacency-when
+    - adjacency-state
+  view: _IsisAdjacencyLogView
+
+_IsisAdjacencyLogView:
+  fields:
+    when: adjacency-when
+    state: adjacency-state
+    event: adjacency-event
+
+# -------------------------------------------------------------------
+# View ISIS route information
+# -------------------------------------------------------------------
+# retrieve the neighbors status information; corresponds to:
+# > show isis route
+# -------------------------------------------------------------------
+IsisrouteTable:
+  rpc: get-isis-route-information
+  item: isis-routing-table/isis-route
+  key: address-prefix
+  view: IsisrouteView
+  
+IsisrouteView:
+  fields:
+    address_prefix: address-prefix
+    metric: metric
+    level: level
+    next_hop_interface: next-hop-element/interface-name
+    next_hop_type: next-hop-element/isis-next-hop-type
+    next_hop_neighbor: next-hop-element/isis-next-hop
+
+# -------------------------------------------------------------------
+# View ISIS data base information
+# -------------------------------------------------------------------
+# retrieve the neighbors status information; corresponds to:
+# > show isis database BRAS.00-00 extensive
+# -------------------------------------------------------------------
+IsisdatabaseTable:
+  rpc: get-isis-database-information
+  args:
+   system-id: "hostname.00-00"
+   extensive: True
+#   level: 2
+  args_key: system-id
+  item: isis-database
+  key: isis-database-entry/lsp-id
+  view: IsisdatabaseView
+  
+IsisdatabaseView:
+  fields:
+    level: level
+    lsp_id: isis-database-entry/lsp-id
+    isis_neighbor: isis-database-entry/isis-neighbor/is-neighbor-id
+    isis_neighbor_metric: isis-database-entry/isis-neighbor/metric    
+    address_prefix: isis-database-entry/isis-prefix/address-prefix
+    metric: isis-database-entry/isis-prefix/metric
+    prefix_flag: isis-database-entry/isis-prefix/prefix-flag
+    prefix_status: isis-database-entry/isis-prefix/prefix-status

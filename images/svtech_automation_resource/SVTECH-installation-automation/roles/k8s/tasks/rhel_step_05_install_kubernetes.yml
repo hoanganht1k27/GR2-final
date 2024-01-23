@@ -1,0 +1,41 @@
+---
+- name: set fact allow_downgrade to yes
+  set_fact: allow_downgrade=yes
+
+- name: Install Kubernetes [Step 01] - Install Kubernetes
+  yum:
+    name: ["kubelet-{{ kubernetes_version }}", "kubeadm-{{ kubernetes_version }}", "kubectl-{{ kubernetes_version }}"]
+    update_cache: yes
+    allow_downgrade: '{{ allow_downgrade }}'
+
+- name: Install Kubernetes [Step 01] - Create /etc/docker directory
+  file:
+    path: /etc/docker
+    state: directory
+    force: yes
+
+- name: Install Kubernetes [Step 02] - Config Container runtimes (docker)
+  copy:
+    content: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+        "log-opts": {
+          "max-size": "100m"
+        },
+        "storage-driver": "overlay2"
+      }
+    dest: /etc/docker/daemon.json
+    force: yes
+
+- name: Install Kubernetes [Step 03] - Restart Docker
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+
+- name: Install Kubernetes [Step 04] - Start kubelet service
+  service:
+    name: kubelet
+    state: started
+    enabled: yes

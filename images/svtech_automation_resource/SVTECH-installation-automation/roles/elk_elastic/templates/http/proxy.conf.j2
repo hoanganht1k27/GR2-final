@@ -1,0 +1,8 @@
+<Location "/grafana">
+        ProxyPass "http://localhost:3000"
+</Location>
+
+<Location "/kibana">
+        ProxyPass http://localhost:{{ kibana_port }}/kibana
+        ProxyPassReverse http://localhost:{{ kibana_port }}/kibana
+</Location>

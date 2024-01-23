@@ -1,0 +1,12 @@
+---
+# tasks file for nms_compose
+
+- include: step_01_install_docker_packages.yml
+
+- include: step_02_connect_private_registry.yml
+  when:
+    - use_private_registry == "true"
+
+- include: step_03_clone_repo.yml
+
+- include: step_04_start_docker_compose.yml

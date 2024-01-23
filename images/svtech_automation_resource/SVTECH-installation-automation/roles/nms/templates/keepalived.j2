@@ -1,0 +1,45 @@
+global_defs {
+   notification_email {
+     no-reply@svtech.com.vn
+   }
+   notification_email_from no-reply@svtech.com.vn
+   smtp_server 127.0.0.1
+   smtp_connect_timeout 30
+   router_id NMS_SVTECH
+   vrrp_skip_check_adv_addr
+#   vrrp_strict
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+   enable_script_security
+   script_user root
+   nopreempt
+}
+
+vrrp_script chk_haproxy {
+   script "/usr/sbin/pidof haproxy"
+   interval 10
+}
+
+vrrp_script chk_icinga {
+   script "/usr/sbin/pidof icinga2"
+   interval 30
+}
+
+vrrp_instance {{ IP }} {
+   interface {{ if }}
+   virtual_router_id {{ virtual_router_id }}
+   priority {{ priority }}
+   smtp_alert
+   advert_int 1
+   nopreempt
+   virtual_ipaddress {
+   	{{ VIP }}
+   }
+
+   track_script {
+	chk_haproxy
+	chk_icinga
+   }
+
+   notify /etc/keepalived/notify.sh
+}

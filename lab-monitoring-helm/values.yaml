@@ -1,0 +1,636 @@
+global:
+  sharedVolume:
+    enabled: true
+  pve-exporter:
+    enabled: true
+  snmp-exporter:
+    enabled: true
+  vmware-exporter:
+    enabled: true
+  pnetlab-exporter:
+    enabled: true
+  prometheus: 
+    enabled: true
+  grafana:
+    enabled: true
+  telegraf:
+    enabled: true
+  kafka:
+    enabled: true
+  hostPathPV:
+    enabled: true
+  preparation:
+    enabled: true
+  influxdb:
+    enabled: true
+  kafka_to_influxdb:
+    enabled: true
+  ingress:
+    enabled: false
+  metallb:
+    enabled: false
+  syncthing:
+    enabled: true
+  mariadb-galera:
+    enabled: true
+  proxy:
+    enabled: true
+
+  basePath: /opt/shared/
+
+  kafkaConfig:
+    topic: test1
+    partition: 12
+
+  sharedPersistenceVolume:
+    - volumeName: prometheus-file-base-pv
+      pvcName: prometheus-file-base-pvc
+      storageSize: 500Mi
+      storageClass: prometheus-file-base-hostpath
+      path: 
+        prometheus: /prometheus/file_base
+        rundeck: /home/juniper/file_base
+        initFileBase: /tmp
+      accessMode: ReadWriteOnce
+      shareFor:
+        - prometheus
+        - rundeck
+        - initFileBase
+    - volumeName: lab-monitoring-resource-pv
+      pvcName: lab-monitoring-resource-pvc
+      storageSize: 500Mi
+      storageClass: lab-monitoring-resource-hostpath
+      path:
+        grafana: /opt/lab-monitoring-resource
+        preparation: /opt/lab-monitoring-resource
+        initDataGrafana: /opt/lab-monitoring-resource
+      accessMode: ReadWriteOnce
+      shareFor:
+        - grafana
+        - preparation
+        - init-data-grafana
+
+############################################################
+#                     Proxy
+############################################################
+proxy:
+  image:
+    registry: docker.io
+    repository: hoanganht1k27/svtech-lab-monitoring-proxy
+    tag: 1.0.0
+
+    pullPolicy: IfNotPresent
+
+  replicaCount: 3
+
+  commonAnnotations:
+    helm.sh/hook-weight: "-1"
+
+  resources:
+    limits: {}
+    #   cpu: 100m
+    #   memory: 128Mi
+    requests: {}
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  service:
+    ## Service type
+    type: LoadBalancer
+    port: 80
+
+    # externalIPs: ["10.98.0.183"]
+    # Change this loadBalancerIP to your free IP
+    # loadBalancerIP: 10.98.0.184
+    annotations:
+      metallb.universe.tf/allow-shared-ip: default
+
+    ## Set the service SessionAffinity for session stickiness
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-userspace
+    sessionAffinity: ClientIP
+
+    ## Customize the SessionAffinity configuration. The default value for sessionAffinityConfig.clientIP.timeoutSeconds is 10800 (3 hours)
+    sessionAffinityConfig:
+      clientIP:
+        timeoutSeconds: 7200
+
+
+  configuration: |-
+    server {
+        listen 8080;
+
+        {{- if and .Values.global.proxy.enabled .Values.global.grafana.enabled }}
+
+        location /grafana {
+            rewrite  ^/grafana/(.*)  /$1 break;
+            proxy_pass http://grafana:3000;
+            proxy_set_header   Host   $host;
+            proxy_set_header   X-Real-IP  $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }        
+        {{- end  }}
+
+        {{- if and .Values.global.proxy.enabled .Values.global.prometheus.enabled }}
+        location /prometheus {
+            proxy_pass http://prometheus:9090;
+            proxy_set_header   Host   $host;
+            proxy_set_header   X-Real-IP  $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        {{- end  }}
+
+        {{- if and .Values.global.proxy.enabled .Values.global.prometheus.enabled }}
+        location /influxdb {
+            proxy_pass http://influxdb:8086;
+            proxy_set_header   Host   $host;
+            proxy_set_header   X-Real-IP  $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        {{- end  }}
+
+    }
+
+############################################################
+#                     Mariadb Galera
+############################################################
+mariadb-galera:
+  image:
+    registry: docker.io
+    repository: bitnami/mariadb-galera
+    tag: 10.5.8
+    pullPolicy: IfNotPresent
+    debug: false
+
+  commonAnnotations:
+    helm.sh/hook-weight: "9"
+
+  service:
+    type: ClusterIP
+    port: 3306
+    # clusterIP: None
+    # nodePort: 30001
+    externalIPs: []
+
+  securityContext:
+    enabled: true
+    fsGroup: 0
+    runAsUser: 0
+
+  rootUser:
+    user: root
+    password: "juniper@123"
+    forcePassword: false
+
+  db:
+    user: "juniper"
+    password: "juniper@123"
+    name: my_database
+    forcePassword: false
+
+  galera:
+    name: galera
+    bootstrap:
+      bootstrapFromNode: 0
+      forceSafeToBootstrap: true
+    mariabackup:
+      user: mariabackup
+      password: "juniper@123"
+      forcePassword: false
+
+  replicaCount: 3
+
+  persistence:
+    enabled: true
+    # Enable persistence using an existing PVC
+    # existingClaim:
+    # Subdirectory of the volume to mount
+    # subPath:
+    # mountPath on Container
+    mountPath: /bitnami/mariadb
+    # hostPath: mount path on Host
+    hostPath: /data/mariadb
+    ## selector can be used to match an existing PersistentVolume
+    ## selector:
+    ##   matchLabels:
+    ##     app: my-app
+    ##
+    selector: {}
+    storageClass: "mariadb"
+    ## Persistent Volume Claim annotations
+    annotations:
+    ## Persistent Volume Access Mode
+    accessModes:
+      - ReadWriteOnce
+    ## Persistent Volume size
+    size: 8Gi
+
+  resources:
+    limits: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+    requests: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+
+  #  
+  # affinity:
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #     - labelSelector:
+  #         matchExpressions:
+  #           - key: "app"
+  #             operator: In
+  #             values:
+  #             - syncthing
+  #       topologyKey: "kubernetes.io/hostname"
+
+metallb:
+  externalIP: 10.98.3.105/32
+
+pve-exporter:
+  user: prometheus@pve
+  password: juniper@123
+  replicaCount: 1
+  image:
+    repository: prompve/prometheus-pve-exporter
+    tag: 2.3
+
+pnetlab-exporter:
+  replicaCount: 1
+
+  databases:
+    - host: 10.98.0.12
+      port: 3306
+      user: prometheus
+      password: pnetlab
+    - host: 10.98.0.9
+      port: 3306
+      user: prometheus
+      password: pnetlab
+    - host: 10.98.0.5
+      port: 3306
+      user: prometheus
+      password: juniper@123
+
+  image:
+    repository: adonato/query-exporter
+    tag: latest
+
+  interval: 15
+
+snmp-exporter:
+  community: test
+
+  image:
+    repository: prom/snmp-exporter
+    tag: latest
+
+  replicaCount: 1
+
+vmware-exporter:
+  vsphere:
+    host: 10.98.0.7
+    user: tuha@vsphere.local
+    password: ABCD1234
+
+  image:
+    repository: pryorda/vmware_exporter
+    tag: latest
+
+  replicaCount: 1
+
+kafka_to_influxdb:
+  replicaCount: 3
+  image:
+    repository: hoanganht1k27/svtech-lab-monitoring-kafka-to-influxdb
+    tag: 1.0.0
+  init:
+    image:
+      repository: busybox
+      tag: "latest"
+      pullPolicy: IfNotPresent
+
+kafka:
+  podAntiAffinityPreset: soft
+  kafka:
+    replicaCount: 3
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    config:
+      offsets_topic_replication_factor: 3
+      transaction_state_log_replication_factor: 2
+      transaction_state_log_min_isr: 1
+      default_replication_factor: 3
+      min_insync_replica: 2
+      log_retention_hours: 24
+  zookeeper:
+    replicaCount: 3
+    resources:
+      requests:
+        cpu: 50m
+        memory: 50Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  persistence:
+    enabled: true
+    kafka:
+      hostPath: /data/kafka
+      size: 20Gi
+    zookeeper:
+      hostPath: /data/zookeeper
+      size: 5Gi
+
+preparation:
+  init:
+    image:
+      repository: busybox
+      tag: "latest"
+      pullPolicy: IfNotPresent
+  initRepo:
+    image:
+      registry: docker.io
+      repository: svtechnmaa/svtech_debuger
+      tag: "v1.0.0"
+      pullPolicy: IfNotPresent
+    GH_USERNAME: hoanganht1k27
+    repoList: "lab-monitoring-resource:latest"
+    GH_TOKEN: Z2hwX25lV2JnYzl5ck1L
+  initKafkaTopic:
+    image:
+      repository: quay.io/strimzi/kafka
+      tag: "0.36.1-kafka-3.5.1"    
+      pullPolicy: IfNotPresent
+prometheus:
+  fileBaseConfig:
+    snmp: 
+      - targets:
+        - 10.98.11.11
+        - 10.98.11.12
+        - 10.98.11.4
+        labels:
+          target_type: "physical"
+    pve: 
+      - targets:
+        - 10.98.0.1
+        - 10.98.0.11
+        labels:
+          target_type: "pve"
+    node_exporter:
+      - targets:
+          - 10.98.0.5:9100
+        labels:
+          type: 'pnetlab'
+          ip: '10.98.0.5'
+      - targets:
+          - 10.98.0.9:9100
+        labels:
+          type: 'pnetlab'
+          ip: '10.98.0.9'
+      - targets:
+          - 10.98.0.12:9100
+        labels:
+          type: 'pnetlab'
+          ip: '10.98.0.12'
+      - targets:
+          - 10.98.0.11:9100
+        labels:
+          type: 'pve'
+          ip: '10.98.0.11'
+      - targets:
+          - 10.98.0.1:9100
+        labels:
+          type: 'pve'
+          ip: '10.98.0.1'
+  replicaCount: 1
+  image:
+    repository: hoanganht1k27/svtech-lab-monitoring-prometheus
+    tag: 1.0.0
+  config:
+    scrapeInterval: 1m
+    evaluationInterval: 1m
+
+grafana:
+  init:
+    image:
+      repository: busybox
+      tag: "latest"
+      pullPolicy: IfNotPresent
+  replicaCount: 1
+  image:
+    #repository: hoanganht1k27/svtech-lab-monitoring-grafana
+    repository: svtechnmaa/svtech_grafana
+    tag: v1.2.0
+  grafanaConfig:
+    mysqlHost: mariadb
+    mysqlPort: 3306
+    mysqlDB: grafana
+    mysqlUser: grafana
+    mysqlPassword: juniper@123
+    adminUser: thrukadmin
+    adminPassword: thrukadmin
+
+telegraf:
+  replicaCount: 1
+
+  image:
+    repository: telegraf
+    tag: 1.27.0
+
+  init:
+    waitForKafka:
+      image: 
+        repository: busybox
+        tag: 1.33
+    waitForKafkaTopic:
+      image:
+        repository: quay.io/strimzi/kafka
+        tag: 0.36.1-kafka-3.5.1
+
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+influxdb:
+  image:
+    registry: docker.io
+    repository: bitnami/influxdb
+    tag: 2.7.1
+    pullPolicy: IfNotPresent
+    debug: true
+
+  commonAnnotations:
+    helm.sh/hook-weight: "9"
+
+  architecture: high-availability
+
+  auth:
+    enabled: true
+    ## Whether to use files to provide secrets instead of env vars.
+    usePasswordFiles: false
+    ## InfluxDB(TM) admin credentials
+    admin:
+      username: admin
+      password: juniper@123
+      token: sDQUzg2yzNmiRNXppIr0
+      ## Primary org name and id
+      org: SVTech
+      ## Primary bucket name and id
+      bucket: telegraf
+
+    createUserToken: false
+
+    ## InfluxDB(TM) credentials for user with 'admin' privileges on the db specified at 'database' parameter
+    user:
+      username: juniper
+      password: juniper@123
+      ## Org where to create the user, Default: primary.org
+      org:
+      ## Whether to create a new bucket or use the primary bucket
+      ## already create. If it is not null a new bucket will be created.
+      bucket:
+    ## InfluxDB(TM) credentials for user with 'read' privileges on the db specified at 'database' parameter
+    readUser:
+      username:
+      password:
+    ## InfluxDB(TM) credentials for user with 'write' privileges on the db specified at 'database' parameter
+    writeUser:
+      username:
+      password:
+    ## Secret with InfluxDB(TM) credentials
+    ## NOTE: This will override the users/passwords defined at adminUser, user, readUser and writeUser
+    existingSecret:
+
+  influxdb:
+    # initdbScripts:
+    #   my_init_script.sh: |
+    #      #!/bin/sh
+    #      echo "Do something."
+    replicaCount: 3
+    securityContext:
+      enabled: false
+      fsGroup: 1001
+      runAsUser: 1001
+    resources:
+      limits: {}
+      #   cpu: 100m
+      #   memory: 128Mi
+      requests: {}
+      #   cpu: 100m
+      #   memory: 128Mi
+    containerPorts:
+      http: 8086
+      rpc: 8088
+
+    service:
+      type: ClusterIP
+      # externalIPs: ["10.98.0.183"]
+      port: 8086
+      rpcPort: 8088
+      nodePorts:
+        http: ""
+        rpc: ""
+
+  relay:
+    image:
+      registry: docker.io
+      repository: bitnami/influxdb-relay-archived
+      tag: 0.20200717.0-scratch-r7
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    containerPorts:
+      http: 9096
+    service:
+      type: ClusterIP
+      port: 9096
+      nodePort: ""
+      annotations: {}
+
+    configuration: |-
+      [[http]]
+      # Name of the HTTP server, used for display purposes only.
+      name = "relay-server"
+
+      # TCP address to bind to, for HTTP server.
+      bind-addr = "0.0.0.0:9096"
+
+      # Array of InfluxDB(TM) instances to use as backends for Relay.
+      output = [
+          {{- $influxdbReplicaCount := int .Values.influxdb.replicaCount }}
+          {{- $influxdbFullname := include "common.names.fullname" . }}
+          {{- $influxdbHeadlessServiceName := printf "%s-headless" (.Chart.Name) }}
+          {{- $releaseName := .Release.Namespace }}
+          {{- $clusterDomain:= .Values.clusterDomain }}
+          {{- range $e, $i := until $influxdbReplicaCount }}
+          { name="{{ $influxdbFullname }}-{{ $i }}", location="http://{{ $influxdbFullname }}-{{ $i }}.{{ $influxdbHeadlessServiceName }}.{{ $releaseName }}.svc.{{ $clusterDomain }}:8086/write", timeout="10s"},
+          {{- end }}
+      ]
+
+  persistence:
+    enabled: true
+    storageClass: "influxdb"
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+    # mountPath on Container
+    mountPath: /bitnami/influxdb
+    # hostPath: mount path on Host
+    hostPath: /data/influxdb
+
+syncthing:
+  image:
+    registry: docker.io
+    repository: svtechnmaa/svtech_syncthing
+    tag: v1.0.2
+    pullPolicy: IfNotPresent
+    debug: false
+
+  # commonAnnotations:
+    # helm.sh/hook-weight: "9"
+
+  uiPassword: juniper@123
+
+  env:
+    LIST_FOLDER: "lab-monitoring-resource,prometheus-file-base"
+
+  service:
+    # type: ClusterIP
+    # port: 3306
+    # # clusterIP: None
+    # # nodePort: 30001
+    # externalIPs: []
+
+  securityContext:
+    enabled: true
+    fsGroup: 0
+    runAsUser: 0
+
+  replicaCount: 30
+
+  resources:
+    limits: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+    requests: {}
+    #   cpu: 0.5
+    #   memory: 256Mi
+
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: "app"
+              operator: In
+              values:
+              - syncthing
+        topologyKey: "kubernetes.io/hostname"

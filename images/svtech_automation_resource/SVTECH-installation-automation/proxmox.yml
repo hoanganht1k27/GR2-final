@@ -1,0 +1,66 @@
+- hosts: all
+  gather_facts: false
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+      pve_exporter_list_file_path: "{{ rundeck_pve_exporter_list_file_path }}"
+      pve_exporter_list_file_name: "{{ rundeck_pve_exporter_list_file_name }}"
+    cli_vars_value:
+      ansible_user: root
+      ansible_ssh_pass: juniper@123
+      pve_exporter_list_file_path: /tmp/list_proxmox
+      pve_exporter_list_file_name: /tmp/list_proxmox_name
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"
+
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    pve_exporter_list_file_path: "{{ variable_list.pve_exporter_list_file_path }}"
+    pve_exporter_list_file_name: "{{ variable_list.pve_exporter_list_file_name }}"
+  tasks:
+    - name: PROXMOX [Step 01] - Get current timestamp
+      shell: "date +%Y-%m-%d_%H-%M-%S"
+      register: tstampt
+      delegate_to: localhost
+      run_once: true
+    - name: PROXMOX [Step 02] - Set tmp file name
+      shell: "echo '{{ pve_exporter_list_file_path }}_{{ tstampt.stdout }}' > {{ pve_exporter_list_file_name }}"
+      delegate_to: localhost
+      run_once: true
+- hosts: all
+  serial: 10
+  gather_facts: false
+  vars:
+    rundeck: False
+    rundeck_vars_value:
+      ansible_user: "{{ rundeck_ansible_user }}"
+      ansible_ssh_pass: "{{ rundeck_ansible_ssh_pass }}"
+      pve_monitor_user_password: "{{ rundeck_pve_monitor_user_password }}"
+      pve_monitor_group: "{{ rundeck_pve_monitor_group }}"
+      pve_monitor_user: "{{ rundeck_pve_monitor_user }}"
+      pve_exporter_list_file_path: "{{ rundeck_pve_exporter_list_file_path }}"
+      pve_exporter_list_file_name: "{{ rundeck_pve_exporter_list_file_name }}"
+    cli_vars_value:
+      ansible_user: juniper
+      ansible_ssh_pass: juniper@123
+      pve_monitor_user_password: juniper@123
+      pve_monitor_group: monitor
+      pve_monitor_user: prometheus
+      pve_exporter_list_file_path: /tmp/list_proxmox
+      pve_exporter_list_file_name: /tmp/list_proxmox_name
+
+    variable_list: "{{ lookup('vars','rundeck_vars_value') if (rundeck) else lookup('vars','cli_vars_value') }}"
+    variable_mode: "{{ 'RUNDECK' if (rundeck) else 'CLI/PLAYBOOK' }}"
+
+    ansible_user: "{{ variable_list.ansible_user }}"
+    ansible_ssh_pass: "{{ variable_list.ansible_ssh_pass }}"
+    pve_monitor_user_password: "{{ variable_list.pve_monitor_user_password }}"
+    pve_monitor_group: "{{ variable_list.pve_monitor_group }}"
+    pve_monitor_user: "{{ variable_list.pve_monitor_user }}"
+    pve_exporter_list_file_path: "{{ variable_list.pve_exporter_list_file_path }}"
+    pve_exporter_list_file_name: "{{ variable_list.pve_exporter_list_file_name }}"
+  roles:
+    - role: proxmox

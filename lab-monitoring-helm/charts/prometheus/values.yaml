@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: hoanganht1k27/svtech-lab-monitoring-prometheus
+  tag: 1.0.0
+
+config:
+  scrapeInterval: 15s
+  evaluationInterval: 15s
+

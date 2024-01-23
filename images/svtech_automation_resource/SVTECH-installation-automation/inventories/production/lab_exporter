@@ -1,0 +1,8 @@
+
+server ansible_host=10.98.0.126
+
+
+[all:vars]
+ansible_user=root
+ansible_password=juniper@123
+ansible_port=22

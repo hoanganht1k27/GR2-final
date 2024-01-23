@@ -1,0 +1,101 @@
+---
+  - name: "[Libvirt Exporter] - [Step 1] - Check Iptable command"
+    shell: 'iptables --version'
+    register: iptable_command
+
+  - name: "[Libvirt Exporter] - [Step 2] - Check Iptable command"
+    shell: 'systemctl status iptables | grep -i "inactive" | wc -l'
+    register: iptable_status
+    when: "'command not found' not in iptable_command.stdout"
+
+  - name: "[Libvirt Exporter] - [Step 3] - Check Firewalld Status"
+    shell: 'systemctl is-active firewalld'
+    ignore_errors: true
+    register: firewalld_status
+
+  - name: "[Libvirt Exporter] - [Step 4] - Copy Libvirt exporter to Nodes"
+    copy:
+      src: "{{ role_path }}/files/exporters/libvirt-exporter"
+      dest: /usr/local/bin/libvirt-exporter
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Libvirt Exporter] - [Step 5] - Copy Libvirt exporter service"
+    template:
+      src: "{{ role_path }}/templates/libvirt-exporter.j2"
+      dest: /etc/systemd/system/libvirt_exporter.service
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Libvirt Exporter] - [Step 6] - Start and Enable Libvirt exporter service"
+    systemd:
+      name: libvirt_exporter
+      state: started
+      daemon_reload: yes
+      enabled: yes
+
+  - name: "[Libvirt Exporter] - [Step 7] - Iptables rule - allow port 9177"
+    lineinfile:
+      path: /etc/sysconfig/iptables
+      insertafter: '.*--dport 22.*'
+      line: -A INPUT -p tcp -m state --state NEW -m tcp --dport 9177 -j ACCEPT
+    when:
+      - "iptable_status is defined"
+      - "iptable_status.stdout == '0'"
+
+  - name: "[Libvirt Exporter] - [Step 8] - Restart Iptables"
+    systemd:
+      name: iptables
+      state: restarted
+    when:
+      - "iptable_status is defined"
+      - "iptable_status.stdout == '0'"
+
+  - name: "[Libvirt Exporter] - [Step 9] - Firewall rule - allow port 9177"
+    firewalld:
+      port: 9177/tcp
+      permanent: yes
+      state: enabled
+    when: firewalld_status.stdout == 'active'
+
+  - name: "[Libvirt Exporter] - [Step 10] - Firewall rule - Apply Firewall Rule"
+    shell: "firewall-cmd --reload"
+    when: firewalld_status.stdout == 'active'
+
+
+  - name: "[Libvirt Exporter] - [Step 11] - Create folder /usr/share/libvirt/scripts"
+    file:
+      path: /usr/share/libvirt/scripts
+      state: directory
+      mode: '0755'
+      recurse: yes
+
+  - name: "[Libvirt Exporter] - [Step 12] - Copy libvirt-listen-events.py to /usr/share/libvirt/scripts"
+    copy:
+      src: "{{ role_path }}/files/scripts/libvirt-listen-events.py"
+      dest: /usr/share/libvirt/scripts/
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Libvirt Exporter] - [Step 13] - Create service libvirt_listen_events"
+    template:
+      src: "{{ role_path }}/templates/libvirt_listen_events.j2"
+      dest: /etc/systemd/system/libvirt_listen_events.service
+      owner: root
+      group: root
+      mode: '0775'
+
+  - name: "[Libvirt Exporter] - [Step 14] - Start and Enable libvirt_listen_events service"
+    systemd:
+      name: libvirt_listen_events
+      state: started
+      daemon_reload: yes
+      enabled: yes
+
+  - name: "[Libvirt Exporter] - [Step 15] - Start and Enable Libvirt exporter service"
+    systemd:
+      name: libvirt_exporter
+      state: restarted

@@ -1,0 +1,53 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+bootstrapTokens:
+  - token: {{ (system_id | hash('md5'))[:6] }}.{{ (kubernetes_cluster_name | hash('md5'))[:16] }}
+    ttl: 24h0m0s
+    usages:
+    - signing
+    - authentication
+    groups:
+      - system:bootstrappers:kubeadm:default-node-token
+localAPIEndpoint:
+  advertiseAddress: {{ IP }}
+  bindPort: 6443
+nodeRegistration:
+  name: {{ inventory_hostname }}
+  criSocket: /var/run/dockershim.sock
+{% if schedule != True %}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+{% endif %}
+
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+certificatesDir: /etc/kubernetes/pki
+clusterName: {{ kubernetes_cluster_name }}
+controlPlaneEndpoint: {{ VIP }}:6444
+controllerManager: 
+#  extraArgs:
+#    "node-cidr-mask-size": "24"
+apiServer:
+  timeoutForControlPlane: 4m0s
+#  extraArgs:
+#    authorization-mode: "Node,RBAC"
+dns:
+  type: CoreDNS
+etcd:
+  external:
+    endpoints:
+{% for item in master_node_list %}
+    - https://{{ item["IP"] }}:2379
+{% endfor %}
+    caFile: /etc/etcd/ca.pem
+    certFile: /etc/etcd/kubernetes.pem
+    keyFile: /etc/etcd/kubernetes-key.pem
+imageRepository: k8s.gcr.io
+kubernetesVersion: v{{ kubernetes_version }} 
+networking:
+  dnsDomain: cluster.local
+  podSubnet: {{ pod_subnet }}
+  serviceSubnet: {{ service_subnet }}
+scheduler: {}

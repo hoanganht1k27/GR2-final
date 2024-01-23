@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: hoanganht1k27/svtech-lab-monitoring-grafana
+  tag: 1.0.0
+
+grafanaConfig:
+  mysqlHost: 10.98.12.31
+  mysqlPort: 3306
+  mysqlDB: grafana_test
+  mysqlUser: grafana
+  mysqlPassword: juniper@123
+  adminUser: thrukadmin
+  adminPassword: thrukadmin

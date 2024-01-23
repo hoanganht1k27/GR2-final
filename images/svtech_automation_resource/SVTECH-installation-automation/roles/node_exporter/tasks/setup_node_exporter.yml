@@ -1,0 +1,19 @@
+- name: Copy install file to remote host
+  copy: 
+    src: node_exporter-1.5.0.linux-amd64.tar.gz 
+    dest: "{{ tar_gz_folder }}/node_exporter-1.5.0.linux-amd64.tar.gz"
+- name: Extract install file in remote host
+  shell: |
+    cd {{ tar_gz_folder }}
+    tar -xvzf node_exporter-1.5.0.linux-amd64.tar.gz
+- name: Install lsof package
+  yum:
+    name: lsof
+    state: present
+- name: Open port {{ node_exporter_port }} with iptables
+  iptables:
+    action: "insert"
+    chain: INPUT
+    protocol: tcp
+    destination_port: "{{ node_exporter_port | int }}"
+    jump: ACCEPT

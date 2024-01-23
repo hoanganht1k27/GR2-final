@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: False
+  roles:
+    - role: environment
+      become: yes
+      tag: environment
+
+    - role: nms
+      become: yes
+      tag: icinga2
+      any_errors_fatal: true

@@ -1,0 +1,62 @@
+# Wrote by Hoang Anh Tu
+---
+- include_vars:
+    file: "{{ item }}"
+  with_items:
+    - "{{ playbook_dir }}/roles/elk_beat/defaults/metricbeat.yml"
+
+- name: "BEAT - INCLUDE ROLE elk_beat"
+  include_role:
+    name: elk_beat
+
+- name: "BEAT - STEP 01  - check if requested Beat version lock exists"
+  become: yes
+  shell: 'yum versionlock list | grep {{ item }} | grep -c "{{es_version}}"'
+  register: beat_requested_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - metricbeat
+    - filebeat
+
+- name: "BEAT - STEP 02 - lock Beat version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}* ; yum versionlock add {{ item }}-{{ es_version }}
+  args:
+    warn: false
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - es_version_lock
+    - beat_requested_version_locked is defined
+    - beat_requested_version_locked.results[0].stdout|int == 0 
+
+- name: "BEAT - STEP 03 - check if any Logstash version lock exists"
+  become: yes
+  shell: yum versionlock list | grep -c {{ item }}
+  register: beat_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - metricbeat
+    - filebeat
+
+- name: "BEAT - STEP 04 - unlock Logstash version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}*
+  args:
+    warn: false
+  with_items:
+    - metricbeat
+    - filebeat
+  when:
+    - not es_version_lock
+    - beat_version_locked is defined
+    - beat_version_locked.results[0].stdout|int > 0

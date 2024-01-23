@@ -1,0 +1,127 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "init-grafana-data"
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-init-repo
+          image: {{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}
+          imagePullPolicy: {{ .Values.init.image.pullPolicy | quote }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+                until [ `ls -A /opt/lab-monitoring-resource | grep 'grafana-entities' | wc -l` != 0 ];
+                do
+                  echo "Waiting for Init Repo...";
+                  sleep 2;
+                done
+          volumeMounts:
+          {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+            {{- range .Values.global.sharedPersistenceVolume }}
+
+            {{- if has "init-data-grafana" .shareFor }}
+            - name: {{ .volumeName }}
+              mountPath: {{ .path.initDataGrafana }}
+            {{- end }}
+
+            {{- end }}
+          {{- end  }}
+      containers:
+      - name: init-data
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        command:
+          - bash
+          - -ec
+          - |
+              GRAFANA_HOST={{ .Chart.Name }}
+              TIMEOUT=${TIMEOUT:-360}
+              result=false
+              grafana_stats=""
+              function grafana_is_up {
+                  sleep 1
+                  if [ "${TIMEOUT}" == 0 ]; then
+                      echo "Timeout Waiting grafana Up !"
+                      result="timeout"
+                      return 0;
+                  fi
+                  echo "Waiting grafana Up ..."
+                  grafana_stats=`curl -X GET -u thrukadmin:thrukadmin http://$GRAFANA_HOST:3000/api/admin/stats`
+                  if [ $? == 0 ]; then
+                      result="up"
+                      echo "Grafana is Up"
+                      true
+                  else
+                      TIMEOUT=$(expr $TIMEOUT - 1)
+                      false
+                  fi
+
+                  return $?;
+              }
+              function import_grafana_entities {
+                  while ! grafana_is_up ; do true; done
+                  grafana_dashboard_number=`echo $grafana_stats | python2 -c "import sys, json; print json.load(sys.stdin)['dashboards']"`
+                  grafana_datasource_number=`echo $grafana_stats | python2 -c "import sys, json; print json.load(sys.stdin)['datasources']"`
+                  if [ "${result}" == "up" ]; then
+                      if [[ ${grafana_dashboard_number} == 0 && ${grafana_datasource_number} == 0 ]]; then
+
+                          echo "Init wizzy configuration"
+                          cd /opt/grafana-entities && \
+                            wizzy init && \
+                            wizzy set grafana url http://$GRAFANA_HOST:3000 && \
+                            wizzy set grafana username thrukadmin && \
+                            wizzy set grafana password thrukadmin
+
+                          echo "No Dashboard and Datasource. Import Dashboards:"
+                          cd /opt/grafana-entities && wizzy export dashboards
+
+                          echo "No Dashboard and Datasource. Import Datasource:"
+                          mkdir -p /tmp/grafana-entities/datasources
+                          # cp -rf /opt/grafana-entities/datasources/..data/* /tmp/grafana-entities/datasources
+                          cp -rf /opt/grafana-entities/datasources/* /tmp/grafana-entities/datasources
+
+                          cp -rf /opt/grafana-entities/conf /tmp/grafana-entities
+                          # sed -i 's,%ReleaseName,{{ .Release.Name }},g' /tmp/grafana-entities/datasources/*
+                          cd /tmp/grafana-entities && wizzy export datasources
+                      else
+                          echo "There are ${grafana_dashboard_number} dasboards and ${grafana_datasource_number} datasources exists. Take no action !"
+                      fi
+                  fi
+              }
+             
+              rm -rf /opt/grafana-entities 
+              mkdir /opt/grafana-entities
+              cp -rf /opt/lab-monitoring-resource/grafana-entities/datasources /opt/grafana-entities
+              cp -rf /opt/lab-monitoring-resource/grafana-entities/dashboards /opt/grafana-entities
+
+              for file in `grep -lr /opt/grafana-entities/* -e "\"refresh\": 1"`;do sed -i 's/"refresh": 1,/"refresh": 2,/g' $file ;done
+              import_grafana_entities
+        volumeMounts:
+          # - name: grafana-datasources
+          #   mountPath: /opt/grafana-entities/datasources
+          {{- if and .Values.global.sharedPersistenceVolume .Values.global.sharedVolume.enabled }}
+            {{- range .Values.global.sharedPersistenceVolume }}
+
+            {{- if has "init-data-grafana" .shareFor }}
+            - name: {{ .volumeName }}
+              mountPath: {{ .path.initDataGrafana }}
+            {{- end }}
+
+            {{- end }}
+          {{- end  }}  
+
+      volumes:
+        {{- range .Values.global.sharedPersistenceVolume }}
+
+        {{- if has "init-data-grafana" .shareFor }}
+        - name: {{ .volumeName }}
+          persistentVolumeClaim:
+            claimName: {{ .pvcName }}
+        {{- end }}
+
+        {{- end }}            

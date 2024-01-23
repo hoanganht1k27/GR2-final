@@ -1,0 +1,76 @@
+[active]
+NMS-01 ansible_host=10.98.0.113 IP=10.98.0.113 backend_name=NMS-01 backend_ip=10.98.0.113 thruk_id=svtech01 priority=110 if=ens192 role=primary serverid=1
+
+[all:vars]
+####################################
+#  Variables for HA Configuration  #
+####################################
+# Set HA = true for installing Active - Backup NMS
+# Set HA = false for installing multi single or single NMS
+HA = false
+ha_thruk_id = svtech-vip
+ha_backend_name = NMS-vip
+VIP = 10.98.0.156
+virtual_router_id = 104
+timezone="Asia/Ho_Chi_Minh"
+# Check timezone in this link: https://www.ibm.com/support/knowledgecenter/it/SSAW57_8.5.5/com.ibm.websphere.nd.multiplatform.doc/ae/rrun_svr_timezones.html
+
+############################
+# Variables for icinga2-ui #
+############################
+icinga2_ui_user = icinga2-ui
+icinga2_ui_user_password = icinga2-ui@123
+
+##########################################
+# Variables for configure api-users.conf #
+##########################################
+api_user = icingaAdmin
+api_password = icingaAdmin
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_user = root
+ansible_pass = juniper@123
+
+########################
+# Variable for mariadb #
+########################
+mariadb_root_password = juniper@123
+ha_user = juniper
+ha_password = juniper@123
+
+########################
+# Variable for grafana #
+########################
+grafana_database = grafana
+grafana_database_user = grafana
+grafana_database_password = grafana
+grafana_admin_user = thrukadmin
+grafana_admin_password = thrukadmin
+organization = svtech
+
+#########################
+# Variable for Influxdb #
+#########################
+influxdb_database = influxdb_nms
+influxdb_user = juniper
+influxdb_password = juniper@123
+
+#########################
+# Variable for Rundeck #
+#########################
+rundeck_user = thrukadmin
+rundeck_password = thrukadmin
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = stagging

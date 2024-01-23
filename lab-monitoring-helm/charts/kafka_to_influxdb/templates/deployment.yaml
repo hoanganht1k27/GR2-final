@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kafka-to-influxdb-deployment
+  name: kafka-to-influxdb
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: kafka-to-influxdb-deployment
+  template:
+    metadata:
+      labels:
+        app: kafka-to-influxdb-deployment
+    spec:
+      securityContext:
+        fsGroup: 0
+      initContainers:
+      - name: wait-for-kafka
+        image: {{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}
+        command:
+          - /bin/sh
+          - -ec
+          - |
+              until nc -zvw5 kafka-kafka-brokers 9092; do echo "Waiting for Kafka..."; sleep 2; done
+      containers:
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: Always
+        name: kafka-to-influxdb
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "250Mi"
+          limits:
+            cpu: 2
+            memory: "2Gi"
+        env:
+          - name: INFLUXDB_BUCKET
+            value: telegraf
+          - name: INFLUXDB_ORG
+            value: SVTech
+          - name: INFLUXDB_TOKEN
+            value: sDQUzg2yzNmiRNXppIr0
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: kafka-kafka-brokers:9092
+          - name: KAFKA_TOPIC
+            value: "{{ .Values.global.kafkaConfig.topic }}"
+          - name: HEADLESS_SERVICE
+            value: influxdb-headless

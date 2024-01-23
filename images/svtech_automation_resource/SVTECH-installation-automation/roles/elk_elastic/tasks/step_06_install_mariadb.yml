@@ -1,0 +1,5 @@
+# Wrote by Hoang Anh Tu
+---
+- name: MARIADB - INCLUDE ROLE MariaDB Clustering
+  include_role:
+    name: database

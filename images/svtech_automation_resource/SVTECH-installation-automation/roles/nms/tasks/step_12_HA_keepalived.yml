@@ -1,0 +1,48 @@
+---
+# Wrote by Hoang Anh Tu
+  - name: KEEPALIVED - HA INSTALLATION [STEP 01] - Install Keepalived
+    yum:
+      name: "{{ item.package }}"
+      state: latest
+    with_items: "{{ keepalived_yum }}"
+
+  - name: KEEPALIVED - HA INSTALLATION [STEP 02] - Configurate Keepalived
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
+      backup: true
+    with_items:
+      - { src: "{{ role_path }}/templates/keepalived.j2", dest: "/etc/keepalived/keepalived.conf" }
+
+  - name: KEEPALIVED - HA INSTALLATION [STEP 02] - Configurate Notify
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0755
+      backup: true
+    with_items:
+      - { src: "{{ role_path }}/files/keepalived/notify.sh", dest: "/etc/keepalived/notify.sh" }
+      - { src: "{{ role_path }}/files/keepalived/master.sh", dest: "/etc/keepalived/master.sh" }
+      - { src: "{{ role_path }}/templates/slave.sh.j2", dest: "/etc/keepalived/slave.sh" }
+
+
+  - name: KEEPALIVED - HA INSTALLATION [STEP 03] - Restart keepalived on Primary Node
+    service:
+      name: keepalived
+      state: restarted
+      enabled: yes
+    when:
+      - role == "primary"
+
+  - name: KEEPALIVED - HA INSTALLATION [STEP 04] - Restart keepalived on Backup Node
+    service:
+      name: keepalived
+      state: restarted
+      enabled: yes
+    when:
+      - role == "backup"

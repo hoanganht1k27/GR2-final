@@ -1,0 +1,22 @@
+
+replicaCount: 1
+
+databases:
+  - host: 10.98.0.12
+    port: 3306
+    user: root
+    password: pnetlab
+  - host: 10.98.0.9
+    port: 3306
+    user: root
+    password: pnetlab
+  - host: 10.98.0.5
+    port: 3306
+    user: root
+    password: pnetlab
+
+image:
+  repository: adonato/query-exporter
+  tag: latest
+
+interval: 15

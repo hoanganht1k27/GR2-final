@@ -1,0 +1,54 @@
+2023-06-06 14:54:01,316 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 14:54:01,316 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 14:54:01,316 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 14:54:03,329 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 14:54:03,330 INFO main(50)     Time to ping all host: 2.0132904052734375
+2023-06-06 14:54:03,330 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 14:54:03,330 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 14:54:05,333 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 14:54:05,334 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-06 15:12:22,447 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 15:12:22,448 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 15:12:22,448 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 15:12:24,460 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 15:12:24,461 INFO main(50)     Time to ping all host: 2.0132620334625244
+2023-06-06 15:12:24,462 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 15:12:24,462 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 15:12:26,466 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 15:12:26,466 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-06 15:16:46,061 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 15:16:46,061 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 15:16:46,061 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 15:16:48,073 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 15:16:48,074 INFO main(50)     Time to ping all host: 2.013024091720581
+2023-06-06 15:16:48,075 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 15:16:48,075 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 15:16:50,079 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 15:16:50,080 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-06 15:17:27,265 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 15:17:27,265 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 15:17:27,265 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 15:17:29,276 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 15:17:29,277 INFO main(50)     Time to ping all host: 2.0118250846862793
+2023-06-06 15:17:29,277 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 15:17:29,278 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 15:17:31,281 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 15:17:31,282 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-06 17:29:39,674 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 17:29:39,674 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 17:29:39,674 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 17:29:41,689 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 17:29:41,690 INFO main(50)     Time to ping all host: 2.015503168106079
+2023-06-06 17:29:41,691 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 17:29:41,691 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 17:29:43,695 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 17:29:43,695 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname
+2023-06-06 20:17:58,784 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.29/32', 'community': 'public', 'output_dir': '/tmp/inventory_dest_file', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-06-06 20:17:58,784 INFO main(42)     Connecting to network: 10.98.12.29/32:
+2023-06-06 20:17:58,784 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.29/32 into list of host
+2023-06-06 20:18:00,796 INFO TEST_HOST_PING(74)     10.98.12.29 is UP!
+2023-06-06 20:18:00,797 INFO main(50)     Time to ping all host: 2.013012409210205
+2023-06-06 20:18:00,798 INFO main(51)     List of alive host:: ['10.98.12.29']
+2023-06-06 20:18:00,798 INFO main(55)     Collecting all hostname using snmp community public
+2023-06-06 20:18:02,802 ERROR CHECK_SNMP_HOSTNAME(474)     timed out while connecting to remote host
+2023-06-06 20:18:02,802 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.29, using IP address as hostname

@@ -1,0 +1,160 @@
+# Install MariaDB
+# Wrote by Hoang Anh Tu
+---
+- set_fact:
+    innodb_buffer_pool_size_mb: "{{ (ansible_memtotal_mb*(innodb_buffer_pool_size_percent|default(50, true))/100)|int|abs }}"
+
+- name: DATABASE [Step 01]-[Cluster] - Install Galera MariaDB Packages
+  yum:
+    name:
+      - MariaDB-server
+      - MariaDB-client
+      - MariaDB-backup
+      - nc
+      - socat
+      - MySQL-python
+      - galera-4
+    state: latest
+
+- name: DATABASE [Step 02]-[Cluster] - Checking MySQL Log Directory
+  stat: path=/var/log/mysql
+  register: mysqllog_dir
+
+- name: DATABASE [Step 03]-[Cluster] - Create MariaDB log's directory
+  file: 
+    path: /var/log/mysql
+    state: directory
+    owner: mysql
+    group: mysql
+  when:
+    - mysqllog_dir.stat.exists == false
+
+- name: DATABASE [Step 04]-[Cluster] - Configure MariaDB
+  template:
+    src: "{{ role_path }}/templates/mysql_cluster/server.j2"
+    dest: "/etc/my.cnf.d/server.cnf"
+
+- name: DATABASE [Step 05]-[Cluster] - Change DB's Limit Open file
+  replace:
+    dest: /usr/lib/systemd/system/mariadb.service
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  with_items:
+    - { old: "LimitNOFILE=.*", new: 'LimitNOFILE=infinity'}
+
+- name: DATABASE [Step 06]-[Cluster] - force systemd to reread DB configs
+  systemd:
+    name: mariadb
+    state: stopped
+    enabled: yes
+    daemon_reload: yes
+
+- name: DATABASE [Step 07]-[Cluster]-[Bootstrap] - Start MariaDB
+  command: galera_new_cluster
+  when:
+    - bootstrap == "enable"
+
+- name: DATABASE [Step 08]-[Cluster] - Check Database Root's password
+  command: mysqladmin -uroot status
+  ignore_errors: yes
+  register: mysql_root_password
+  failed_when: false
+  args:
+    warn: false
+  when: 
+    - bootstrap == "enable"
+
+- name: DATABASE [Step 09]-[Cluster]-[Bootstrap] - Create SSTUser File
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ hostvars[inventory_hostname].wsrep_sst_auth_user }}"
+    host: "localhost"
+    password: "{{ hostvars[inventory_hostname].wsrep_sst_auth_password }}"
+    priv: "*.*:PROCESS,RELOAD,LOCK TABLES,REPLICATION CLIENT"
+    update_password: on_create
+    state: present
+  when: 
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+
+- name: DATABASE [Step 11]-[Cluster]-[Bootstrap] - Secure MySQL Installation
+  command: "{{ item }}"
+  with_items:
+    - mysql -uroot -e "DELETE FROM mysql.user WHERE User='';"
+    - mysql -uroot -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    - mysql -uroot -e "DROP DATABASE IF EXISTS test;"
+    - mysql -uroot -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
+  when: 
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+
+- name: DATABASE [Step 12]-[Cluster]-[Bootstrap] - Generate random password for Root user when auto_gen_password is true
+  shell: "{{ item }}"
+  with_items:
+    - rm -rf /tmp/temp
+    - echo "- Database" >> /tmp/temp
+    - echo "User:root" >> /tmp/temp
+    - echo "Password:" >> /tmp/temp
+    - echo $(openssl rand -hex 8)'D8' |tee -a /tmp/password | tee -a /tmp/temp
+    - mysqladmin -u root password `cat /tmp/password`
+    - sed '3N;s/\n/ /' /tmp/temp  >> ~/info
+    - rm -rf /tmp/temp /tmp/sstuser.sql
+  when:
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- name: DATABASE [Step 13]-[Cluster]-[Bootstrap] - Collect random password when auto_gen_password is true
+  command: "{{ item }}"
+  with_items:
+    - cat /tmp/password
+  register: autogen_mariadb_root_password
+  when:
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- set_fact:
+    mariadb_root_password: "{{ autogen_mariadb_root_password.results[0].stdout }}"
+  when:
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "true"
+
+- name: DATABASE [Step 14]-[Cluster]-[Bootstrap] - Set password for Root user
+  shell: "{{ item }}"
+  with_items:
+    - "mysqladmin -u root password {{ mariadb_root_password }}"
+  no_log: true
+  when:
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0
+    - auto_gen_password== "false"
+
+- name: DATABASE [Step 15]-[Cluster]-[Bootstrap] - Altering the root@localhost Account to Revert to the Previous Authentication Method
+  command: "{{ item }}"
+  with_items:
+    - mysql -uroot -p{{mariadb_root_password}} -e "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD('{{mariadb_root_password}}');"
+  no_log: true
+  when:
+    - bootstrap == "enable"
+
+- name: DATABASE [Step 16]-[Cluster]-[Join] - Start MariaDB
+  service:
+    name: mysql
+    state: restarted
+  throttle: 1
+  when:
+    - bootstrap == "disable"
+
+- name: DATABASE [Step 18]-[Cluster] - Getting Database information to Ansible Server
+  fetch:
+    src: ~/info
+    dest: "{{ playbook_dir }}/host_info/{{ hostvars[inventory_hostname].prefix }}-GaleraCluster-{{ inventory_hostname }}"
+    flat: yes
+  when:
+    - bootstrap == "enable"
+    - mysql_root_password.rc == 0

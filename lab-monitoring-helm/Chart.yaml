@@ -1,0 +1,47 @@
+apiVersion: v2
+name: lab-monitoring-chart
+description: A Helm chart for Kubernetes
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.16.0"
+
+dependencies:
+  - name: pve-exporter
+    condition: global.pve-exporter.enabled
+  - name: vmware-exporter
+    condition: global.vmware-exporter.enabled
+  - name: snmp-exporter
+    condition: global.snmp-exporter.enabled
+  - name: pnetlab-exporter
+    condition: global.pnetlab-exporter.enabled
+  - name: prometheus
+    condition: global.prometheus.enabled
+  - name: grafana
+    condition: global.grafana.enabled
+  - name: hostPathPV
+    condition: global.hostPathPV.enabled
+  - name: sharedVolume
+    condition: global.sharedVolume.enabled
+  - name: telegraf
+    condition: global.telegraf.enabled
+  - name: kafka
+    condition: global.kafka.enabled
+  - name: preparation
+    condition: global.preparation.enabled
+  - name: influxdb
+    condition: global.influxdb.enabled
+  - name: kafka_to_influxdb
+    condition: global.kafka_to_influxdb.enabled
+  - name: ingress
+    condition: global.ingress.enabled
+  - name: metallb
+    condition: global.metallb.enabled
+  - name: syncthing
+    condition: global.syncthing.enabled
+  - name: mariadb-galera
+    condition: global.mariadb-galera.enabled
+  - name: proxy
+    condition: global.proxy.enabled

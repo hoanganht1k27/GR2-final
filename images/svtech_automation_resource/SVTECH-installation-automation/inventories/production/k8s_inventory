@@ -1,0 +1,37 @@
+[master]
+node1 ansible_host=10.98.0.211 IP=10.98.0.211 master=True schedule=True priority=120 if_name=ens192 init_node=True
+node2 ansible_host=10.98.0.212 IP=10.98.0.212 master=True schedule=True priority=110 if_name=ens192
+node3 ansible_host=10.98.0.213 IP=10.98.0.213 master=True schedule=True priority=100 if_name=ens192
+
+## Note that:
+### master=True             --> this node will be setup as master node
+### master=False or notSet  --> this node will be setup as worker node
+
+### schedule=True            --> If this node is master node, this node is also worker node (it's mean the pods will be scheduled on this node)
+
+[all:vars]
+VIP = 10.98.0.215
+virtual_router_id = 215
+timezone = "Asia/Ho_Chi_Minh"
+system_id = test
+kubernetes_version = 1.22.7
+kubernetes_cluster_name = kubernetes
+pod_subnet = 192.168.1.0/24
+service_subnet = 192.168.2.0/24
+prefix=staging
+
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_ssh_user = root
+ansible_ssh_pass = juniper@123
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+

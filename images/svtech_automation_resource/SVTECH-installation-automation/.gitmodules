@@ -1,0 +1,3 @@
+[submodule "roles/ansible-beats"]
+	path = roles/ansible-beats
+	url = https://github.com/elastic/ansible-beats.git

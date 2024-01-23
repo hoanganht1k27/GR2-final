@@ -1,0 +1,128 @@
+[active]
+NMS01 ansible_host=10.98.10.171 IP=10.98.10.171 backend_name=HNI-01 backend_ip=10.98.10.171 thruk_id=HNI01 priority=110 if=ens192 role=primary serverid=1 ganesha_id=111
+
+[backup]
+NMS02 ansible_host=10.98.10.172 IP=10.98.10.172 backend_name=HNI-02 backend_ip=10.98.10.172 thruk_id=HNI02 priority=100 if=ens192 role=backup serverid=2 ganesha_id=1112
+
+[all:vars]
+####################################
+#  Variables for HA Configuration  #
+####################################
+# Set HA = true for installing Active - Backup NMS
+# Set HA = false for installing multi single or single NMS
+HA = true
+system_id = hni
+#ha_thruk_id = hni-vip
+#ha_backend_name = hni-vip
+VIP = 10.98.10.170
+virtual_router_id = 177
+timezone = "Asia/Ho_Chi_Minh"
+# Check timezone in this link: https://www.ibm.com/support/knowledgecenter/it/SSAW57_8.5.5/com.ibm.websphere.nd.multiplatform.doc/ae/rrun_svr_timezones.html
+java_url = "https://www.dropbox.com/s/s3eirfc7gix3osf/jdk-8u131-linux-x64.rpm?dl=1"
+ansible_vers = 2.8
+#proxy = http://10.98.0.135:3128
+
+
+#########################
+# Variables for HAProxy #
+#########################
+mail_from = tuhoang@svtech.com.vn
+mail_to = tuhoang@svtech.com.vn
+
+#########################
+# Variables for Gitlist #
+#########################
+gitlist_data_path = /opt/gitlist
+gitlist_code_path = /var/www/gitlist
+
+##############################################
+# NOT USE ANYMORE - Variables for Glusterfs  #
+##############################################
+glusterfs_client = ganesha
+#glusterfs_client = native
+ganesha_path = /opt/data
+
+##############################################
+# NOT USE ANYMORE - Variables for icinga2-ui #
+#############################################
+icinga2_ui_user = icinga2-ui
+icinga2_ui_user_password = icinga2-ui@123
+
+##########################################
+# Variables for configure api-users.conf #
+##########################################
+api_user = icingaAdmin
+api_password = icingaAdmin
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_user = root
+ansible_pass = juniper@123
+
+########################
+# Variable for mariadb #
+########################
+mariadb_root_password = juniper@123
+ha_user = juniper
+ha_password = juniper@123
+icinga_user = icinga
+icinga_password = icinga
+
+########################
+# Variable for grafana #
+########################
+grafana_database = grafana
+grafana_database_user = grafana
+grafana_database_password = grafana
+grafana_admin_user = thrukadmin
+grafana_admin_password = thrukadmin
+organization = svtech
+htpasswd_auth = false
+
+#########################
+# Variable for Influxdb #
+#########################
+influxdb_database = influxdb_nms
+influxdb_user = juniper
+influxdb_password = juniper@123
+
+#########################
+# Variable for Rundeck #
+#########################
+rundeck_user = thrukadmin
+rundeck_password = thrukadmin
+rundeck_static_API_token = UkTttnpfh5MC9A3O859k43wPhhWbCsf8
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+#####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = stagging
+
+#######################
+# Variables for PyENV #
+#######################
+pyenv_repo = https://github.com/pyenv/pyenv.git
+pyenv_root = "/opt/.pyenv"
+pyenv_version = v1.2.11
+pyenv_update = no
+pyenv_share = /etc/profile.d/bash_profile.sh
+pyenv_default = /opt/.pyenv/versions/automation36
+
+#############################
+#  Variables for Syncthing  #
+#############################
+sync_api_key = juniper@123
+
+
+############################################
+#  Variables for Dependencies Github Repo  #
+############################################
+list_github_repo = ["moophat/SVTECH-Junos-Automation", "moophat/SVTECH-Junos-Monitoring", "moophat/icinga2-report"]

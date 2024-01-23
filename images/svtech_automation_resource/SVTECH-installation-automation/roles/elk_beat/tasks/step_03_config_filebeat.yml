@@ -1,0 +1,35 @@
+# Wrote by Hoang Anh Tu
+---
+- name: "[FILEBEAT] - STEP 01 - Populate service facts"
+  service_facts:
+  register: services_state
+
+- name: "[FILEBEAT-SYSTEM] - STEP 01 - Enable Mysql Module if it's installed"
+  command: filebeat modules enable system
+
+- name: "[FILEBEAT-SYSTEM] - STEP 02 - Configure System Module"
+  copy:
+    src: "{{ role_path }}/files/filebeat/{{ item }}"
+    dest: "/etc/filebeat/modules.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - system.yml
+
+- name: "[FILEBEAT-MYSQL] - STEP 03 - Enable Mysql Module if it's installed"
+  command: filebeat modules enable mysql
+  when:
+    - services_state.ansible_facts.services['mysql.service'] is defined or services_state.ansible_facts.services['mariadb.service'] is defined
+
+- name: "[FILEBEAT-MYSQL] - STEP 04 - Configure Mysql Module"
+  template:
+    src: "{{ role_path }}/templates/filebeat/{{ item }}.j2"
+    dest: "/etc/filebeat/modules.d/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - mysql
+  when: 
+    - services_state.ansible_facts.services['mysql.service'] is defined or services_state.ansible_facts.services['mariadb.service'] is defined

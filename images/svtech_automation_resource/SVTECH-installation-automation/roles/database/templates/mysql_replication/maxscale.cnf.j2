@@ -1,0 +1,99 @@
+# MaxScale documentation:
+# https://mariadb.com/kb/en/mariadb-maxscale-25/
+
+# Global parameters
+#
+# Complete list of configuration options:
+# https://mariadb.com/kb/en/mariadb-maxscale-25-mariadb-maxscale-configuration-guide/
+
+[maxscale]
+threads=auto
+datadir={{ maxscale_datadir }}
+admin_host={{ admin_host }}
+{% if admin_secure_gui == "true" %}
+admin_secure_gui={{ admin_secure_gui }}
+admin_ssl_key={{ maxscale_datadir }}/{{ maxscale_key }}
+admin_ssl_cert={{ maxscale_datadir }}/{{ maxscale_cert }}
+admin_ssl_ca_cert={{ maxscale_datadir }}/{{ maxscale_ca_cert }}
+{% endif %}
+
+# Server definitions
+#
+# Set the address of the server to the network
+# address of a MariaDB server.
+#
+
+{% for host in groups['replication_master']| union (groups['replication_slave']) %}
+[{{ hostvars[host].inventory_hostname }}]
+type=server
+address={{ hostvars[host].IP }}
+port={{ mariadb_port }}
+protocol=MariaDBBackend
+
+{% endfor %}
+
+# Monitor for the servers
+#
+# This will keep MaxScale aware of the state of the servers.
+# MariaDB Monitor documentation:
+# https://mariadb.com/kb/en/maxscale-25-monitors/
+
+[MariaDB-Monitor]
+type=monitor
+module=mariadbmon
+servers={% for host in groups['replication_master']| union (groups['replication_slave']) %}{{ hostvars[host].inventory_hostname }}{% if not loop.last %},{% endif %}{% endfor %}
+
+user={{ monitor_user.name }}
+password={{ monitor_user.password }}
+monitor_interval={{ monitor_interval }}
+failcount={{ failcount }}
+auto_failover={{ auto_failover }}
+auto_rejoin={{ auto_rejoin }}
+enforce_read_only_slaves={{ enforce_read_only_slaves }}
+enforce_writable_master={{ enforce_writable_master }}
+replication_user={{ hostvars[groups['replication'][0]]['replication_user']['name'] }}
+replication_password={{ hostvars[groups['replication'][0]]['replication_user']['password'] }}
+cooperative_monitoring_locks={{ cooperative_monitoring_locks }}
+
+# Service definitions
+#
+# Service Definition for a read-only service and
+# a read/write splitting service.
+#
+
+### READ-WRITE 
+[maxscale-read-write-split]
+type=service
+router=readwritesplit
+servers={% for host in groups['replication_master']| union (groups['replication_slave']) %}{{ hostvars[host].inventory_hostname }}{% if not loop.last %},{% endif %}{% endfor %}
+
+user={{ maxscale_user.name }}
+password={{ maxscale_user.password }}
+master_accept_reads={{ master_accept_reads }}
+master_failure_mode={{ master_failure_mode }}
+master_reconnection={{ master_reconnection }}
+
+[maxscale-read-write-listener]]
+type=listener
+service=maxscale-read-write-split
+protocol=MariaDBClient
+port={{ maxscale_read_write_port }}
+
+### BIN-LOG
+#[maxscale-binlog]
+#type=service
+#router=binlogrouter
+#cluster=MariaDB-Monitor
+#select_master={{ select_master }}
+#server_id={{ server_id }}
+#expire_log_duration={{ expire_log_duration }}
+#expire_log_minimum_files={{ expire_log_minimum_files }}
+#user={{ hostvars[groups['replication'][0]]['replication_user']['name'] }}
+#password={{ hostvars[groups['replication'][0]]['replication_user']['password'] }}
+#datadir={{ binlog_dir }}
+#
+#[maxscale-binlog-listener]
+#type=listener
+#service=maxscale-binlog
+#protocol=MariaDBClient
+#port={{ maxscale_bin_log_port }}

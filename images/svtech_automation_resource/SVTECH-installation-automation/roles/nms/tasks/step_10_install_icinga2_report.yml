@@ -1,0 +1,129 @@
+---
+# Wrote by Hoang Anh Tu
+  - stat: path=/etc/icinga2-report
+    register: icinga_report_path
+
+  - name: Register icinga2-report Repo Path
+    set_fact:
+      icinga_report_repo: "/opt/icinga2-report"
+
+  - name: ICINGA2 - REPORT [STEP 01] - Creates ICINGA2-REPORT's directory
+    file: path={{ item }} state=directory
+    with_items:
+      - /etc/icinga2-report
+    when:
+      - icinga_report_path.stat.exists == false
+
+  - name: ICINGA2 - REPORT [Step 02] - Copy ICINGA2-REPORT configurations
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0775
+      remote_src: yes
+    with_items:
+      - { src: "{{ icinga_report_repo }}/icinga2_report_datasource", dest: "/var/lib/grafana/plugins/" }
+      - { src: "{{ icinga_report_repo }}/icinga2_report_panel", dest: "/var/lib/grafana/plugins/" }
+      - { src: "{{ icinga_report_repo }}/icinga2_report_panel_transposed", dest: "/var/lib/grafana/plugins/" }
+      - { src: "{{ icinga_report_repo }}/scripted_dashboard/service_detail_dashboard.js", dest: "/usr/share/grafana/public/dashboards/" }
+      - { src: "{{ icinga_report_repo }}/configuration", dest: "/etc/icinga2-report" }
+
+      # - { src: "{{ icinga_report_repo }}/service/icinga2-report.service", dest: "/etc/systemd/system/icinga2-report.service" }
+    when:
+      - icinga_report_path.stat.exists == false
+
+
+  # - name: ICINGA2 - REPORT [Step 03] - Install python 3.6.2
+  #   shell: "env PYTHON_CONFIGURE_OPTS='--enable-shared' {{ item }}"
+  #   args:
+  #     executable: /bin/bash
+  #   with_items:
+  #     - "{{ pyenv_root }}/bin/pyenv install 3.6.2"
+  #     - "{{ pyenv_root }}/bin/pyenv virtualenv 3.6.2 icinga2-report-env"
+
+  # - name: ICINGA2 - REPORT [Step 04] - Install NodeJS 8.x
+  #   shell: "{{ item }}"
+  #   with_items:
+  #     - curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash -
+  #     - yum install -y nodejs
+
+  # - name: ICINGA2 - REPORT [Step 05] - Build Icinga-report
+  #   shell: chdir={{ icinga_report_repo }} {{ item }}
+  #   with_items:
+  #     - "{{ pyenv_root }}/bin/pyenv local icinga2-report-env"
+  #     - pip install pipenv
+  #     - pipenv install --python 3.6.2
+  #     - pip install -r requirements.txt
+  #     - pip install pyinstaller
+  #     - source /etc/profile.d/bash_profile.sh {{ pyenv_root }}/bin/pyenv activate icinga2-report-env && npm install && npm run build && make
+  #   environment:
+  #     HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+  #     HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+  #     LC_ALL: "en_US.UTF-8"
+  #     LANG: "en_US.UTF-8"
+
+  # - name: ICINGA2 - REPORT [Step 06] - Copy file binary to /etc/icinga2-report
+  #   copy:
+  #     src: "{{ item.src }}"
+  #     dest: "{{ item.dest }}"
+  #     owner: root
+  #     group: root
+  #     mode: 0775
+  #     remote_src: yes
+  #   with_items:
+  #     - { src: "{{ icinga_report_repo }}/icinga2-report", dest: "/etc/icinga2-report" }
+
+  - name: ICINGA2 - REPORT [Step 03] - Configure Icinga2's Report
+    template:
+      src: "{{ role_path }}/templates/icinga2_report.j2"
+      dest: "/etc/icinga2-report/datasources.yml"
+      backup: yes
+    when:
+      - HA == "false"
+
+  - name: ICINGA2 - HA - REPORT [Step 03] - Configure Icinga2's Report
+    template:
+      src: "{{ role_path }}/templates/ha_icinga2_report.j2"
+      dest: "/etc/icinga2-report/datasources.yml"
+      backup: yes
+    when:
+      - HA == "true"
+
+  # - name: ICINGA2 - REPORT [Step 09] - Reload Systemctl
+  #   command: systemctl daemon-reload
+
+  # - name: ICINGA2 - REPORT [Step 10] - Startup ICINGA2-REPORT
+  #   service: name=icinga2-report
+  #            state=restarted
+  #            enabled=yes
+
+
+  - name: ICINGA2 - REPORT [Step 04] - Copy ICINGA2-REPORT Docker-compose files
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0775
+    with_items:
+      - { src: "{{ role_path }}/files/icinga2_report/auth", dest: "/etc/icinga2-report/auth"}
+      - { src: "{{ role_path }}/files/icinga2_report/docker-compose.yml", dest: "/etc/icinga2-report/docker-compose.yml"}
+
+  - name: ICINGA2 - REPORT [Step 05] - Startup Icinga2's Report
+    service: name=docker
+             state=restarted
+             enabled=yes
+
+  - name: ICINGA2 - REPORT [Step 06] - Setup Icinga2's Report Container with Docker-compose
+    shell:
+        cmd: "docker-compose -f docker-compose.yml up -d"
+        chdir: /etc/icinga2-report/
+
+
+  - name: ICINGA2 - REPORT [Step 07] - Startup Grafana
+    service: name=grafana-server
+             state=restarted
+             enabled=yes
+
+

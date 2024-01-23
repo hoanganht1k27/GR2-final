@@ -1,0 +1,321 @@
+# Wrote by Hoang Anh Tu
+---
+- name: SYNCTHING - [Step 01] - Checking /etc/hosts for Syncthing
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[item].IP }} {{ hostvars[item].inventory_hostname }}"
+    state: present
+  with_items: "{{ groups['all'] }}"
+
+  #  - name: SYNCTHING [Step 02] - Install Syncthing Repository
+  #  copy:
+  #    src: "{{ role_path }}/files/repositories/syncthing.repo"
+  #    dest: "/etc/yum.repos.d/syncthing.repo"
+  #
+  #- name: SYNCTHING - [Step 03] - Install Syncthing
+  #  yum:
+  #    name:
+  #      - syncthing 
+  #      - syncthing-tools
+  #    state: latest
+
+- name: SYNCTHING [Step 02] - Install Syncthing
+  command: chdir=/var/tmp/ {{ item }}
+  with_items:
+    - wget https://github.com/syncthing/syncthing/releases/download/v1.7.1/syncthing-linux-amd64-v1.7.1.tar.gz
+    - tar -xvf syncthing-linux-amd64-v1.7.1.tar.gz
+    - cp -rf syncthing-linux-amd64-v1.7.1/syncthing /usr/bin/syncthing
+  args:
+    warn: False
+
+- name: SYNCTHING - [Step 05] - Add Syncthing Ports to Firewall
+  lineinfile:
+    dest: /etc/sysconfig/iptables
+    insertafter: "{{ item.after }}"
+    state: present
+    backup: yes
+    line: "{{ item.line }}"
+  with_items:
+    - { after: '-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT', line: '# SYNCTHING #' }
+    - { after: '# SYNCTHING #', line: '-A INPUT -p tcp -m state --state NEW -m tcp --dport 8384 -j ACCEPT' }
+  notify:
+    - Restart Iptables
+
+- meta: flush_handlers
+
+- name: SYNCTHING - [Step 06] - Create directory if it not exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+  with_items:
+    - "/etc/syncthing"
+
+- name: SYNCTHING - [Step 07] - Setup Inotify watches for user
+  command: "{{ item }}"
+  with_items:
+    - echo "fs.inotify.max_user_watches=204800" | sudo tee -a /etc/sysctl.conf
+    - sysctl -p
+
+- name: SYNCTHING [Step 08] - Create Syncthing Systemd Service
+  copy:
+    src: "{{ role_path }}/files/syncthing/syncthing.service"
+    dest: "/etc/systemd/system/syncthing.service"
+
+- name: SYNCTHING - [Step 09] - Startup Syncthing
+  service:
+    name: syncthing
+    state: started
+    enabled: yes
+
+- name: "SYNCTHING - [Step 10] - Pause {{ item }}s (Syncthing creating config's file)"
+  pause:
+    seconds: "{{ item }}"
+  with_items:
+    - 3
+
+- name: SYNCTHING - [Step 11] - Stop Syncthing
+  service:
+    name: syncthing
+    state: stopped
+
+- name: SYNCTHING - [Step 12] - Configure Syncthing 
+  replace:
+    dest: /etc/syncthing/config.xml
+    replace: "{{ item.new }}"
+    regexp: "{{ item.old }}"
+  with_items:
+    - { old: '<address>dynamic</address>', new: '<address>tcp://0.0.0.0</address>' }
+    - { old: '<autoAcceptFolders>false</autoAcceptFolders>', new: '<autoAcceptFolders>true</autoAcceptFolders>' }
+    - { old: '<address>127.0.0.1:8384</address>', new: '<address>0.0.0.0:8384</address>' }
+    - { old: '<globalAnnounceEnabled>true</globalAnnounceEnabled>', new: '<globalAnnounceEnabled>false</globalAnnounceEnabled>' }
+    - { old: '<apikey>.*</apikey>', new: '<apikey>juniper@123</apikey>' }
+    - { old: '<relaysEnabled>true</relaysEnabled>', new: '<relaysEnabled>false</relaysEnabled>' }
+    - { old: '<defaultFolderPath>~</defaultFolderPath>', new: '<defaultFolderPath>/opt/shared</defaultFolderPath>' }
+
+- name: SYNCTHING - [Step 13] - Configure Syncthing's User
+  lineinfile:
+    dest: /etc/syncthing/config.xml
+    line: "{{ item.new }}"
+    insertbefore: "{{ item.old }}"
+    state: present
+  with_items:
+    - { old: '<autoAcceptFolders>true</autoAcceptFolders>', new: '        <allowNetwork>10.98.0.0/14</allowNetwork>' }
+    - { old: '<theme>default</theme>', new: '        <user>juniper</user>' }
+    - { old: '<theme>default</theme>', new: '        <password>$2a$10$kkFyQqXAu0rdlmaJ7iyeEumsBzeoEzt/JOF04Zlc4HOgWgcJ.bOuC</password>' }
+
+- name: SYNCTHING - [Step 14] - Restart Syncthing Service
+  service:
+    name: syncthing
+    state: started
+    enabled: yes
+
+
+# - name: SYNCTHING - [Step 14] - Install pyenv python 3.6
+#   include_role:
+#     name: ansible-pyenv
+
+- set_fact:
+   venv: "{{ pyenv_default }}"
+
+- name: SYNCTHING - [Step 15] - Install Syncthing Manager
+  pip: 
+    name: 
+      - syncthingmanager
+      - syncthing==2.3.1
+    virtualenv: "{{ venv }}"
+    virtualenv_site_packages: yes
+  environment:
+    HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+    HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+    LC_CTYPE: "en_US.UTF-8"
+
+- name: SYNCTHING - [Step 16] - Initial Syncthing Manager Config
+  command: "{{ venv }}/bin/stman configure"
+  register: stman_output
+  failed_when: false
+  changed_when: '"Autoconfiguration failed. Please specify the API key manually." in stman_output'
+
+- name: SYNCTHING - [Step 17] - Config Syncthing Manager
+  template:
+    src: "{{ role_path }}/templates/syncthingmanager.conf.j2"
+    dest: "/root/.config/syncthingmanager/syncthingmanager.conf"
+    mode: 0775
+  when:
+    - stman_output is not failed
+
+- name: SYNCTHING - [Step 18] - Collect Device ID
+  uri:
+    url: "http://{{ inventory_hostname }}:8384/rest/stats/device"
+    method: GET
+    return_content: yes
+    headers:
+      X-API-Key: "{{ sync_api_key }}"
+  register: device_id
+
+#- debug:
+#    var: device_id
+#    msg: "{{ device_id.x_syncthing_id }} have ip address {{ device_id.url |replace ('http://','') |replace (':8384/rest/stats/device','') }}" 
+
+- name: SYNCTHING - [Step 19] - Generate Add Device Script
+  template:
+    src: "{{ role_path }}/templates/syncthing_add_device.j2"
+    dest: "/tmp/syncthing_add_device.sh"
+    mode: 0775
+  when:
+    - role == "primary"
+
+- name: SYNCTHING - [Step 20] - Execute Add Device Script
+  command: "/bin/bash /tmp/syncthing_add_device.sh"
+  when:
+    - role == "primary"
+
+- name: SYNCTHING - [Step 21] - Generate Add Folder Script
+  template:
+    src: "{{ role_path }}/templates/syncthing_add_folder.j2"
+    dest: "/tmp/syncthing_add_folder.sh"
+    mode: 0775
+
+- name: SYNCTHING - [Step 22] - Generate Share Folder Script
+  template:
+    src: "{{ role_path }}/templates/syncthing_share_folder.j2"
+    dest: "/tmp/syncthing_share_folder.sh"
+    mode: 0775
+
+- name: SYNCTHING - [Step 23] - Execute Add folder
+  command: "/bin/bash /tmp/syncthing_add_folder.sh"
+
+- name: SYNCTHING - [Step 23] - Execute Share folder
+  command: "/bin/bash /tmp/syncthing_share_folder.sh"
+  when:
+    - role == "primary"
+
+- name: SYNCTHING - [Step 24] - Configure Syncthing
+  replace:
+    dest: /etc/syncthing/config.xml
+    replace: "{{ item.new }}"
+    regexp: "{{ item.old }}"
+  with_items:
+    - { old: 'fsWatcherEnabled="false"', new: 'fsWatcherEnabled="true"' }
+    - { old: '<copyOwnershipFromParent>false</copyOwnershipFromParent>', new: '<copyOwnershipFromParent>true</copyOwnershipFromParent>' }
+
+- name: SYNCTHING - [Step 25] - Restart Syncthing Service
+  service:
+    name: syncthing
+    state: restarted
+    enabled: yes
+
+- name: "SYNCTHING - [Step 26] - Create Shared Storage with suitable owner/group/permission"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  with_items:
+    - { path: "/opt/shared/etc--httpd/conf.d", owner: "root", group: "root", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--icinga2/features-available", owner: "icinga", group: "icinga", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--icinga2/scripts", owner: "icinga", group: "icinga", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--icinga2/conf.d", owner: "rundeck", group: "rundeck", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--grafana", owner: "root", group: "grafana", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--thruk", owner: "apache", group: "apache", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/usr--share--nagvis", owner: "apache", group: "apache", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/etc--rundeck", owner: "rundeck", group: "rundeck", mode: "u=rwx,g=rwx,o=rx,g+s" }
+#    - { path: "/opt/shared/var--rundeck--projects", owner: "rundeck", group: "rundeck", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/var--lib--rundeck", owner: "rundeck", group: "rundeck", mode: "u=rwx,g=rwx,o=rx,g+s" }
+    - { path: "/opt/shared/opt--gitlist", owner: "rundeck", group: "rundeck", mode: "u=rwx,g=rwx,o=rx,g+s" }
+
+- name: SYNCTHING - [Step 27] - Synchonize data to shared storage
+  shell: "rsync -avzh {{ mode | default(' ') }} {{ item.src }} {{ item.dest }}"
+  with_items:
+    - { src: "/etc/httpd/conf.d/", dest: "/opt/shared/etc--httpd/conf.d/", mode: "--delete" }
+    - { src: "/etc/icinga2/conf.d/", dest: "/opt/shared/etc--icinga2/conf.d/", mode: "--delete" }
+    - { src: "/etc/icinga2/features-available/", dest: "/opt/shared/etc--icinga2/features-available/", mode: "--delete" }
+    - { src: "/etc/icinga2/scripts/", dest: "/opt/shared/etc--icinga2/scripts/" }
+    - { src: "/etc/grafana/", dest: "/opt/shared/etc--grafana/", mode: "--delete" }
+    - { src: "/usr/share/nagvis/", dest: "/opt/shared/usr--share--nagvis/" }
+    - { src: "/etc/thruk/", dest: "/opt/shared/etc--thruk/" }
+    - { src: "/usr/share/icinga2/plugins/libexec", dest: "/opt/shared/usr--share--icinga2/" }
+    - { src: "/etc/rundeck/", dest: "/opt/shared/etc--rundeck/" }
+    - { src: "/opt/gitlist/", dest: "/opt/shared/opt--gitlist/" }
+#    - { src: "/var/rundeck/projects/", dest: "/opt/shared/var--rundeck--projects" }
+    - { src: "/var/lib/rundeck/logs", dest: "/opt/shared/var--lib--rundeck/" }
+  delegate_to: "{{ inventory_hostname }}"
+  when:
+    - role == "primary"
+
+#- name: SYNCTHING - [Step 27] - Synchonize data to shared storage
+#  synchronize:
+#    src: "{{ item.src }}"
+#    dest: "{{ item.dest }}"
+#    perms: yes
+#    recursive: yes
+#  with_items:
+#    - { src: "/etc/httpd/conf.d/", dest: "/opt/shared/etc--httpd/conf.d/" }
+#    - { src: "/etc/icinga2/conf.d/", dest: "/opt/shared/etc--icinga2/conf.d/" }
+#    - { src: "/etc/icinga2/features-available/", dest: "/opt/shared/etc--icinga2/features-available/" }
+#    - { src: "/etc/icinga2/scripts/", dest: "/opt/shared/etc--icinga2/scripts/" }
+#    - { src: "/etc/grafana/", dest: "/opt/shared/etc--grafana/" }
+#    - { src: "/usr/share/nagvis/", dest: "/opt/shared/usr--share--nagvis/" }
+#    - { src: "/etc/thruk/", dest: "/opt/shared/etc--thruk/" }
+#    - { src: "/usr/share/icinga2/plugins/libexec", dest: "/opt/shared/usr--share--icinga2/" }
+#    - { src: "/etc/rundeck/", dest: "/opt/shared/etc--rundeck/" }
+#    - { src: "/opt/gitlist/", dest: "/opt/shared/opt--gitlist/" }
+##    - { src: "/var/rundeck/projects/", dest: "/opt/shared/var--rundeck--projects" }
+##    - { src: "/var/lib/rundeck/", dest: "/opt/shared/var--lib--rundeck" }
+#  delegate_to: "{{ inventory_hostname }}"
+#  when:
+#    - role == "primary"
+
+- name: "SYNCTHING - [Step 28] - Pause {{ item }}s (Syncthing creating config's file)"
+  pause:
+    seconds: "{{ item }}"
+  with_items:
+    - 120
+
+- name: SYNCTHING - [Step 29] - Mount Syncthing shared storage (bind)
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    opts: bind
+    state: mounted
+    fstype: none
+  with_items:
+    - { src: "/opt/shared/etc--httpd/conf.d", path: "/etc/httpd/conf.d" }
+    - { src: "/opt/shared/etc--icinga2/conf.d", path: "/etc/icinga2/conf.d" }
+    - { src: "/opt/shared/etc--icinga2/features-available", path: "/etc/icinga2/features-available" }
+    - { src: "/opt/shared/etc--icinga2/scripts", path: "/etc/icinga2/scripts" }
+    - { src: "/opt/shared/etc--grafana", path: "/etc/grafana" }
+    - { src: "/opt/shared/etc--thruk", path: "/etc/thruk" }
+    - { src: "/opt/shared/usr--share--nagvis", path: "/usr/share/nagvis" }
+    - { src: "/opt/shared/etc--rundeck", path: "/etc/rundeck" }
+    - { src: "/opt/shared/opt--gitlist", path: "/opt/gitlist" }
+    - { src: "/opt/shared/usr--share--icinga2/libexec", path: "/usr/share/icinga2/plugins/libexec" }
+#    - { src: "/opt/shared/var--rundeck--projects", path: "/var/rundeck/projects"}
+    - { src: "/opt/shared/var--lib--rundeck/logs", path: "/var/lib/rundeck/logs" }
+
+- name: SYNCTHING - [Step 30] - Clearing temporary script"
+  file:
+    path: /tmp/syncthing_add_device.sh
+    state: absent
+  with_items:
+    - /tmp/syncthing_add_device.sh
+    - /tmp/syncthing_share_folder.sh
+  when:
+    - role == "primary"
+
+- name: SYNCTHING - [Step 31] - Ignore Post-commit Icinga2's github file"
+  lineinfile:
+    dest: /opt/shared/etc--icinga2/.stignore 
+    line: "post-commit"
+    state: present
+    create: yes
+    mode: 0775
+
+- name: SYNCTHING - [Step 32] - Reload services to apply configration that was shared by Syncthing"
+  service:
+    name: keepalived
+    state: restarted
+    enabled: yes
+  when:
+    - role != "primary"

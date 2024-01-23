@@ -1,0 +1,26 @@
+---
+# defaults file for icinga2-ansible-no-ui
+icinga2_yum:
+ - { package: "icinga2" }
+ - { package: "icinga2-selinux" }
+
+icinga2_depencies_development_tools_groups:
+ - { package: "@Development Tools" }
+
+mariadb_yum:
+  - { package: "MariaDB-server" }
+  - { package: "MariaDB-client" }
+
+influxdb_yum:
+  - { package: "influxdb" }
+
+grafana_yum:
+  - { package: "grafana" }
+
+keepalived_yum:
+  - { package: "ipset-libs" }
+  - { package: "keepalived" }
+
+haproxy_yum:
+#  - { package: "haproxy" }
+  - { package: "haproxy22" }

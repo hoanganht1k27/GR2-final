@@ -1,0 +1,6 @@
+replicaCount: 3
+
+image:
+  repository: hoanganht1k27/svtech-lab-monitoring-kafka-to-influxdb
+  tag: 1.0.0
+

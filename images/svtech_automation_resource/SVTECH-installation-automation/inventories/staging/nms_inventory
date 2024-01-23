@@ -1,0 +1,87 @@
+[active]
+icinga-mobifone-1 ansible_host=10.98.0.154 IP=10.98.0.154 backend_name=HNI-01 backend_ip=10.98.0.154 thruk_id=HNI01 priority=110 if=ens192 role=primary serverid=1 ganesha_id=111
+
+[backup]
+icinga-mobifone-2 ansible_host=10.98.0.155 IP=10.98.0.155 backend_name=HNI-02 backend_ip=10.98.0.155 thruk_id=HNI02 priority=100 if=ens192 role=backup serverid=2 ganesha_id=1112
+
+[all:vars]
+####################################
+#  Variables for HA Configuration  #
+####################################
+# Set HA = true for installing Active - Backup NMS
+# Set HA = false for installing multi single or single NMS
+HA = true
+ha_thruk_id = hni-vip
+ha_backend_name = hni-vip
+VIP = 10.98.0.156
+virtual_router_id = 120
+timezone = "Asia/Ho_Chi_Minh"
+# Check timezone in this link: https://www.ibm.com/support/knowledgecenter/it/SSAW57_8.5.5/com.ibm.websphere.nd.multiplatform.doc/ae/rrun_svr_timezones.html
+java_url = "https://www.dropbox.com/s/s3eirfc7gix3osf/jdk-8u131-linux-x64.rpm?dl=1"
+
+#############################
+#  Variables for Glusterfs  #
+#############################
+glusterfs_client = ganesha
+#glusterfs_client = native
+ganesha_path = /opt/data
+
+############################
+# Variables for icinga2-ui #
+############################
+icinga2_ui_user = icinga2-ui
+icinga2_ui_user_password = icinga2-ui@123
+
+##########################################
+# Variables for configure api-users.conf #
+##########################################
+api_user = icingaAdmin
+api_password = icingaAdmin
+
+##################################
+# Variables for passwordless SSH #
+##################################
+ansible_port = 22
+ansible_user = root
+ansible_pass = juniper@123
+
+########################
+# Variable for mariadb #
+########################
+mariadb_root_password = juniper@123
+ha_user = juniper
+ha_password = juniper@123
+
+########################
+# Variable for grafana #
+########################
+grafana_database = grafana
+grafana_database_user = grafana
+grafana_database_password = grafana
+grafana_admin_user = thrukadmin
+grafana_admin_password = thrukadmin
+organization = svtech
+
+#########################
+# Variable for Influxdb #
+#########################
+influxdb_database = influxdb_nms
+influxdb_user = juniper
+influxdb_password = juniper@123
+
+#########################
+# Variable for Rundeck #
+#########################
+rundeck_user = thrukadmin
+rundeck_password = thrukadmin
+
+###########################################
+# Variables for create new SSH admin user #
+###########################################
+admin_user = juniper
+admin_password = juniper@123
+
+#####################################################
+# Variables for create prefix name file information #
+#####################################################
+prefix = stagging

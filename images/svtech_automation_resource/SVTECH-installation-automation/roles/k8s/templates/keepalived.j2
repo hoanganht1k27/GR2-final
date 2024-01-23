@@ -1,0 +1,44 @@
+global_defs {
+  notification_email {
+  }
+  router_id LVS_DEVEL
+  vrrp_skip_check_adv_addr
+  vrrp_garp_interval 0
+  vrrp_gna_interval 0
+}
+
+vrrp_script chk_haproxy {
+  script "/usr/sbin/pidof haproxy"
+  interval 10
+  # weight 2
+}
+
+vrrp_instance haproxy-vip {
+  state {% if master == True and init_node is defined and init_node == True %}MASTER{% else %}BACKUP
+  {% endif %}
+
+  priority {{ priority }}
+  interface {{ if_name }}                       # Network card
+  virtual_router_id {{ virtual_router_id }}
+  advert_int 1
+  nopreempt
+  authentication {
+    auth_type PASS
+    auth_pass 1111
+  }
+  unicast_src_ip {{ IP }}      # The IP address of this machine
+  unicast_peer {
+    {% for item in hostvars.values() %}{% if item['IP'] != IP and master == True %}{{ item['IP'] }}{% endif %}
+
+    {% endfor %}
+
+  }
+
+  virtual_ipaddress {
+    {{ VIP }}/24                  # The VIP address
+  }
+
+  track_script {
+    chk_haproxy
+  }
+}

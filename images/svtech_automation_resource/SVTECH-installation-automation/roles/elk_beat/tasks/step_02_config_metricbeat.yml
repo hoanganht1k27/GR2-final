@@ -1,0 +1,56 @@
+# Wrote by Hoang Anh Tu
+---
+- name: "[METRICBEAT - STEP 01 - Populate service facts"
+  service_facts:
+  register: services_state
+
+- name: "[METRICBEAT-SYSTEM - STEP 02 - Configure System Module"
+  copy:
+    src: "{{ role_path }}/files/metricbeat/{{ item.from }}"
+    dest: "{{ item.to }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { from: 'custom_fields.yml', to: '/etc/metricbeat/custom_fields.yml'}
+    - { from: 'system.yml', to: '/etc/metricbeat/modules.d/system.yml'}
+
+- name: "[METRICBEAT-MYSQL - STEP 03 - Enable Mysql Module if it's installed"
+  command:  metricbeat modules enable mysql
+  when:
+    - services_state.ansible_facts.services['mysql.service'] is defined or services_state.ansible_facts.services['mariadb.service'] is defined
+
+- name: "[METRICBEAT-MYSQL - STEP 04 - Configure Mysql Module"
+  template:
+    src: "{{ role_path }}/templates/metricbeat/{{ item }}.j2"
+    dest: "/etc/metricbeat/modules.d/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - mysql
+  when: 
+    - services_state.ansible_facts.services['mysql.service'] is defined or services_state.ansible_facts.services['mariadb.service'] is defined
+
+- name: "[METRICBEAT-MYSQL - STEP 05 - Remove quantile_95 column from performance table"
+  replace:
+    dest: /usr/share/metricbeat/module/mysql/performance/manifest.yml 
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  with_items:
+    - { old: "last_seen, quantile_95", new: 'last_seen'}
+  when:
+    - services_state.ansible_facts.services['mysql.service'] is defined or services_state.ansible_facts.services['mariadb.service'] is defined
+
+- name: "[METRICBEAT-HTTP - STEP 06 - Configure and Enable HTTP Module {{ http_module }}"
+  template:
+    src: "{{ role_path }}/templates/metricbeat/{{ item }}.j2"
+    dest: "/etc/metricbeat/modules.d/{{ item }}.yml"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - "{{ http_module }}"
+  when:
+    - http_module is defined

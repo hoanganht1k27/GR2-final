@@ -1,0 +1,16 @@
+# Install Docker Packages...
+# Wrote by Pham Tan Thanh
+---
+- name: Private-Registry [STEP 01] - Add daemon docker file
+  template:
+    src: "{{ role_path }}/templates/daemon.j2"
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Private-Registry [STEP 02] - Restart Docker Service
+  service:
+    name: docker
+    state: restarted
+  failed_when: false

@@ -1,0 +1,9 @@
+# - name: Kill own ssh connections
+#   ssh-reconnect: all=True
+
+
+# - name: reset ssh connection
+#   local_action:
+#     module: file
+#     path: "~/.ansible/cp"
+#     state: absent

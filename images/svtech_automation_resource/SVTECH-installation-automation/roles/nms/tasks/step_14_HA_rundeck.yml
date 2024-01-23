@@ -1,0 +1,478 @@
+---
+  - name: Register Automation Repo Path
+    set_fact:
+      junos_automation_repo: "/opt/SVTECH-Junos-Automation"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 01] - Checking Java
+    shell: java -version
+    ignore_errors: yes
+    register: java_check
+    failed_when: false
+    args:
+      warn: false
+
+  - name: RUNDECK - HA - INSTALLATION [Step 02] - Java 8 - Copy setup file
+    get_url:
+      url: "{{ java_url }}"
+      dest: /tmp/java-jdk.rpm
+      # checksum: md5:9024d13ec651d07de450d465f14065a6
+    when:
+      - java_check.stderr is search('command not found')
+
+  - name: RUNDECK - HA - INSTALLATION [Step 03] - Java 8 - Installing
+    yum:
+      name: /tmp/java-jdk.rpm
+      state: present
+    when:
+      - java_check.stderr is search('command not found')
+
+  - name: RUNDECK - HA - INSTALLATION [Step 04] - Java 8 - Clear Temp
+    file:
+      state: absent
+      path: /tmp/java-jdk.rpm
+    when:
+      - java_check.stderr is search('command not found')
+
+#   - name: RUNDECK - HA - INSTALLATION [Step 05] - Install Rundeck Repository
+#     yum:
+#       name:
+#         #- https://bintray.com/rundeck/rundeck-rpm/download_file?file_path=rundeck-3.2.6.20200427-1.noarch.rpm
+#         #- https://bintray.com/rundeck/rundeck-rpm/download_file?file_path=rundeck-config-3.0.27.20191204-1.201912050239.noarch.rpm  
+#         #- https://download.rundeck.org/rpm/rundeck-3.0.26.20190829-1.201908292109.noarch.rpm
+#         - https://download.rundeck.org/rpm/rundeck-config-3.0.26.20190829-1.201908292109.noarch.rpm
+#         - https://download.rundeck.org/rpm/rundeck-3.0.27.20191204-1.201912050239.noarch.rpm
+# #      name: http://repo.rundeck.org/latest.rpm
+#       state: present
+#       validate_certs: False
+
+  - name: RUNDECK - HA - INSTALLATION [Step 05] - Install Rundeck Repository
+    shell: "{{ item }}"
+    with_items:
+      - "curl https://raw.githubusercontent.com/rundeck/packaging/main/scripts/rpm-setup.sh 2> /dev/null | bash -s rundeck"
+      - "sed -i.bak s/gpgcheck=0/gpgcheck=1/ /etc/yum.repos.d/rundeck.repo"
+      - "rpm --import https://raw.githubusercontent.com/rundeck/packaging/main/pubring.gpg"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 06] - Install Rundeck
+    shell: yum install -y https://download.rundeck.org/rpm/rundeck-3.0.27.20191204-1.201912050239.noarch.rpm --setopt=obsoletes=0
+
+
+  - name: RUNDECK - HA - INSTALLATION [Step 07] - Starting Rundeck
+    service:
+      name: rundeckd
+      state: restarted
+      enabled: yes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 08] - Configure Grails Server
+    lineinfile:
+      dest: /etc/rundeck/rundeck-config.properties
+      regexp: '^grails.serverURL=http://localhost:4440$'
+      line: 'grails.serverURL=http://localhost:4440/rundeck'
+      state: present
+      backrefs: yes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 09] - Configure Rundeck option (time and url)
+    lineinfile:
+      dest: /etc/rundeck/profile
+      line: "{{ item.new }}"
+      insertbefore: "{{ item.old }}"
+      state: present
+    with_items:
+      - { old: '.*-Drdeck.base.*', new: '           -Dserver.web.context=/rundeck \' }
+      - { old: '.*-Dserver.web.context=.*', new: '           -Duser.timezone={{ timezone }} \'}
+      - { old: '.*-Dserver.web.context=.*', new: '           -Drundeck.jetty.connector.forwarded=true \'}
+
+  - name: RUNDECK - HA - INSTALLATION [Step 10] - Disable default rundeck's admin user
+    replace:
+      dest: /etc/rundeck/realm.properties
+      replace: "#admin:admin,user,admin,architect,deploy,build"
+      regexp: "^admin:admin,user,admin,architect,deploy,build"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 11] - Create new rundeck's admin user
+    lineinfile:
+      dest: /etc/rundeck/realm.properties
+      line: "{{ rundeck_user }}:{{ rundeck_password }},user,admin,architect,deploy,build"
+      insertafter: "#admin:admin,user,admin,architect,deploy,build"
+      state: present
+
+  - name: RUNDECK - HA - INSTALLATION [Step 12] - Disable rundeck's default database
+    replace:
+      dest: /etc/rundeck/rundeck-config.properties
+      replace: "#dataSource.url = jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true"
+      regexp: "^dataSource.url = jdbc:h2:file:/var/lib/rundeck/data/rundeckdb;MVCC=true"
+      
+  - name: RUNDECK - HA - INSTALLATION [Step 13] - Configurate db connections for rundeck
+    lineinfile:
+      dest: /etc/rundeck/rundeck-config.properties 
+      line: "{{ item }}"
+      state: present
+    with_items:
+      - "dataSource.url = jdbc:mysql://127.0.0.1/rundeck?autoReconnect=true"
+      - "dataSource.username=rundeck"
+      - "dataSource.password={{ mariadb_root_password }}"
+      - "dataSource.driverClassName=com.mysql.jdbc.Driver"
+      - "rundeck.projectsStorageType=db"
+      - "server.max-http-header-size=640000"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 14] - Create rundeck database
+    mysql_db:
+      login_user: root
+      login_password: "{{ mariadb_root_password }}"
+      login_host: 127.0.0.1
+      name: rundeck
+      state: present
+
+  - name: RUNDECK - HA - INSTALLATION [Step 15] - Grant Mariadb Privileges for rundeck user
+    mysql_user:
+      login_user: root
+      login_password: "{{ mariadb_root_password }}"
+      login_host: 127.0.0.1
+      name: "rundeck"
+      host: "{{ item }}"
+      password: "{{ mariadb_root_password }}"
+      append_privs: true
+      priv: "rundeck.*:ALL,GRANT"
+      state: present
+    with_items:
+      - "localhost"
+      - "127.0.0.1"
+
+#  - name: RUNDECK - HA - INSTALLATION [Step 16] - Configurate Keepalived for rundeck (notify.sh)
+#    lineinfile:
+#      dest: /etc/keepalived/notify.sh
+#      line: "{{ item.new }}"
+#      insertbefore: "{{ item.insert_after }}"
+#      state: present
+#    with_items:
+#      - { insert_after: "                  icinga2 feature enable livestatus", new: "                  service rundeckd start" }
+#      - { insert_after: "                  icinga2 feature disable livestatus", new: "                  service rundeckd stop" }
+#      - { insert_after: "                  icinga2 feature disable livestatus", new: "                  service rundeckd stop" }
+
+  - name: RUNDECK - HA - INSTALLATION [Step 17] - Configurate Keepalived for rundeck (slave.sh)
+    lineinfile:
+      dest: /etc/keepalived/slave.sh
+      line: "{{ item.new }}"
+      insertbefore: "{{ item.insert_before }}"
+      state: present
+    with_items:
+      - { insert_before: "^mysqldump.*flush-logs.*grafana.*>", new: "mysqldump -u{{ ha_user }} -p{{ ha_password }} --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -h {{ VIP }} rundeck  > /tmp/rundeck.sql" }
+      - { insert_before: "^mysql.*grafana.*<", new: "mysql -u{{ ha_user }} -p{{ ha_password }} rundeck < /tmp/rundeck.sql" }
+
+  - name: RUNDECK - HA - INSTALLATION [Step 18] - Configurate MariaDB Master Slave replication for rundeck database
+    lineinfile:
+      dest: /etc/my.cnf.d/server.cnf
+      line: "replicate-wild-do-table         = rundeck.%"
+      insertafter: "replicate-wild-do-table         = grafana.%"
+      state: present
+    notify:
+      - Restart mariadb
+      - Restart rundeckd
+
+  - meta: flush_handlers
+
+  - name: RUNDECK - HA - INSTALLATION [Step 19] - Checking SSH key
+    stat:
+      path: /root/.ssh/id_rsa
+    register: ssh_key_checking
+
+  - name: RUNDECK - HA - INSTALLATION [Step 20] - Create SSH Key if not existed
+    expect:
+      command: ssh-keygen -t rsa -b 4096
+      echo: yes
+      responses:
+        'Enter file in which to save the key': ''
+        'Enter passphrase' : ''
+        'Enter same passphrase again' : ''
+    when: ssh_key_checking.stat.exists == false
+
+  - name: RUNDECK - HA - INSTALLATION [Step 21] - Create directory for storing ssh key
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0777
+      owner: rundeck
+      group: rundeck
+    with_items:
+      - /var/lib/rundeck/nodes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 22] - Create all Host's key for rundeck
+    lineinfile: 
+      path: "{{ item.dest }}"
+      line: "{{ item.src }}"
+      create: yes 
+      state: present
+    with_items:
+      - { src: '/root/.ssh/id_rsa.pub', dest: '/root/.ssh/authorized_keys' }
+      - { src: '/root/.ssh/id_rsa', dest: '/var/lib/rundeck/nodes/{{ inventory_hostname }}.key' }
+
+  - name: RUNDECK - HA - INSTALLATION [Step 23] - Verify directory's permission
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0775
+      owner: rundeck
+      group: rundeck
+    with_items:
+      - /var/lib/rundeck/nodes
+      - /tmp/rundeck_jobs/NMS
+      - /tmp/rundeck_jobs/Automation
+
+  - name: RUNDECK - HA - INSTALLATION [Step 24] - Getting SSH Key
+    fetch:
+      src: /var/lib/rundeck/nodes/{{ inventory_hostname }}.key
+      dest: "/tmp/{{ inventory_hostname }}.key"
+      flat: yes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 25] - Pushing SSH key to both of Host
+    template:
+      src: "{{ item }}"
+      dest: "/var/lib/rundeck/nodes/"
+      owner: rundeck
+      group: rundeck
+      mode: 0775
+    with_fileglob:
+      - /tmp/*.key
+    notify:
+      - Restart rundeck
+
+  - name: RUNDECK - HA - INSTALLATION [Step 26] - Restart keepalived
+    service:
+      name: keepalived
+      state: restarted
+      enabled: yes
+    when:
+      - role == "backup"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 26] - Install Java Cryptography Extension (JCE)
+    copy:
+      src: "{{ item }}"
+      dest: "/tmp/"
+      mode: 0777
+    with_items:
+      - "{{ role_path }}/files/UnlimitedJCEPolicyJDK8"
+
+  - name: "RUNDECK - HA - INSTALLATION [STEP 27] - Get Java Cryptography Extension (JCE)'s jar files"
+    find:
+      paths: "/tmp/UnlimitedJCEPolicyJDK8"
+    register: UnlimitedJCEPolicyJDK8_files
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 28.1] - Create Java Cryptography Extension (JCE)  Library directory"
+    file:
+      path: "/usr/java/jdk1.8.0_131/jre/lib/security/"
+      state: directory
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 28.2] - Copy Java Cryptography Extension (JCE) into Java's Library"
+    copy:
+      src: "{{ item }}"
+      dest: "/usr/java/jdk1.8.0_131/jre/lib/security/"
+      mode: 0775
+      remote_src: yes
+    with_items:
+      - "{{ UnlimitedJCEPolicyJDK8_files.files | map(attribute='path') | list }}"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 29] - Checking Rundeck-cli
+    shell: rd
+    ignore_errors: yes
+    register: rundeck_cli_check
+    failed_when: false
+    args:
+      warn: false
+
+  # - name: RUNDECK - HA - INSTALLATION [Step 30] - Rundeck-cli - Prepare
+  #   shell: "{{ item }}"
+  #   with_items:
+  #     - "curl https://raw.githubusercontent.com/rundeck/packaging/main/scripts/rpm-setup.sh 2> /dev/null | bash -s rundeck"
+  #     - "sed -i.bak s/gpgcheck=0/gpgcheck=1/ /etc/yum.repos.d/rundeck.repo"
+  #     - "rpm --import https://raw.githubusercontent.com/rundeck/packaging/main/pubring.gpg"
+  #   when:
+  #     - rundeck_cli_check.stderr is search('command not found')
+
+  - name: RUNDECK - HA - INSTALLATION [Step 31] - Rundeck-cli - Installing
+    yum:
+      name: rundeck-cli
+      state: present
+    when:
+      - rundeck_cli_check.stderr is search('command not found')
+
+  - name: RUNDECK - HA - INSTALLATION [Step 32] - Restarting Rundeck
+    service:
+      name: rundeckd
+      state: restarted
+      enabled: yes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 33] - Rundeck-cli - Waiting Rundeckd service online
+    shell: "rd system info"
+    until:
+      - submit_result.rc == 0
+    retries: 999
+    delay: 45
+    register: submit_result
+    environment:
+      RD_URL: http://{{IP}}:4440/rundeck
+      RD_USER: "{{rundeck_user}}"
+      RD_PASSWORD: "{{rundeck_password}}"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 34] - Rundeck-cli - Create default Project
+    shell: "{{ item }}"
+    args:
+      executable: /bin/bash
+    with_items:
+      - /usr/bin/rd projects create -p {{ system_id|upper }}-Monitoring
+      - /usr/bin/rd projects create -p {{ system_id|upper}}-Automation
+    environment:
+      RD_URL: http://{{IP}}:4440/rundeck
+      RD_USER: "{{rundeck_user}}"
+      RD_PASSWORD: "{{rundeck_password}}"
+    when:
+      - role == "primary"
+
+  - name: RUNDECK - HA - INSTALLATION [STEP 35-1] - Rundeck-cli - Copy Rundeck NMS Job file to host
+    shell: "cp -r {{ item }} /tmp/rundeck_jobs && chmod  777 -R /tmp/rundeck_jobs/NMS"
+    with_items:
+      - "{{ junos_automation_repo }}/Rundeck-Projects/NMS"
+    when:
+      - role == "primary"
+
+  - name: RUNDECK - HA - INSTALLATION [STEP 35-2] - Rundeck-cli - Copy Rundeck Automation Job file to host
+    shell: "cp -r {{ item }} /tmp/rundeck_jobs && chmod  777 -R /tmp/rundeck_jobs/Automation"
+    with_items:
+      - "{{ junos_automation_repo }}/Rundeck-Projects/Automation"
+    when:
+      - role == "primary"
+
+  - name: RUNDECK - HA - INSTALLATION [STEP 36] - Get Rundeck Job NMS files in remote host
+    find:
+      paths: "/tmp/rundeck_jobs/NMS"
+    register: rundeck_job_NMS_files
+
+  - name: RUNDECK - HA - INSTALLATION [STEP 37] - Get Rundeck Job Automation files in remote host
+    find:
+      paths: "/tmp/rundeck_jobs/Automation"
+    register: rundeck_job_Automation_files
+
+
+  - name: RUNDECK - HA - INSTALLATION [Step 38] - Rundeck-cli - Import NMS Rundeck Jobs
+    shell: '/usr/bin/rd jobs load -p "{{ system_id|upper }}-Monitoring" --file "{{ item }}" -F yaml'
+    with_items:
+      - "{{ rundeck_job_NMS_files.files | map(attribute='path') | list }}"
+    environment:
+      RD_URL: http://{{IP}}:4440/rundeck
+      RD_USER: "{{rundeck_user}}"
+      RD_PASSWORD: "{{rundeck_password}}"
+    when:
+      - role == "primary"
+
+
+  - name: RUNDECK - HA - INSTALLATION [Step 39] - Rundeck-cli - Import Automation Rundeck Jobs
+    shell: '/usr/bin/rd jobs load -p "{{ system_id|upper }}-Automation" --file "{{ item }}" -F yaml'
+    with_items:
+      - "{{ rundeck_job_Automation_files.files | map(attribute='path') | list }}"
+    environment:
+      RD_URL: http://{{IP}}:4440/rundeck
+      RD_USER: "{{rundeck_user}}"
+      RD_PASSWORD: "{{rundeck_password}}"
+    when:
+      - role == "primary"
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 40] - Config Rundeck allow update user without restart"
+    lineinfile:
+      dest: /etc/rundeck/jaas-loginmodule.conf
+      regexp: "^org.eclipse.jetty.jaas"
+      line: "org.rundeck.jaas.jetty.ReloadablePropertyFileLoginModule required"
+      state: present
+    notify:
+      - Restart rundeck
+
+  - name: RUNDECK - HA - INSTALLATION [Step 41] - Copy Init Rundeck ACL file to /etc/rundeck
+    template:
+      src: "{{ item }}"
+      dest: "/etc/rundeck/"
+      owner: rundeck
+      group: rundeck
+      mode: 0775
+    with_fileglob:
+      - "{{ role_path }}/files/rundeck/rundeck_acl/*.aclpolicy"
+
+  - name: RUNDECK - HA - INSTALLATION [Step 42] - Copy Rundeck User Management file script to /etc/rundeck
+    copy:
+      src: "{{ item }}"
+      dest: "/etc/rundeck/"
+      mode: 0775
+      owner: rundeck
+      group: rundeck
+    with_items:
+      - "{{ role_path }}/files/rundeck/user_management"
+
+
+  - name: RUNDECK - HA - INSTALLATION [Step 43] - Create dir /var/lib/rundeck/exp/webapp/WEB-INF/
+    file:
+      path: /var/lib/rundeck/exp/webapp/WEB-INF
+      state: directory
+      owner: rundeck
+      group: rundeck
+      mode: 0755
+
+  - name: RUNDECK - HA - INSTALLATION [Step 44] - Raise Session Timeout
+    blockinfile:
+      path: "/var/lib/rundeck/exp/webapp/WEB-INF/web.xml"
+      owner: rundeck
+      group: rundeck
+      create: yes
+      mode: 0775
+      block: |
+        <session-config>
+            <session-timeout>243200</session-timeout>
+        </session-config>
+
+
+  - name: RUNDECK - HA - INSTALLATION [Step 45] - Append group icinga for user Rundeck
+    user:
+      name: rundeck
+      shell: /bin/bash
+      groups: icinga
+      append: yes
+
+  - name: RUNDECK - HA - INSTALLATION [Step 46] - Update {{ item }} Permission for Rundeck
+    file:
+      path: /etc/icinga2/conf.d/managed/hosts
+      owner: rundeck
+      group: rundeck
+      mode: 0775
+      recurse: yes
+    with_items:
+      - /etc/icinga2/conf.d/managed/hosts
+      - /opt/SVTECH-Junos-Automation
+
+  - name: RUNDECK - HA - INSTALLATION [Step 47] - Create Sudo File if it's not existed
+    file:
+      path: /etc/sudoers.d/users
+      state: touch
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 48] - Grant Sudo Privileges to user Rundeck"
+    lineinfile:
+      dest: /etc/sudoers.d/users
+      regexp: "^rundeck ALL"
+      line: "rundeck  ALL=(ALL) NOPASSWD: ALL"
+      state: present
+
+  - name: RUNDECK - HA - INSTALLATION [Step 49] - Create API token file if it's not existed
+    file:
+      path: /etc/rundeck/tokens.properties
+      state: touch
+      owner: rundeck
+      group: rundeck
+      mode: 0664
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 50] - Create Rundeck Static API Token"
+    lineinfile:
+      path: /etc/rundeck/tokens.properties
+      line: '{{ rundeck_user }}: {{ rundeck_static_API_token }}'
+      insertbefore: EOF
+
+  - name: "RUNDECK - HA - INSTALLATION [Step 51] - Mapping file Static API Token config"
+    lineinfile:
+      path: /etc/rundeck/framework.properties
+      line: 'rundeck.tokens.file=/etc/rundeck/tokens.properties'
+      insertbefore: EOF
+    notify:
+      - Restart rundeck
+  - meta: flush_handlers

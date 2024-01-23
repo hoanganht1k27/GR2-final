@@ -1,0 +1,37 @@
+---
+- hosts: all
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+    - pause:
+        prompt: "{{ item }}"
+      register: replication_confirm
+        #      no_log: yes
+      delegate_to: localhost
+      run_once: yes
+      with_items: |
+          [INFO] - [MARIADB REPLICATION] - User input confirmation
+          [INFO] - [MARIADB REPLICATION] - BEWARE!! The data will be DELETED on Slave Node as DEFAULT behavior
+          [INFO] - [MARIADB REPLICATION] - Do you want to continue [yes/no]
+      when:
+        - ('replication' in groups and groups['replication'] | length) > 0
+
+    - name: "[INFO] - [MARIADB REPLICATION] - Checking confirmation"
+      assert:
+        that: "'yes' in replication_confirm.results | map(attribute='user_input') | list | lower"
+        fail_msg: "[INFO] - [MARIADB REPLICATION] - The confirmation is '{{ replication_confirm.results | map(attribute='user_input') }}'. This run will be EXITED!"
+        success_msg: "[INFO] - [MARIADB REPLICATION] - The confirmation is '{{ replication_confirm.results | map(attribute='user_input') }}'. This run will be EXECUTED!"
+        quiet: true
+      delegate_to: localhost
+      run_once: yes
+      when:
+        - ('replication' in groups and groups['replication'] | length) > 0
+
+  roles:
+    - role: environment
+      become: yes
+      tags: environment
+
+    - role: database
+      become: yes
+      tag: database

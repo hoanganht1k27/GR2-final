@@ -1,0 +1,23 @@
+---
+    - name: KEEPALIVED - INSTALLATION [STEP 01] - Install Keepalived
+      yum:
+        name: ["ipset-libs", "keepalived"]
+        state: latest
+
+    - name: KEEPALIVED - INSTALLATION [STEP 02] - Configurate Keepalived
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+        backup: true
+      with_items:
+        - { src: "{{ role_path }}/templates/keepalived.j2", dest: "/etc/keepalived/keepalived.conf" }
+
+    - name: KEEPALIVED - INSTALLATION [STEP 03] - Restart keepalived
+      service:
+        name: keepalived
+        state: restarted
+        enabled: yes
+

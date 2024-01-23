@@ -1,0 +1,37 @@
+---
+# tasks file for Database Installation
+# Wrote by Hoang Anh Tu
+
+- include: checking_services.yml
+
+- include: 2_database_iptables.yml
+
+- include: 3_setup_mariadb_repo.yml
+#  when:
+#    - (inventory_hostname not in groups['maxscale'] and mysql_state.ansible_facts.services['mysql.service'] is not defined) or (inventory_hostname in groups['maxscale'] and mysql_state.ansible_facts.services['maxscale.service'] is not defined)
+
+- include: 4_setup_single_mariadb.yml
+  when:
+    - ('single' in groups and inventory_hostname in groups['single']) or ('replication' in groups and inventory_hostname in groups['replication'])
+    - mysql_state.ansible_facts.services['mysql.service'] is not defined 
+
+- include: 5_setup_galera_cluster_mariadb.yml
+  when:
+    - ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster'])
+    - mysql_state.ansible_facts.services['mysql.service'] is not defined 
+
+- include: checking_services.yml
+
+- include: 6_setup_replication_mariadb.yml
+  when:
+    - ('replication' in groups and inventory_hostname in groups['replication'])
+    - mysql_state.ansible_facts.services['mysql.service'] is defined
+
+- include: 7_setup_maxscale.yml
+  when:
+    - ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster']) or ('replication' in groups and inventory_hostname in groups['replication'])
+    - mysql_state.ansible_facts.services['mysql.service'] is defined
+
+- include: 8_print_result.yml
+  when:
+    - ('galera_cluster' in groups and inventory_hostname in groups['galera_cluster']) or ('replication' in groups and inventory_hostname in groups['replication'])

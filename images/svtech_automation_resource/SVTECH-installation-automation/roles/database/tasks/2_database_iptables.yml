@@ -1,0 +1,63 @@
+# Install and Configure Iptables 
+# Wrote by Hoang Anh Tu
+---
+  - name: IPTABLES [Step 01] - Stop Firewalld
+    service: 
+      name: firewalld 
+      state: stopped 
+      enabled: no  
+
+  - name: IPTABLES [Step 02] - Install Iptables
+    yum: 
+      name: ['iptables','iptables-services'] 
+      state: latest
+
+  - name: IPTABLES [Step 03]-[Single] - Add MySQL Connect Port to Firewall
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertbefore: '-A INPUT -j REJECT --reject-with icmp-host-prohibited'
+      line: '{{ item }}'
+      state: present
+    with_items:
+      - "# DATABASE - SINGLE #"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport {{ mariadb_port }} -m comment --comment \"MariaDB Port\" -j ACCEPT"
+    when:
+      - ('single' in groups and inventory_hostname in groups['single']) or ('replication' in groups and inventory_hostname in groups['replication'])
+    notify:
+      - Restart Iptables
+
+  - name: IPTABLES [Step 04]-[Cluster] - Add MySQL Connect Port to Firewall
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertbefore: '-A INPUT -j REJECT --reject-with icmp-host-prohibited'
+      line: '{{ item }}'
+      state: present
+    with_items:
+      - "# DATABASE - CLUSTER #"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport {{ mariadb_port }} -m comment --comment \"MariaDB Port\" -j ACCEPT"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport 4567 -m comment --comment \"Galera Cluster Port\" -j ACCEPT"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport 4568 -m comment --comment \"Galera Cluster Port\" -j ACCEPT"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -m comment --comment \"Galera Cluster Port\" -j ACCEPT"
+    when:
+      - ('galera_cluster' in groups) and inventory_hostname in groups['galera_cluster']
+    notify:
+      - Restart Iptables
+
+  - name: IPTABLES [Step 05]-[Maxscale] - Add Maxscale Port to Firewall
+    lineinfile:
+      dest: /etc/sysconfig/iptables
+      insertbefore: '-A INPUT -j REJECT --reject-with icmp-host-prohibited'
+      line: '{{ item }}'
+      state: present
+    with_items:
+      - "# DATABASE - MAXSCALE #"
+      - "-A INPUT -p tcp -m state --state NEW -m tcp --dport {{ maxscale_read_write_port }} -m comment --comment \"Maxscale read-write Port\" -j ACCEPT"
+    when:
+      - ('maxscale' in groups) and inventory_hostname in groups['maxscale']
+    notify:
+      - Restart Iptables
+
+  - meta: flush_handlers
+
+
+

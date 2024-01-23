@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: telegraf
+  tag: 1.27.0
+
+config:
+  interval: 10s
+  round_interval: true
+  metric_batch_size: 5000
+  metric_buffer_limit: 1000000
+  collection_jitter: 0s
+  flush_interval: 5s
+  precision: 0s
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+

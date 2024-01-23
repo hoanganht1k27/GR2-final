@@ -1,0 +1,287 @@
+---
+ChassisInventoryTable:
+    rpc: get-chassis-inventory
+    item: //name[starts-with(.,'Chassis')]/parent::*
+    view: _ChassisInventory_view
+
+_ChassisInventory_view:
+    fields:
+        name: name
+        desc: description
+        sn: serial-number
+        #FPC: FPCTable
+        #MIC: MICTable
+        #PIC: PICTable
+        #PortModule: PortModuleTable
+        #Midplane: MidplaneTable
+        #RE: RoutingEngineTable
+        #SCB: SCBTable
+        #Fantray: FantrayTable
+        #PEM: PEMTable
+        #PDM: PDMTable
+        #FPM: FPMTable
+
+MidplaneTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'Midplane')]
+    item: //name[starts-with(.,'Midplane')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _Midplane_view
+_Midplane_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        clei-code: clei-code
+        model: model-number
+
+RoutingEngineTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'Routing Engine')]
+    item: //name[starts-with(.,'Routing Engine')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _RoutingEngine_view
+_RoutingEngine_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+CBTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'CB')]
+    item: //name[starts-with(.,'CB')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _CB_view
+_CB_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+
+PEMTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'PEM')]
+    item: //name[starts-with(.,'PEM')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _PEM_view
+_PEM_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+
+PDMTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'PDM')]
+    item: //name[starts-with(.,'PDM')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _PDM_view
+_PDM_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+FPMTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'FPM')]
+    item: //name[starts-with(.,'FPM')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _FPM_view
+_FPM_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+FanTrayTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'Fan Tray')]
+    item: //name[starts-with(.,'FPC')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    view: _FanTray_view
+_FanTray_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        clei-code: clei-code
+        model: model-number
+
+FPCTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'FPC')]
+    item: //name[starts-with(.,'FPC')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    key:
+        - name
+    view: _FPC_view
+_FPC_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+        #MIC: MICSubTable
+        #PIC: PICSubTable
+
+MICTable:
+    rpc: get-chassis-inventory
+    item: //name[starts-with(.,'MIC')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - name
+    view: _MIC_view
+MICSubTable: #this table do not have a rpc - to be used by parent table  FPC , do not touch it
+    item: //name[starts-with(.,'MIC')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - name
+    view: _MIC_view
+_MIC_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+        #PIC: PICSubTable
+
+PICTable:
+    rpc: get-chassis-inventory
+    item: //name[starts-with(.,'PIC')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - ancestor::*[starts-with(name,'MIC')]/name
+        - name
+    view: _PIC_view
+PICSubTable: #this table do not have a rpc - to be used by parent table MIC and FPC , do not touch it
+    item: //name[starts-with(.,'PIC')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - ancestor::*[starts-with(name,'MIC')]/name
+        - name
+    view: _PIC_view
+_PIC_view:
+    fields:
+        fpc_name: ../name
+        pic_name: name
+       #name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        desc: description
+        #PORT: PortModuleSubTable
+PortModuleTable:
+    rpc: get-chassis-inventory
+    item: //name[starts-with(.,'Xcvr')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - ancestor::*[starts-with(name,'MIC')]/name
+        - ancestor::*[starts-with(name,'PIC')]/name
+        - name
+    view: _PortModule_view
+PortModuleSubTable:
+    item: //name[starts-with(.,'Xcvr')]/parent::*
+    key:
+        - ancestor::*[starts-with(name,'FPC')]/name
+        - ancestor::*[starts-with(name,'MIC')]/name
+        - ancestor::*[starts-with(name,'PIC')]/name
+        - name
+    view: _PortModule_view
+_PortModule_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        desc: description
+
+
+
+#This is a status table but will be used to get PortModuleDetaiL, do not Remove it
+PICStatusTable:
+    rpc: get-pic-information
+    item: //fpc/pic
+    key:
+        - ../slot
+        - pic-slot
+    view: _PICStatus_view
+_PICStatus_view:
+    fields:
+        fpc_slot: ../slot
+        pic_slot: pic-slot
+        pic_state: pic-state
+        pic_type: pic-type
+
+
+
+PortModuleDetailTable:
+    rpc: get-pic-detail
+    item: .//fpc/pic-detail/port-information/port
+    key:
+        - ancestor::*/slot
+        - ancestor::*/pic-slot
+        - port-number
+    view: _PortModuleDetail_view
+_PortModuleDetail_view:
+    fields:
+        fpc_slot: ancestor::*/slot
+        pic_slot: ancestor::*/pic-slot
+        port-number:  port-number
+        cable-type:  cable-type
+        fiber-mode:  fiber-mode
+        sfp-vendor-name:  sfp-vendor-name
+        sfp-vendor-pno:  sfp-vendor-pno
+        wavelength:  wavelength
+        sfp-vendor-fw-ver:  sfp-vendor-fw-ver
+
+
+PSMTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'PSM')]
+    item: //name[starts-with(.,'PSM')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    key:
+        - name
+    view: _PSM_view
+_PSM_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+
+SFBTable:
+    rpc: get-chassis-inventory
+    #item: ./chassis/chassis-module[starts-with(name,'SFB')]
+    item: //name[starts-with(.,'SFB')]/parent::* #Do not change this, this syntax is used to cover multi-routing engine use case
+    key:
+        - name
+    view: _SFB_view
+_SFB_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+

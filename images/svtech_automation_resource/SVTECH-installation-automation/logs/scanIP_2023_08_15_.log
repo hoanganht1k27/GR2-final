@@ -1,0 +1,18 @@
+2023-08-15 15:14:59,504 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.31/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-08-15 15:14:59,504 INFO main(42)     Connecting to network: 10.98.12.31/32:
+2023-08-15 15:14:59,504 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.31/32 into list of host
+2023-08-15 15:15:01,535 INFO TEST_HOST_PING(74)     10.98.12.31 is UP!
+2023-08-15 15:15:01,535 INFO main(50)     Time to ping all host: 2.030684232711792
+2023-08-15 15:15:01,535 INFO main(51)     List of alive host:: ['10.98.12.31']
+2023-08-15 15:15:01,536 INFO main(55)     Collecting all hostname using snmp community public
+2023-08-15 15:15:01,537 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-08-15 15:15:01,538 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.31, using IP address as hostname
+2023-08-15 15:19:30,096 INFO main(40)     List of received arguments {'networkAddress': '10.98.12.31/32', 'community': 'public', 'output_dir': '/tmp/exporter_inventory', 'collect_hostname': True, 'log_dir': './logs', 'log_prefix': 'scanIP', 'log_surfix': '', 'log_timestamp': '%Y_%m_%d', 'log_level': 'INFO', 'ping_interval': 0.1, 'ping_count': 3, 'list_full_oid': None}
+2023-08-15 15:19:30,097 INFO main(42)     Connecting to network: 10.98.12.31/32:
+2023-08-15 15:19:30,097 INFO GET_ALIVE_HOST(118)     Resolving provided subnet 10.98.12.31/32 into list of host
+2023-08-15 15:19:32,121 INFO TEST_HOST_PING(74)     10.98.12.31 is UP!
+2023-08-15 15:19:32,121 INFO main(50)     Time to ping all host: 2.0245964527130127
+2023-08-15 15:19:32,122 INFO main(51)     List of alive host:: ['10.98.12.31']
+2023-08-15 15:19:32,122 INFO main(55)     Collecting all hostname using snmp community public
+2023-08-15 15:19:32,124 ERROR CHECK_SNMP_HOSTNAME(474)     unknown object id (sysName)
+2023-08-15 15:19:32,124 INFO main(59)     The host can be ping but doesn't have host name: 10.98.12.31, using IP address as hostname

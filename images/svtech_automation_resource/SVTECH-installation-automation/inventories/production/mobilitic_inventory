@@ -1,0 +1,27 @@
+[node]
+node1 ansible_host=10.38.22.11
+node2 ansible_host=10.38.22.12
+node3 ansible_host=10.38.22.13
+node4 ansible_host=10.38.22.14
+node5 ansible_host=10.38.22.15
+node6 ansible_host=10.38.22.16
+node7 ansible_host=10.38.22.17
+node8 ansible_host=10.38.22.18
+
+[admin]
+compute01 ansible_host=10.38.22.36
+compute02 ansible_host=10.38.22.37
+ceph01 ansible_host=10.38.22.41
+ceph02 ansible_host=10.38.22.42
+ceph03 ansible_host=10.38.22.43
+
+
+[node:vars]
+ansible_user=root
+ansible_password=h@yl4ch1nhb4n
+ansible_port=22
+
+[admin:vars]
+ansible_user=root
+ansible_password=admin123
+ansible_port=22

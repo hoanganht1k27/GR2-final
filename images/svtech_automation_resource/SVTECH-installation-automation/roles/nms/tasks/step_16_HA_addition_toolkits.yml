@@ -1,0 +1,105 @@
+---
+  - name: ADDITION TOOLKITS - HA - [Step 01] - Pip install Python Library
+    pip:
+      name: ['Flask', 'pyyaml', 'argparse']
+    environment:
+      HTTP_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      HTTPS_PROXY: "{{ proxy if (proxy is defined) else ''}}"
+      LC_CTYPE: "en_US.UTF-8"
+
+  - name: ADDITION TOOLKITS - HA - [Step 02] - Register File Path
+    set_fact:
+      root_path: "/opt/SVTECH-Junos-Automation/addition_toolkit"
+
+  # - name: ADDITION TOOLKITS - HA - [Step 03] - Copy Addition Tools file to remote host
+  #   copy:
+  #     src: "{{ item }}"
+  #     dest: "/opt/"
+  #     mode: 0775
+  #   with_items:
+  #     - "{{ role_path }}/files/addition_toolkit"
+
+  - name: ADDITION TOOLKITS - HA - [Step 03] - Rundeck Options API - Link static file for rundeck_options_API
+    blockinfile:
+      path: "/etc/httpd/conf.d/flask_static.conf"
+      create: yes
+      mode: 0664
+      # insertafter: EOF
+      marker: "#{mark} Rundeck Options API"
+      block: |
+            Alias "/static_upgrade/" "{{ root_path }}/rundeck_options_API/static/"
+            <Directory {{ root_path }}/rundeck_options_API/static/>
+              Order allow,deny
+              Allow from all
+              Require all granted
+            </Directory>
+
+  - name: ADDITION TOOLKITS - HA - [Step 04] - Csv To HTML Table - Link static file for csv-to-html-table
+    blockinfile:
+      path: "/etc/httpd/conf.d/flask_static.conf"
+      create: yes
+      mode: 0664
+      # insertafter: EOF
+      marker: "#{mark} Csv To HTML Table"
+      block: |
+            Alias "/static_csv/" "{{ root_path }}/csv-to-html-table/static/"
+            <Directory {{ root_path }}/csv-to-html-table/static/>
+              Order allow,deny
+              Allow from all
+              Require all granted
+            </Directory>
+
+  - name: ADDITION TOOLKITS - HA - [Step 05] - Csv To HTML Table - Config Proxy
+    blockinfile:
+      path: "/etc/httpd/conf.d/proxy.conf"
+      create: yes
+      marker: "#{mark} Csv To HTML Table"
+      block: |
+            <Location "/csv">
+                    RequestHeader set Host "http://{{ VIP }}/csv"
+                    ProxyPass "http://127.0.0.1:8000"
+            </Location>
+
+  - name: ADDITION TOOLKITS - HA - [Step 06] - Upgrade Switchover Confirmation - Config Proxy
+    blockinfile:
+      path: "/etc/httpd/conf.d/proxy.conf"
+      create: yes
+      marker: "#{mark} Upgrade Switchover Confirmation"
+      block: |
+            <Location "/switchover_upgrade">
+                    RequestHeader set Host "http://{{ VIP }}/switchover_upgrade"
+                    ProxyPass "http://127.0.0.1:1111"
+            </Location>
+
+  - name: ADDITION TOOLKITS - HA - [Step 07] - Create Addition Toolkits Service
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0775
+      remote_src: yes
+    with_items:
+      - { src: "{{ root_path }}/csv-to-html-table/csv.service", dest: "/etc/systemd/system/" }
+      - { src: "{{ root_path }}/rundeck_options_API/rundeck-options-api.service", dest: "/etc/systemd/system/" }
+
+
+  - name: ADDITION TOOLKITS - HA - [Step 08] - Generate datasource
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: "{{ role_path }}/templates/ha_rundeck_options_datasource.j2", dest: "/opt/SVTECH-Junos-Automation/addition_toolkit/rundeck_options_API/datasources.yml" }
+
+
+  - name: ADDITION TOOLKITS - HA - [Step 09] - Start Addition Toolkits Service
+    service:
+      name: "{{item}}"
+      state: started
+      enabled: yes
+      daemon_reload: yes
+    with_items:
+      - csv.service
+      - rundeck-options-api.service
+    notify:
+      - Restart http

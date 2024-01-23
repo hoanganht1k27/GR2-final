@@ -1,0 +1,19 @@
+# Wrote by Hoang Anh Tu
+---
+- include_vars: "{{ item }}"
+  with_items:
+    - "{{ playbook_dir }}/roles/elk_beat/defaults/metricbeat.yml"
+
+- name: "[METRICBEAT] - INCLUDE ROLE ansible-beats"
+  include_role: 
+    name: ansible-beats
+    vars_from: "{{ playbook_dir }}/roles/elk_beat/defaults/metricbeat.yml"
+
+- include_vars:
+    file: "{{ item }}"
+  with_items:
+    - "{{ playbook_dir }}/roles/elk_beat/defaults/filebeat.yml"
+
+- name: "[FILEBEAT] - INCLUDE ROLE ansible-beats"
+  include_role:
+    name: ansible-beats

@@ -1,0 +1,112 @@
+[all:children]
+elastic
+aaa
+
+[elastic]
+hht-nms-01 ansible_port=22 ansible_host=10.207.134.250 IP=10.207.134.250 prefix=production node_master=true node_data=true node_ingest=true kibana=true es_mem_size=4g server_id=1 bootstrap=enable app_group=EMS  gen_cert=true
+hht-nms-02 ansible_port=22 ansible_host=10.207.134.251 IP=10.207.134.251 prefix=production node_master=true node_data=true node_ingest=true kibana=true es_mem_size=4g server_id=2 bootstrap=disable app_group=EMS
+hht-nms-03 ansible_port=22 ansible_host=10.207.134.252 IP=10.207.134.252 prefix=production node_master=true node_data=true node_ingest=true kibana=true es_mem_size=4g server_id=3 bootstrap=disable app_group=EMS
+
+[aaa]
+hht-radius-01 ansible_port=22 ansbile=10.207.134.147 IP=10.207.134.147 http_module=sbr_statistic
+hht-radius-02 ansible_port=22 ansbile=10.207.134.148 IP=10.207.134.148 http_module=sbr_statistic
+hht-radius-03 ansible_port=22 ansbile=10.207.134.149 IP=10.207.134.149 http_module=sbr_statistic
+hht-radius-04 ansible_port=22 ansbile=10.207.134.150 IP=10.207.134.150 http_module=sbr_statistic
+hht-radius-05 ansible_port=22 ansbile=10.207.134.151 IP=10.207.134.151 http_module=sbr_statistic
+hht-radius-06 ansible_port=22 ansbile=10.207.134.152 IP=10.207.134.152 http_module=sbr_statistic
+
+hht-dbuser-01 ansible_port=22 ansbile=10.73.90.171 IP=10.73.90.171
+hht-dbuser-02 ansible_port=22 ansbile=10.73.90.172 IP=10.73.90.172
+hht-dbuser-03 ansible_port=22 ansbile=10.73.90.173 IP=10.73.90.173
+hht-dbuser-04 ansible_port=22 ansbile=10.73.90.174 IP=10.73.90.174
+hht-dbuser-05 ansible_port=22 ansbile=10.73.90.175 IP=10.73.90.175
+hht-dbuser-06 ansible_port=22 ansbile=10.73.90.176 IP=10.73.90.176
+
+hht-dbact-01 ansible_port=22 ansbile=10.73.90.177 IP=10.73.90.177
+hht-dbact-02 ansible_port=22 ansbile=10.73.90.178 IP=10.73.90.178
+hht-dbact-03 ansible_port=22 ansbile=10.73.90.179 IP=10.73.90.179
+hht-dbact-04 ansible_port=22 ansbile=10.73.90.180 IP=10.73.90.180
+
+hht-api-01 ansible_port=22 ansbile=10.207.134.248 IP=10.207.134.248  prefix=production
+hht-api-02 ansible_port=22 ansbile=10.207.134.249 IP=10.207.134.249  prefix=production
+
+[all:vars]
+ansible_ssh_user=root
+admin_user = juniper
+admin_password = aaa@juniper@123
+timezone = "Asia/Ho_Chi_Minh"
+version=7.10.2
+http_port=9200
+transport_port=9300
+
+### BEAT - INDEX LIST ###
+index_list=["metricbeat", "filebeat", "aaa", "sql", "snmp-fqx", "snmp-hpe", "snmp-lb", "radius-log", "snmp-fortigate","snmp-store_easy"]
+
+### BEAT - SYSTEM Module Variables ###
+system_reload_period=30s
+
+### BEAT - MYSQL Module Variables ###
+mysql_db_period=30s
+mysql_host=127.0.0.1
+mysql_port=3306
+mysql_monitor_username=monitor
+mysql_monitor_password=monitor@aaa
+
+### LOGSTASH - Listen Port Variables ###
+logstash_listen_metricbeat_port=5044
+logstash_listen_filebeat_port=5045
+
+### API GATEWAY Variables ###
+proxysql_username=aaa_writer
+proxysql_password=aaa_writer
+vip_proxysql_host=10.207.134.230
+vip_proxysql_port=3306
+vip_api_gateway=10.207.134.230
+vip_graphql_port=18080
+
+
+#=============================================
+[elastic:vars]
+mysql_error_log_path=/var/log/mysql/error.log
+mysql_slow_log_path=/var/log/mysql/slow.log
+kibana_port=5601
+cluster_name=aaa
+
+### Elastic's SSL Variables ###
+keystore_file=elastic-certificates.p12
+truststore_file=elastic-certificates.p12
+api_basic_auth_password=aaa@juniper@123
+keystore_password=""
+ca_password=""
+elastic_password=aaa@juniper@123
+apm_system_password=aaa@juniper@123
+kibana_system_password=aaa@juniper@123
+logstash_system_password=aaa@juniper@123
+beats_system_password=aaa@juniper@123
+remote_monitoring_user=aaa@juniper@123
+
+### Galera Cluster Variables ###
+database_solution=cluster
+wsrep_cluster_name=ClusterDatabase
+wsrep_sst_auth_user=sstuser
+wsrep_sst_auth_password=juniper@123
+auto_gen_password=false
+mariadb_root_password=aaa@juniper@123
+
+### Logstash User Variables ###
+logstash_writer_username=logstash
+logstash_writer_password=aaa@juniper@123
+
+#### Grafana Variables ###
+organization=viettelnet-hht
+grafana_database=grafana
+grafana_database_user=grafana
+grafana_database_password=aaa@juniper@123
+grafana_admin_user = admin
+grafana_admin_password = aaa@juniper@123
+
+#=============================================
+[aaa:vars]
+app_group=AAA
+mysql_error_log_path=/data/database/mariadb.err 
+mysql_slow_log_path=/data/database/mariadb-slow.log 

@@ -1,0 +1,704 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "$$hashKey": "object:2348",
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 47,
+  "iteration": 1656052726125,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "GraphQL Data Source",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "color-background"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(70, 191, 49)",
+                "value": null
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 700000000
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_outbits_value.time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 243
+              },
+              {
+                "id": "displayName",
+                "value": "max_outbits_time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_inbits_value.time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 225
+              },
+              {
+                "id": "displayName",
+                "value": "max_inbits_time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_inbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 111
+              },
+              {
+                "id": "displayName",
+                "value": "max_inbits_values"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_outbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              },
+              {
+                "id": "displayName",
+                "value": "max_outbits_values"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 368
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.display_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 173
+              },
+              {
+                "id": "displayName",
+                "value": "Interface_name"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_outbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 250
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_inbits_values"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 177
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.max_inbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 255
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_inbits_time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 217
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_outbits_values"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 218
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "max_outbits_time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 211
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "max_outbits_values"
+          }
+        ]
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "aliasBy": "",
+          "annotationTags": "",
+          "annotationText": "",
+          "annotationTitle": "",
+          "constant": 6.5,
+          "dataPath": "port",
+          "endTimePath": "endTime",
+          "groupBy": "",
+          "queryText": "query {\r\n        port(livestatusds: \"LiveStatus\", influxds: \"InfluxdbDatasource\", \r\n          \t\tmeasurement: \"Interface-check-command\", \r\n          \t\tfilter: \"host_name ~ (${hostname:pipe}) and display_name ~ IfCheck-$service\", \r\n              start: $__from, stop: $__to, timezone: \"Asia/Bangkok\") {\r\n\r\n              host_name\r\n              bandwidth {   display_name\r\n                \t\t\t\t\t\tmax_inbits_value {\r\n                                                time\r\n                                                value\r\n                                             }\r\n                \t\t\t\t\t\tmax_outbits_value{\r\n                              \t\t\t\t\t\t\t\t\ttime\r\n                              \t\t\t\t\t\t\t\t\tvalue\r\n                            \t\t\t\t\t\t\t\t }\r\n                    \t\t}\r\n              }\r\n    \t}\r\n",
+          "refId": "A",
+          "timeFormat": null,
+          "timePath": "Time"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "GraphQL MAX Bandwidth Report ",
+      "type": "table"
+    },
+    {
+      "datasource": "GraphQL Data Source",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "color-background"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(70, 191, 49)",
+                "value": null
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 700000000
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.mean_outbits_value.time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 243
+              },
+              {
+                "id": "displayName",
+                "value": "mean_outbits_time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.mean_inbits_value.time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 225
+              },
+              {
+                "id": "displayName",
+                "value": "mean_inbits_time"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.mean_inbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 111
+              },
+              {
+                "id": "displayName",
+                "value": "mean_inbits_values"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.mean_outbits_value.value"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              },
+              {
+                "id": "displayName",
+                "value": "mean_outbits_values"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "host_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 369
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bandwidth.display_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 173
+              },
+              {
+                "id": "displayName",
+                "value": "Interface_name"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mean_inbits_values"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 178
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mean_outbits_values"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 252
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "mean_outbits_time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 232
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 8,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "host_name"
+          }
+        ]
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "aliasBy": "",
+          "annotationTags": "",
+          "annotationText": "",
+          "annotationTitle": "",
+          "constant": 6.5,
+          "dataPath": "port",
+          "endTimePath": "endTime",
+          "groupBy": "",
+          "queryText": "query {\r\n        port(livestatusds: \"LiveStatus\", influxds: \"InfluxdbDatasource\", \r\n          \t\tmeasurement: \"Interface-check-command\", \r\n          \t\tfilter: \"host_name ~ (${hostname:pipe}) and display_name ~ IfCheck-$service\", \r\n              start: $__from, stop: $__to, timezone: \"Asia/Bangkok\") {\r\n\r\n              host_name\r\n              bandwidth {   display_name\r\n                \t\t\t\t\t\tmean_inbits_value {\r\n                                                time\r\n                                                value\r\n                                             }\r\n                \t\t\t\t\t\tmean_outbits_value{\r\n                              \t\t\t\t\t\t\t\t\ttime\r\n                              \t\t\t\t\t\t\t\t\tvalue\r\n                            \t\t\t\t\t\t\t\t }\r\n                    \t\t}\r\n              }\r\n    \t}\r\n",
+          "refId": "A",
+          "timeFormat": null,
+          "timePath": "Time"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "GraphQL MEAN Bandwidth Report ",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 25,
+  "style": "dark",
+  "tags": [
+    "report"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "LiveStatus",
+          "value": "LiveStatus"
+        },
+        "datasource": "grafana_thruk",
+        "definition": "SHOW datasources;",
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "SHOW datasources;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "HNMR",
+          "value": "HNMR"
+        },
+        "datasource": "grafana_thruk",
+        "definition": "SELECT hostgroups.name FROM ${datasource:csv};",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Hostgroup",
+        "multi": false,
+        "name": "hostgroup",
+        "options": [],
+        "query": "SELECT hostgroups.name FROM ${datasource:csv};",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": "",
+        "current": {
+          "selected": true,
+          "text": "CSR",
+          "value": [
+            "CSR"
+          ]
+        },
+        "datasource": "grafana_thruk",
+        "definition": "SELECT hosts.vars.device_type FROM $datasource;",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Device Type",
+        "multi": true,
+        "name": "device_type",
+        "options": [],
+        "query": "SELECT hosts.vars.device_type FROM $datasource;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": "ME-CSR-HNI-C150.6---H2_CMY_HO_XUAN_MAI",
+          "value": [
+            "ME-CSR-HNI-C150.6---H2_CMY_HO_XUAN_MAI"
+          ]
+        },
+        "datasource": "grafana_thruk",
+        "definition": "SELECT hosts.display_name FROM $datasource WHERE vars.device_type = $device_type AND groups ~ (${hostgroup:pipe})",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Hostname",
+        "multi": true,
+        "name": "hostname",
+        "options": [],
+        "query": "SELECT hosts.display_name FROM $datasource WHERE vars.device_type = $device_type AND groups ~ (${hostgroup:pipe})",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "grafana_thruk",
+        "definition": "SELECT services.display_name FROM $datasource WHERE host_name ~ (${hostname:pipe});",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Interface",
+        "multi": true,
+        "name": "service",
+        "options": [],
+        "query": "SELECT services.display_name FROM $datasource WHERE host_name ~ (${hostname:pipe});",
+        "refresh": 1,
+        "regex": "/-([ae|xe|ge].*)/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "1d",
+          "value": "1d"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "label": "Downsampling Period",
+        "multi": false,
+        "name": "downsampling",
+        "options": [
+          {
+            "$$hashKey": "object:267",
+            "selected": true,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "$$hashKey": "object:268",
+            "selected": false,
+            "text": "3d",
+            "value": "3d"
+          },
+          {
+            "$$hashKey": "object:269",
+            "selected": false,
+            "text": "1w",
+            "value": "1w"
+          },
+          {
+            "$$hashKey": "object:270",
+            "selected": false,
+            "text": "2w",
+            "value": "2w"
+          },
+          {
+            "$$hashKey": "object:271",
+            "selected": false,
+            "text": "4w",
+            "value": "4w"
+          },
+          {
+            "$$hashKey": "object:272",
+            "selected": false,
+            "text": "8w",
+            "value": "8w"
+          }
+        ],
+        "query": "1d, 3d, 1w, 2w, 4w, 8w",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "six_months",
+          "value": "six_months"
+        },
+        "datasource": "influxdb_nms",
+        "definition": "select rp from forever.rp_config where  ($__to - $__from > \"start\") and ($__to - $__from <= \"end\")",
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "rp",
+        "options": [],
+        "query": "select rp from forever.rp_config where  ($__to - $__from > \"start\") and ($__to - $__from <= \"end\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Bandwidth-Report-Overview",
+  "uid": "bandwidth-report-overview",
+  "version": 8
+}

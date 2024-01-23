@@ -1,0 +1,48 @@
+FROM rundeck/rundeck:4.13.0
+
+USER root
+
+# Install Base packet
+RUN apt-get -y update && \
+    apt-get --no-install-recommends -y install vim iputils-ping software-properties-common git telnet libsnmp-dev snmp-mibs-downloader gcc apt-transport-https dos2unix zip unzip unrar sshpass lftp build-essential jq parallel && \
+    apt-get autoclean
+
+# Install Rundeck-cli
+RUN curl -s https://packagecloud.io/install/repositories/pagerduty/rundeck/script.deb.sh | os=any dist=any bash && \
+    apt-get -y update && \
+    apt-get --no-install-recommends -y install rundeck-cli && \
+    apt-get autoclean
+
+COPY ./pyenv /root/.pyenv
+
+ENV PATH="/root/.pyenv/bin:/root/.pyenv/shims:${PATH}"
+
+RUN pyenv install 3.6.5;
+RUN pyenv virtualenv 3.6.5 automation36
+RUN pyenv global automation36
+RUN pip install --upgrade pip
+
+# Install base python packages
+RUN pip install setuptools==40.8.0 wheel setuptools_rust bcrypt==3.2.2 cryptography==3.3 pynacl==1.3.0
+
+COPY ./requirements.txt /tmp/requirements.txt
+
+# Install Python Dependencies
+RUN pip install -r /tmp/requirements.txt --no-cache-dir
+
+RUN ansible-galaxy collection install community.general
+RUN ansible-galaxy collection install community.vmware
+
+ENV RUNDECK_SERVER_CONTEXT_PATH=/rundeck \
+    RUNDECK_GRAILS_URL=http://localhost:4440/rundeck \
+    RUNDECK_SERVER_ADDRESS="0.0.0.0" \
+    RUNDECK_DATABASE_URL=jdbc:h2:file:/home/rundeck/server/data/grailsdb;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=MONTH,HOUR,MINUTE,YEAR,SECONDS \
+    RUNDECK_DATABASE_USERNAME=rundeck \
+    RUNDECK_DATABASE_PASSWORD=juniper@123 \
+    TZ=Asia/Ho_Chi_Minh
+
+COPY ./sudoers.d/users /etc/sudoers.d/users
+
+EXPOSE 4440
+
+ENTRYPOINT [ "/tini", "--", "docker-lib/entry.sh" ]

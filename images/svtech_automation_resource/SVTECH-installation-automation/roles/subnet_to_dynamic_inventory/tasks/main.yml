@@ -1,0 +1,39 @@
+- name: debug
+  shell: echo hello
+  register: test
+
+- name: SCAN SUBNET - [STEP 01] - Scan all IP in specific subnet
+  scan_ip:
+    networkAddress: "{{ subnet }}"
+    community: "{{ community }}"
+    output_dir: "{{ inventory_dest_file }}"
+    collect_hostname: True
+    log_dir: "{{ log_dir | default('./logs') }}"
+    log_prefix: "{{ log_prefix | default('./scan_ip')}}"
+    log_surfix: "{{ log_surfix | default('') }}"
+    log_timestamp: "{{ log_timestamp | default('%Y_%m_%d') }}"
+    log_level: "{{ log_level | default('INFO')}}"
+  run_once: True
+  register: list_ip
+
+- name: "SCAN SUBNET - [STEP 02] - Create inventory of of scanned host"
+  add_host:
+    ansible_host: "{{ item.IP }}"
+    hostname: "{{ item.snmp_hostname }}"
+    groups: "{{destination_inventory_group_name}}"
+  with_items: "{{list_ip.result.list_w_hostname}}"
+  when: list_ip.result.list_w_hostname is defined
+
+- name: "SCAN SUBNET - [STEP 03] - Create inventory of of scanned host"
+  add_host:
+    ansible_host: "{{ item.IP }}"
+    hostname: "{{ item.IP }}"
+    groups: "{{destination_inventory_group_name}}"
+  with_items: "{{list_ip.result.list_no_hostname}}"
+  when: list_ip.result.list_no_hostname is defined
+
+- name: print scan result
+  debug:
+    msg: "{{list_ip.result}}"
+  tags: 
+    - debug

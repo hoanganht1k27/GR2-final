@@ -1,0 +1,31 @@
+- hosts: localhost
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: juniper@123
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_pass: juniper@123
+    proxmox: 10.98.1.123
+    proxmoxUsername: anh.nguyen@pveasdfadsf
+    proxmoxPassword: juniper@123asfdsfasdfs
+    proxmoxDynamicInventoryFile: /opt/SVTECH-installation-automation/inventories/default/my.proxmox.yml
+  gather_facts: false
+  tasks:
+    - name: PROXMOX [Step 01] Add url to dynamic inventory file
+      lineinfile:
+        path: "{{ proxmoxDynamicInventoryFile }}"
+        regexp: "^url: *"
+        line: "url: https://{{ proxmox }}:8006"
+        state: present
+    - name: PROXMOX [Step 02] Add username to dynamic inventory file
+      lineinfile:
+        path: "{{ proxmoxDynamicInventoryFile }}"
+        regexp: "^user: *"
+        line: "user: {{ proxmoxUsername }}"
+        state: present
+    - name: PROXMOX [Step 03] Add password to dynamic inventory file
+      lineinfile:
+        path: "{{ proxmoxDynamicInventoryFile }}"
+        regexp: "^password: *"
+        line: "password: {{ proxmoxPassword }}"
+        state: present

@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "init-kafka-topic"
+spec:
+  ttlSecondsAfterFinished: 120
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+      - name: wait-for-kafka
+        image: {{ .Values.init.image.repository }}:{{ .Values.init.image.tag }}
+        command:
+          - /bin/sh
+          - -ec
+          - |
+              until nc -zvw5 kafka-kafka-brokers 9092; do echo "Waiting for Kafka..."; sleep 20; done
+      containers:
+      - name: init-kafka-topic
+        image: {{ .Values.initKafkaTopic.image.repository }}:{{ .Values.initKafkaTopic.image.tag }}
+        imagePullPolicy: {{ .Values.initKafkaTopic.image.pullPolicy | quote }}
+        command:
+          - bash
+          - -ec
+          - |
+              status=`bin/kafka-topics.sh --list --bootstrap-server kafka-kafka-bootstrap:9092 | grep {{ .Values.global.kafkaConfig.topic }} | wc -l`
+              if [[ "$status" == "0" ]]; then
+                echo "Topic haven't existed yet, creating..."
+                bin/kafka-topics.sh --create --topic {{ .Values.global.kafkaConfig.topic }} --bootstrap-server kafka-kafka-bootstrap:9092 --partitions {{ .Values.global.kafkaConfig.partition }}
+                echo "Topic created"
+              else
+                echo "Topic existed. Ignore"
+              fi

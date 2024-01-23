@@ -1,0 +1,360 @@
+---
+- name: DATABASE [Step 01]-[Replication] - ALL - Install pigz, socat packages
+  yum:
+    name:
+      - pigz
+      - socat
+    state: latest
+  when:
+    - inventory_hostname in groups['replication']
+
+- name: DATABASE [Step 02]-[Replication] - ALL - Ensure replication user exists on master.
+  mysql_user:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: "{{ replication_user.name }}"
+    host: "{{ replication_user.host | default('%') }}"
+    password: "{{ replication_user.password }}"
+    priv: "{{ replication_user.priv }}"
+    update_password: on_create
+    state: present
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  when:
+    - inventory_hostname in groups['replication_master']
+    - replication_user.name is defined
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 03]-[Replication] - SLAVE - Check replication status.
+  mysql_replication:
+    mode: getreplica
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+  ignore_errors: true
+  register: slave
+  when:
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 04]-[Replication] - SLAVE - Create backup directory if it does not exist
+  file:
+    path: "{{ backup_dir }}"
+    state: "{{ item }}"
+    mode: '0770'
+  with_items:
+    - absent
+    - directory
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 05]-[Replication] - SLAVE - Stop MariaDB Services
+  service:
+    name: mariadb
+    state: stopped
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 06]-[Replication] - MASTER - Open IPTABLES Port for replicating data via socat
+  iptables:
+    action: insert
+    chain: INPUT
+    ctstate: NEW
+    protocol: tcp
+    destination_port: "4444{{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }}"
+    jump: ACCEPT
+    wait: 10
+    comment: "Replication DB port for {{ inventory_hostname }} - index_var {{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }}"
+  throttle: 1
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+#- name: DATABASE [Step 04]-[Replication] - MASTER - Binding Port for replicating data
+#  shell: "mariabackup --user=root --password={{ mariadb_root_password }} --backup --target-dir=/tmp/ --stream=xbstream --parallel=4 | pigz -c | socat - TCP-LISTEN:4444{{async_item}},reuseaddr"
+#  async: 9999999
+#  poll: 0
+#  loop: "{{ ansible_play_hosts | intersect(groups['replication_slave']) }}"
+#  loop_control:
+#    index_var: "async_item"
+#  register: async_results
+#  delegate_to: "{{ groups['replication_master'][0] }}"
+#  when:
+#    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+#    - inventory_hostname in groups['replication_master']
+#    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 07]-[Replication] - MASTER - Binding Port for replicating data
+  shell: "mariabackup --user=root --password={{ mariadb_root_password }} --host=localhost --socket={{ data_dir }}/mysql.sock --backup --datadir={{ data_dir }} --target-dir=/tmp/ --stream=xbstream --parallel=4 | pigz -c | socat - TCP-LISTEN:4444{{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }},reuseaddr"
+  async: 9999999
+  poll: 0
+  register: async_results
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 08]-[Replication] - SLAVE - Pulling mariabackup data from MASTER Node
+  shell: "socat -u TCP:{{ hostvars[groups['replication_master'][0]].IP }}:4444{{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }} STDOUT  | pigz -dc | mbstream -xv"
+  throttle: 2
+  args:
+    chdir: "{{ backup_dir }}"
+  register: pulling_data
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+#- name: DATABASE [Step 07]-[Replication] - MASTER - Checking Mariabackup status
+#  async_status:
+#    jid: "{{ async_result_item.ansible_job_id }}"
+#  loop: "{{ async_results.results }}"
+#  loop_control:
+#    loop_var: "async_result_item"
+#  register: async_poll_results
+#  until: async_poll_results.finished
+#  retries: 999
+#  ignore_errors: True
+#  delegate_to: "{{ groups['replication_master'][0] }}"
+#  when:
+#    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+#    - inventory_hostname in groups['replication_master']
+#    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 09]-[Replication] - SLAVE - Checking Mariabackup status
+  async_status:
+    jid: "{{ async_results.ansible_job_id }}"
+  register: async_poll_results
+  until: async_poll_results.finished
+  retries: 999
+  ignore_errors: True
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+
+- name: DATABASE [Step 10]-[Replication] - SLAVE - Checking xtrabackup_info file
+  stat:
+    path: "{{ backup_dir }}/xtrabackup_info"
+  register: xtrabackup_info
+  when:
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']
+    - (groups['replication_master'] | length) > 0
+    - (groups['replication_slave'] | length) > 0
+
+# - debug:
+#     var: xtrabackup_info
+
+- name: DATABASE [Step 11]-[Replication] - SLAVE - Deleting {{ data_dir }} directory
+  file:
+    path: "{{ data_dir }}"
+    state: "{{ item }}"
+    mode: '0755'
+    owner: mysql
+    group: mysql
+  with_items:
+    - absent
+    - directory
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: "DATABASE [Step 12]-[Replication] - SLAVE - Prepare mariabackup data and copy back to {{ data_dir }}"
+  shell: "{{ item }}"
+  throttle: 1
+  args:
+    chdir: "{{ backup_dir }}"
+  with_items:
+    - "mariabackup --prepare  --target-dir={{ backup_dir }}"
+    - "mariabackup --copy-back --target-dir={{ backup_dir }} --datadir={{ data_dir }}"
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: "DATABASE [Step 013]-[Replication] - SLAVE - Change {{ data_dir }} permission"
+  file:
+    path: "{{ data_dir }}"
+    mode: '0755'
+    state: directory
+    recurse: yes
+    owner: mysql
+    group: mysql
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+  
+- name: DATABASE [Step 14]-[Replication] - SLAVE - Creating template for changemaster.sql
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0755
+    backup: true
+  with_items:
+    - { src: "{{ role_path }}/templates/mysql_replication/change_master.sh.j2", dest: "/tmp/mysql_replication.sh" }
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: Creating changemaster.sql
+  command: /bin/bash /tmp/mysql_replication.sh && find /tmp/mysql_replication.sh -delete
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 15]-[Replication] - SLAVE - Starting MariaDB Services
+  service:
+    name: mariadb
+    state: started
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 16]-[Replication] - MASTER - Retrive Master Replication State
+  mysql_replication:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    mode: getprimary
+  register: master
+  delegate_to: "{{ groups['replication_master'][0] }}"
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 17]-[Replication] - SLAVE - Running Changer Master script
+  mysql_db:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    name: all
+    state: import
+    target: /tmp/changemaster.sql 
+    encoding: utf8
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 18]-[Replication] - SLAVE - Starting replication
+  mysql_replication: 
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    mode: startreplica
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 19]-[Replication] - MASTER - Close IPTABLES Port for replicating data via socat
+  iptables:
+    action: insert
+    chain: INPUT
+    ctstate: NEW
+    protocol: tcp
+    destination_port: "4444{{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }}"
+    jump: ACCEPT            
+    state: absent
+    wait: 10
+    comment: "Replication DB port for {{ inventory_hostname }} - index_var {{ (ansible_play_hosts|intersect(groups['replication_slave'])).index(inventory_hostname) }}"
+  delegate_to: "{{ groups['replication_master'][0] }}"          
+  when:                                                         
+    - (slave.Is_Replica is defined and not slave.Is_Replica) or (slave.Is_Replica is not defined and slave is failed)
+    - inventory_hostname in groups['replication_slave']         
+    - (groups['replication_master'] | length) > 0               
+                                                      
+
+- name: DATABASE [Step 19]-[Replication] - ALL - Pause for 20 second to wait Slave nodes's replication process is stable
+  pause:
+    seconds: 20
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 20]-[Replication] - SLAVE - Check replication status after replicating
+  mysql_replication:
+    mode: getreplica
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+  ignore_errors: true
+  register: re_slave
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+
+- name: DATABASE [Step 21]-[Replication] - SLAVE - Set read_only variable to "ON" for Slave Nodes
+  mysql_variables:
+    login_user: root                                                                    
+    login_password: "{{ mariadb_root_password }}"                                       
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    variable: read_only
+    value: "1"
+#    mode: persist
+  when:
+    - slave.Is_Replica is defined
+    - slave.Is_Replica == true 
+
+- name: DATABASE [Step 22]-[Replication] - SLAVE - Remove backup files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ backup_dir }}"
+    - /tmp/mysql_replication.sh
+    - /tmp/changemaster.sql
+  when:
+    - xtrabackup_info.stat is defined
+    - xtrabackup_info.stat.exists
+    
+- name: DATABASE [Step 23]-[Replication] - ALL - Check for read_only_value setting
+  mysql_variables:
+    login_user: root
+    login_password: "{{ mariadb_root_password }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    variable: read_only
+  register: read_only
+
+- name: DATABASE [Step 24]-[Replication] - ALL - Collect Replication status
+  set_fact:
+    replication_status: |
+      {% if re_slave.Is_Replica is not defined and slave.Is_Replica is not defined %}
+      === {{ inventory_hostname }} - REPLICATION - MASTER STATUS ===
+      + Is Primary: True,
+      + Read_Only: {{ read_only.msg }},
+      {% endif %}
+      {% if re_slave.Is_Replica is not defined and slave.Is_Replica is defined %}
+      === {{ inventory_hostname }} - REPLICATION - SLAVE STATUS ===
+      {% if slave.Is_Replica is defined %}+ Is Replica: {{ slave.Is_Replica }}{% endif %},
+      {% if slave.Slave_IO_Running is defined %}+ Slave_IO_Running: {{ slave.Slave_IO_Running }}{% endif %},
+      {% if slave.Slave_SQL_Running is defined %}+ Slave_SQL_Running: {{ slave.Slave_SQL_Running }}{% endif %},
+      {% if slave.Master_Server_Id is defined %}+ Master_Server_Id: {{ slave.Master_Server_Id }}{% endif %},
+      {% if slave.Seconds_Behind_Master is defined %}+ Seconds_Behind_Master: {{ slave.Seconds_Behind_Master }}{% endif %},
+      {% if slave.Read_Master_Log_Pos is defined %}+ Read_Master_Log_Pos: {{ slave.Read_Master_Log_Pos }}{% endif %},
+      {% if slave.Exec_Master_Log_Pos is defined %}+ Exec_Master_Log_Pos: {{ slave.Exec_Master_Log_Pos }}{% endif %},
+      {% if slave.Seconds_Behind_Master is defined %}+ Seconds_Behind_Master: {{ slave.Seconds_Behind_Master }}{% endif %},
+      {% if slave.Slave_SQL_Running_State is defined %}+ Slave_SQL_Running_State: {{ slave.Slave_SQL_Running_State }}{% endif %},
+      {% if read_only.msg is defined %}+ Read_Only: {{ read_only.msg }},{% endif %}
+      {% endif %}
+      {% if re_slave.Is_Replica is defined %}
+      === {{ inventory_hostname }} - SLAVE - REPLICATION STATUS ===
+      {% if re_slave.Is_Replica is defined %}+ Is Replica: {{ re_slave.Is_Replica }}{% endif %},
+      {% if re_slave.Slave_IO_Running is defined %}+ Slave_IO_Running: {{ re_slave.Slave_IO_Running }}{% endif %},
+      {% if re_slave.Slave_SQL_Running is defined %}+ Slave_SQL_Running: {{ re_slave.Slave_SQL_Running }}{% endif %},
+      {% if re_slave.Master_Server_Id is defined %}+ Master_Server_Id: {{ re_slave.Master_Server_Id }}{% endif %},
+      {% if re_slave.Seconds_Behind_Master is defined %}+ Seconds_Behind_Master: {{ re_slave.Seconds_Behind_Master }}{% endif %},
+      {% if re_slave.Read_Master_Log_Pos is defined %}+ Read_Master_Log_Pos: {{ re_slave.Read_Master_Log_Pos }}{% endif %},
+      {% if re_slave.Exec_Master_Log_Pos is defined %}+ Exec_Master_Log_Pos: {{ re_slave.Exec_Master_Log_Pos }}{% endif %},
+      {% if re_slave.Seconds_Behind_Master is defined %}+ Seconds_Behind_Master: {{ re_slave.Seconds_Behind_Master }}{% endif %},
+      {% if re_slave.Slave_SQL_Running_State is defined %}+ Slave_SQL_Running_State: {{ re_slave.Slave_SQL_Running_State }}{% endif %},
+      {% if read_only.msg is defined %}+ Read_Only: {{ read_only.msg }}{% endif %}
+      {% endif %}

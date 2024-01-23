@@ -1,0 +1,81 @@
+---
+# Wrote by Hoang Anh Tu
+
+  - name: WIZZY - HA - INSTALLATION - Check nodejs version
+    shell: "node -v"
+    register: nodejs_version
+    ignore_errors: true
+
+  - name: WIZZY - HA - INSTALLATION [STEP 01 - 1] - Install Wizzy (nodejs 8x)
+    shell: "npm install -g wizzy"
+    when:
+      - "nodejs_version.failed == false and 'v8' in nodejs_version.stdout"
+
+  - name: WIZZY - HA - INSTALLATION [STEP 01 - 2] - Install Wizzy (not nodejs 8x)
+    shell: "{{ item }}"
+    with_items:
+      - yum remove -y nodejs
+      - curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash -
+      - yum install -y nodejs
+      - npm install -g wizzy
+    when:
+      - "nodejs_version.failed == false and 'v8' not in nodejs_version.stdout"
+
+  - name: WIZZY - HA - INSTALLATION [STEP 01 - 3] - Install Wizzy (nodejs not install)
+    shell: "{{ item }}"
+    with_items:
+      - curl -sL https://rpm.nodesource.com/setup_8.x | sudo bash -
+      - yum install -y nodejs
+      - npm install -g wizzy
+    when:
+      - "nodejs_version.failed == true"
+
+  - name: WIZZY - HA - INSTALLATION [STEP 02] - Create grafana-entities directory
+    file:
+      path: "{{ item }}"
+      recurse: yes
+      state: directory
+    with_items:
+      - /opt/grafana-entities/datasources
+      - /opt/grafana-entities/dashboards
+
+
+  - name: WIZZY - HA - INSTALLATION [STEP 03] - Initialize Wizzy
+    command: chdir=/opt/grafana-entities {{ item }}
+    with_items:
+      - git init
+      - wizzy init
+      - "wizzy set grafana url http://{{ IP }}:3000"
+      - "wizzy set grafana username {{ grafana_admin_user }}"
+      - "wizzy set grafana password {{ grafana_admin_password }}"
+    args:
+      warn: false
+
+  - name: WIZZY - HA - INSTALLATION [STEP 04] - Copy Dashboard to Wizzy's directory
+    copy:
+      src: "{{ role_path }}/files/grafana-entities/dashboards/"
+      dest: /opt/grafana-entities/dashboards/
+      mode: 0775
+      owner: root
+      group: root
+
+  - name: WIZZY - HA - INSTALLATION [STEP 05] - Copy Datasource to Wizzy's directory
+    template:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_influxdb_nms.j2", dest: "/opt/grafana-entities/datasources/influxdb_nms.json" }
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_report.j2", dest: "/opt/grafana-entities/datasources/report.json" }
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_grafana_thruk.j2", dest: "/opt/grafana-entities/datasources/grafana_thruk.json" }
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_IDO_icinga.j2", dest: "/opt/grafana-entities/datasources/IDO_icinga.json" }
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_junos_tableview.j2", dest: "/opt/grafana-entities/datasources/junos_tableview.json" }
+      - { src: "{{ role_path }}/templates/grafana-entities/datasources/ha_audit_config.j2", dest: "/opt/grafana-entities/datasources/audit_config.json" }
+
+  - name: WIZZY - HA - INSTALLATION [STEP 06] - Restore Datasource to grafana via wizzy
+    command: chdir=/opt/grafana-entities {{ item }}
+    with_items:
+      - wizzy export datasources
+      - wizzy export dashboards
+    when:
+      - role == "primary"
+

@@ -1,0 +1,187 @@
+# Wrote by Hoang Anh Tu
+---
+- include_vars: "{{ item }}"
+  with_items:
+    - "{{ role_path }}/../ansible-elasticsearch/defaults/main.yml"
+    - "{{ role_path }}/../ansible-elasticsearch/vars/RedHat.yml"
+
+- name: set fact allow_downgrade to no
+  set_fact: allow_downgrade=no
+
+- name: set fact allow_downgrade to yes
+  set_fact: allow_downgrade=yes
+  when: es_allow_downgrades
+
+#- name: set fact for list of Elasticsearch Master/Ingest HTTP port
+#  set_fact: 
+#    es_master_http: "{{ es_master_http | default([]) + [ 'https://' + hostvars[item].IP + ':' + hostvars[item].http_port] }}"
+#  delegate_to: localhost
+#  run_once: true
+#  when:
+#    - hostvars[item].node_master |bool or hostvars[item].node_ingest |bool
+#  with_items:
+#    - "{{ groups['elastic'] }}"
+
+- name: "LOGSTASH - STEP 01 - Install Logstash-{{ es_version }} package"
+  yum:
+    name: 'logstash{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %}'
+    state: present
+    update_cache: yes
+    allow_downgrade: '{{ allow_downgrade }}'
+
+- name: "LOGSTASH - STEP 02 - Install Logstash's directories"
+  file: 
+    path: "/etc/logstash/{{ item }}"
+    state: directory
+    owner: logstash
+    group: logstash
+    mode: 0775
+  with_items:
+    - dictionary
+    - patterns
+    - certs
+
+- name: "LOGSTASH - STEP 03 - Configure Logstash persisted queue"
+  replace:
+    dest: /etc/logstash/logstash.yml
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  with_items:
+    - { old: '# queue.type: memory', new: 'queue.type: persisted'}
+    - { old: '# queue.page_capacity: 64mb', new: 'queue.page_capacity: 64mb'}
+    - { old: '# queue.max_events: 0', new: 'queue.max_events: 0'}
+    - { old: '# queue.max_bytes: 1024mb', new: 'queue.max_bytes: 1gb'}
+    - { old: '# queue.checkpoint.acks: 1024', new: 'queue.checkpoint.acks: 1024'}
+    - { old: '# queue.checkpoint.writes: 1024', new: 'queue.checkpoint.writes: 1024'}
+
+- name: "LOGSTASH - STEP 04 - Copy Directories's files, Patterns's files"
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    checksum: true
+  with_items:
+    - { src: "{{ role_path }}/templates/logstash/dictionary", dest: "/etc/logstash/" }
+    - { src: "{{ role_path }}/templates/logstash/patterns", dest: "/etc/logstash/" }
+
+- name: "LOGSTASH - STEP 05 - Set permission for logstash folder"
+  file:
+    path: "{{ item }}"
+    owner: logstash
+    group: logstash
+    mode: 0770
+    recurse: yes
+  with_items:
+    - "/etc/logstash/dictionary"
+    - "/etc/logstash/patterns"
+    
+
+- name: "LOGSTASH - STEP 06 - Copy Pipelines's files"
+  template:
+    src: "{{ item }}"
+    dest: /etc/logstash/conf.d/
+  with_fileglob:
+    - "{{ role_path }}/templates/logstash/conf.d/*"
+
+- name: "LOGSTASH - STEP 07 - Create Logstash_writer role"
+  uri:
+    url: "https://localhost:{{ http_port }}/_security/role/logstash_writer"
+    method: POST
+    body: "{\"cluster\": [\"monitor\",\"manage_index_templates\"], \"indices\": [{\"names\": [\"junos-log*\",\"snmp*\",\"radius-logs*\",\"metricbeat*\",\"filebeat*\",\"aaa*\",\"sql*\"], \"privileges\": [\"all\"]}]}"
+    body_format: json
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    headers:
+      Content-Type: "application/json"
+  when: inventory_hostname == play_hosts[0]
+  
+- name: "LOGSTASH - STEP 08 - Create Logstash User"
+  uri:
+    url: "https://localhost:{{ http_port }}/_security/user/logstash"
+    method: POST
+    body: "{\"full_name\": \"{{ beats.logstash.logstash_writer.username }}\", \"password\": \"{{ beats.logstash.logstash_writer.password }}\", \"roles\": [\"logstash_writer\"]}"
+    body_format: json
+    status_code: 200
+    user: "elastic"
+    password: "{{ elastic_password }}"
+    force_basic_auth: yes
+    validate_certs: no
+    headers:
+      Content-Type: "application/json"
+  when: inventory_hostname == play_hosts[0]
+
+- name: "LOGSTASH - STEP 09 - Remove old Logstash's Certificate if it exists"
+  file:
+    path: "/etc/logstash/{{ item }}/{{ inventory_hostname }}.pem"
+    state: absent
+  with_items:
+    - certs
+
+- name: "LOGSTASH - STEP 10 - Create Logstash's Certificate for connecting to Elasticsearch"
+  command: "openssl pkcs12 -in {{ es_ssl_certificate_path }}/{{ keystore_file }} -passin pass: -clcerts -nokeys -chain -out /etc/logstash/{{ item }}/{{ inventory_hostname}}.pem"
+  with_items:
+    - certs
+
+- name: "LOGSTASH - STEP 11 - Chmod and Chown New Logstash's Certificate"
+  file:
+    path: "/etc/logstash/{{ item }}"
+    state: directory
+    recurse: yes
+    owner: logstash
+    group: logstash
+    mode: 0770
+  with_items:
+    - certs
+  notify: Restart Logstash
+
+- name: "LOGSTASH - STEP 12 - check if requested Logstash version lock exists"
+  become: yes
+  shell: 'yum versionlock list | grep {{ item }} | grep -c "{{es_version}}"'
+  register: logstash_requested_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - logstash
+
+- name: "LOGSTASH - STEP 13 - lock Logstash version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}* ; yum versionlock add {{ item }}-{{ es_version }}
+  args:
+    warn: false
+  with_items:
+    - logstash
+  when:
+    - es_version_lock
+    - logstash_requested_version_locked is defined
+    - logstash_requested_version_locked.results[0].stdout|int == 0
+
+- name: "LOGSTASH - STEP 14 - check if any Logstash version lock exists"
+  become: yes
+  shell: yum versionlock list | grep -c {{ item }}
+  register: logstash_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - logstash
+
+- name: "LOGSTASH - STEP 15 - unlock Logstash version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}*
+  args:
+    warn: false
+  with_items:
+    - logstash
+  when:
+    - not es_version_lock
+    - logstash_version_locked is defined
+    - logstash_version_locked.results[0].stdout|int > 0
+
+- meta: flush_handlers

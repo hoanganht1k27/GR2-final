@@ -1,0 +1,12 @@
+---
+- hosts: all
+  gather_facts: False
+  roles:
+    - role: environment
+      become: yes
+      tag: environment
+
+    - role: nms_compose
+      become: yes
+      tag: compose
+      any_errors_fatal: true

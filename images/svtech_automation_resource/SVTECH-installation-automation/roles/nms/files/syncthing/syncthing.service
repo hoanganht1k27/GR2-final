@@ -1,0 +1,18 @@
+[Unit]
+Description=Syncthing - Open Source Continuous File Synchronization for NMS
+Documentation=man:syncthing(1)
+After=network.target
+
+[Service]
+#User=juniper
+ExecStart=/usr/bin/syncthing -gui-address "0.0.0.0:8384" -logflags=3 -home "/etc/syncthing"
+ExecStop=/usr/bin/killall -9 syncthing
+Restart=on-failure
+SuccessExitStatus=3 4
+RestartForceExitStatus=3 4
+Environment="STNODEFAULTFOLDER=yes"
+Environment="STNORESTART=yes"
+Environment="HOME=/etc/syncthing"
+
+[Install]
+WantedBy=multi-user.target

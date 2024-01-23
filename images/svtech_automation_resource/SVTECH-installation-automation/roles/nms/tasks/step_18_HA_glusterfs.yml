@@ -1,0 +1,206 @@
+# Wrote by Hoang Anh Tu
+---
+- name: GLUSTERFS - [Step 01] - Checking /etc/hosts for Glusterfs
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[item].IP }} {{ hostvars[item].inventory_hostname }}"
+    state: present
+  with_items: "{{ groups['all'] }}"
+
+- name: GLUSTERFS - [Step 02] - Install Epel Repository
+  yum: name=epel-release state=latest
+
+- name: GLUSTERFS - [Step 03] - Install Glusterfs Repository
+  yum:
+    name: centos-release-gluster6
+    state: latest
+
+- name: GLUSTERFS - [Step 04] - Install Glusterfs
+  yum:
+    name: glusterfs-server
+    state: latest
+
+- name: GLUSTERFS - [Step 05] - Startup Glusterfs
+  service:
+    name: glusterd
+    state: started
+    enabled: yes
+
+- name: GLUSTERFS - [Step 06] - Configure Glusterfs
+  blockinfile:
+    dest: /etc/glusterfs/glusterd.vol
+    insertafter: 'end-volume'
+    state: present
+    backup: yes
+    content: |
+      volume data
+        type protocol/client
+        option ping-timeout 3
+      end-volume
+
+- name: "GLUSTERFS - [Step 07] - Create directory if it not exists"
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+  with_items:
+    - "/glusterfs"
+    - "/root/tools"
+
+- name: GLUSTERFS - [Step 08] - Copy Glusterfs Peer file
+  template:
+    src: "{{ role_path }}/templates/gluster_peer.sh.j2"
+    dest: "/tmp/gluster_peer.sh"
+    mode: 0775
+  when:
+    - role == "primary"
+
+- name: GLUSTERFS - [Step 09] - Glusterfs Peer probe other host
+  command: "/bin/bash /tmp/gluster_peer.sh"
+  when:
+    - role == "primary"
+
+- name: GLUSTERFS - NATIVE CLIENT - [Step 10] - Mount Glusterfs shared storage
+  mount:
+    path: /opt/shared
+    src: "{{ inventory_hostname }}:/data"
+    fstype: glusterfs
+    state: mounted
+  when:
+    - glusterfs_client == "native"
+
+- name: GLUSTERFS - NFS GANESHA - [Step 11] - Install nfs-ganesha
+  yum:
+    name: nfs-ganesha-gluster
+    state: latest
+  when:
+    - glusterfs_client == "ganesha"
+
+- name: GLUSTERFS - NFS GANESHA - [Step 12] - Stop nfs-server service
+  service:
+    name: nfs-server
+    state: stopped
+    enabled: no
+  when:
+    - glusterfs_client == "ganesha"
+
+- name: GLUSTERFS - NFS GANESHA - [Step 13] - Configuration nfs-ganesha
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0775
+  with_items:
+    - { src: "{{ role_path }}/templates/ganesha.conf.j2", dest: "/etc/ganesha/ganesha.conf" }
+  when:
+    - glusterfs_client == "ganesha"
+
+- name: GLUSTERFS - NFS GANESHA - [Step 14] - Start nfs-ganesha
+  service:
+    name: nfs-ganesha
+    state: restarted
+    enabled: yes
+  when:
+    - glusterfs_client == "ganesha"
+
+- name: GLUSTERFS - NFS GANESHA - [Step 15] - Mount Glusterfs shared storage with nfs-ganesha
+  mount:
+    path: /opt/shared
+    src: "{{ inventory_hostname }}:{{ ganesha_path }}"
+    fstype: nfs4
+    state: mounted
+  when:
+    - glusterfs_client == "ganesha"
+
+- name: "GLUSTERFS - [Step 16] - Create directory if it not exists"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0775
+  with_items:
+    - "/opt/shared/etc--httpd"
+    - "/opt/shared/etc--icinga2"
+    - "/opt/shared/etc--grafana"
+    - "/opt/shared/usr--share--nagvis"
+    - "/opt/shared/etc--thruk"
+    - "/opt/shared/usr--share--icinga2"
+#    - "/opt/shared/etc--icinga2-ui"
+    - "/opt/shared/var--rundeck--projects"
+    - "/opt/shared/var--lib--rundeck"
+    - "/opt/shared/etc--rundeck"
+  when:
+    - role == "primary"
+
+- name: GLUSTERFS - [Step 17] - Synchonize data to shared storage
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    perms: yes
+  with_items:
+    - { src: "/etc/httpd/conf.d/", dest: "/opt/shared/etc--httpd/conf.d" }
+    - { src: "/etc/icinga2/conf.d", dest: "/opt/shared/etc--icinga2" }
+    - { src: "/etc/icinga2/features-available", dest: "/opt/shared/etc--icinga2/" }
+    - { src: "/etc/icinga2/scripts", dest: "/opt/shared/etc--icinga2/" }
+    - { src: "/etc/grafana/", dest: "/opt/shared/etc--grafana" }
+    - { src: "/usr/share/nagvis/", dest: "/opt/shared/usr--share--nagvis" }
+    - { src: "/etc/thruk/", dest: "/opt/shared/etc--thruk" }
+    - { src: "/usr/share/icinga2/plugins/libexec", dest: "/opt/shared/usr--share--icinga2/" }
+#    - { src: "/etc/icinga2-ui/", dest: "/opt/shared/etc--icinga2-ui/" }
+#    - { src: "/var/rundeck/projects/", dest: "/opt/shared/var--rundeck--projects" }
+    - { src: "/var/lib/rundeck/", dest: "/opt/shared/var--lib--rundeck" }
+    - { src: "/etc/rundeck/", dest: "/opt/shared/etc--rundeck" }
+  delegate_to: "{{ inventory_hostname }}"
+  when:
+    - role == "primary"
+
+- name: GLUSTERFS - [Step 18] - Create Mount service
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0775
+  with_items:
+    - { src: "{{ role_path }}/files/glusterfs/mount.service", dest: "/etc/systemd/system/mount.service" }
+    - { src: "{{ role_path }}/templates/mount.sh.j2", dest: "/root/tools/mount.sh" }
+#    - { src: "{{ role_path }}/files/glusterfs/glusterfs-unmount", dest: "/etc/rc.d/init.d/glusterfs-unmount" }
+    - { src: "{{ role_path }}/files/glusterfs/glusterfs-unmount", dest: "/root/tools/unmount.sh" }
+  register: mount_service
+
+- name: GLUSTERFS - [Step 19] - Create Alias for init level
+  lineinfile: 
+    dest: /etc/profile.d/env.sh 
+    line: "alias init='sh /root/tools/unmount.sh && init'"
+    state: present
+
+#- name: GLUSTERFS - [Step 19] - Create Glusterfs-Unmount Symlink for runlevel 0 and 6 
+#  file:
+#    src: "{{ item.src }}"
+#    dest: "{{ item.dest }}"
+#    owner: root
+#    group: root
+#    mode: 0775
+#    state: link
+#  with_items:
+#    - { src: "/etc/rc.d/init.d/glusterfs-unmount", dest: "/etc/rc.d/rc0.d/glusterfs-unmount" }
+#    - { src: "/etc/rc.d/init.d/glusterfs-unmount", dest: "/etc/rc.d/rc6.d/glusterfs-unmount" }
+
+- name: GLUSTERFS - [Step 20] - Startup Mount service
+  service:
+    name: mount
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  notify:
+    - Restart http
+    - Restart grafana
+    - restart icinga2
+#    - Rertart icinga2-ui
+    - Restart rundeck
+
+- meta: flush_handlers
+
+- name: GLUSTERFS - [Step 21] - Restart keepalived on Backup Node
+  service:
+    name: keepalived
+    state: restarted
+    enabled: yes
+  when:
+    - role == "backup"

@@ -1,0 +1,2684 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1627544336784,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Elasticsearch-RADIUS-LOG",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 17,
+        "y": 0
+      },
+      "id": 162,
+      "options": {
+        "content": "<!DOCTYPE html>\n<html>\n<head>\n<style>\n.back {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n}\n\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n.button {\n  display: inline-block;\n  background-color: #2266ee;\n  border: none;\n  color: white;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid #2266ee;\n  font-weight: bold;\n  opacity: 1;\n  float: right;\n  margin:2px\n}\n\n.clicked {\n  display: inline-block;\n  background-color: white;\n  border: none;\n  color: grey;\n  text-align: center;\n  font-size: 14px;\n  width: 10em;\n  height: 45px;\n  transition: all 0.5s;\n  cursor: pointer;\n  border-radius: 5px;\n  border:1px solid grey;\n  font-weight: bold;\n  margin:2px;\n  float: right;\n}\n.button:hover {\n  background-color: white;\n  color: grey;\n  border:1px solid grey;\n}\n\n</style>\n</head>\n<body>\n\n<button class=\"button\" style=\"vertical-align:middle\" onclick=\"window.open('/grafana/d/menu/menu?orgId=1', '_self')\"><span>BACK TO MENU</span></button>\n\n</body>\n</html>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "query": "",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": " ",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 8,
+      "panels": [],
+      "title": "Current Information",
+      "type": "row"
+    },
+    {
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "displayMode": "json-view",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Hostname"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Community"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "hideTimeOverride": true,
+      "id": 2,
+      "interval": "4m",
+      "maxDataPoints": null,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "system.sysName: [[hostname]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Device Information",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "system.sysName|host_address|system.sysDescr|system.sysLocation"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "host_address": 1,
+              "system.sysDescr": 2,
+              "system.sysLocation": 3,
+              "system.sysName": 0
+            },
+            "renameByName": {
+              "host_address": "Address",
+              "host_community": "Community",
+              "hostinfo.sysDescr": "System Desc",
+              "hostinfo.sysName": "Hostname",
+              "system.axSysAFleXEngineVersion": "EngineVersion",
+              "system.axSysFirmwareVersion": "FirmwareVersion",
+              "system.axSysSerialNumber": "Serial Number",
+              "system.sysContact": "SystemContact",
+              "system.sysDescr": "SystemDescr",
+              "system.sysLocation": "SystemLocation",
+              "system.sysName": "Hostname",
+              "system.sysObjectID": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "json-view",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "super-light-blue",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 4,
+        "x": 0,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "id": 4,
+      "interval": "4m",
+      "options": {
+        "showHeader": false
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "system.sysName: [[hostname]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Last Data Received",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "@timestamp"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "deckbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 4,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "id": 146,
+      "interval": "4m",
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "host_address: \"[[address]]\"",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Memory Size",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "system.hrMemorySize"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "MemoryTotal": 1,
+              "MemoryUsage": 0
+            },
+            "renameByName": {
+              "system.hrMemorySize": ""
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "alignNumbersToRightEnabled": false,
+      "cacheTimeout": null,
+      "columnAliases": [
+        {
+          "$$hashKey": "object:1198",
+          "alias": "Index",
+          "name": "Field"
+        },
+        {
+          "$$hashKey": "object:1200",
+          "alias": "Device Name",
+          "name": "First"
+        }
+      ],
+      "columnFiltersEnabled": false,
+      "columnWidthHints": [],
+      "columns": [],
+      "compactRowsEnabled": false,
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "datatablePagingType": "simple_numbers",
+      "datatableTheme": "basic_theme",
+      "emptyData": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "90%",
+      "gridPos": {
+        "h": 9,
+        "w": 9,
+        "x": 9,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "hoverEnabled": false,
+      "id": 155,
+      "infoEnabled": false,
+      "interval": "4m",
+      "lengthChangeEnabled": false,
+      "links": [],
+      "orderColumnEnabled": false,
+      "pagingTypes": [
+        {
+          "$$hashKey": "object:89",
+          "text": "Page number buttons only",
+          "value": "numbers"
+        },
+        {
+          "$$hashKey": "object:90",
+          "text": "'Previous' and 'Next' buttons only",
+          "value": "simple"
+        },
+        {
+          "$$hashKey": "object:91",
+          "text": "'Previous' and 'Next' buttons, plus page numbers",
+          "value": "simple_numbers"
+        },
+        {
+          "$$hashKey": "object:92",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+          "value": "full"
+        },
+        {
+          "$$hashKey": "object:93",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+          "value": "full_numbers"
+        },
+        {
+          "$$hashKey": "object:94",
+          "text": "'First' and 'Last' buttons, plus page numbers",
+          "value": "first_last_numbers"
+        }
+      ],
+      "panelHeight": 288,
+      "pluginVersion": "7.4.3",
+      "rowNumbersEnabled": false,
+      "rowsPerPage": 5,
+      "scroll": false,
+      "scrollHeight": "default",
+      "searchEnabled": false,
+      "searchHighlightingEnabled": false,
+      "showCellBorders": false,
+      "showHeader": true,
+      "showRowBorders": false,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "sortByColumns": [],
+      "sortByColumnsData": [
+        [
+          0,
+          "desc"
+        ]
+      ],
+      "stripedRowsEnabled": false,
+      "styles": [
+        {
+          "$$hashKey": "object:21",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "pattern": "/.*/",
+          "splitPattern": "/ /",
+          "thresholds": [],
+          "type": "string",
+          "unit": "none"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "host_address: \"[[address]]\"",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "themeOptions": {
+        "dark": "./styles/dark.scss",
+        "light": "./styles/light.scss"
+      },
+      "themes": [
+        {
+          "$$hashKey": "object:64",
+          "disabled": false,
+          "text": "Basic",
+          "value": "basic_theme"
+        },
+        {
+          "$$hashKey": "object:65",
+          "disabled": true,
+          "text": "Bootstrap",
+          "value": "bootstrap_theme"
+        },
+        {
+          "$$hashKey": "object:66",
+          "disabled": true,
+          "text": "Foundation",
+          "value": "foundation_theme"
+        },
+        {
+          "$$hashKey": "object:67",
+          "disabled": true,
+          "text": "ThemeRoller",
+          "value": "themeroller_theme"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Devices",
+      "transform": "table",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "system.hrDeviceDescr.*"
+            }
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "system.hrDeviceDescr",
+            "renamePattern": "Device"
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "first"
+            ]
+          }
+        }
+      ],
+      "type": "briangann-datatable-panel"
+    },
+    {
+      "alignNumbersToRightEnabled": false,
+      "cacheTimeout": null,
+      "columnAliases": [
+        {
+          "$$hashKey": "object:1198",
+          "alias": "Index",
+          "name": "Field"
+        },
+        {
+          "$$hashKey": "object:1200",
+          "alias": "Status",
+          "name": "First"
+        }
+      ],
+      "columnFiltersEnabled": false,
+      "columnWidthHints": [],
+      "columns": [],
+      "compactRowsEnabled": false,
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "datatablePagingType": "simple_numbers",
+      "datatableTheme": "basic_theme",
+      "emptyData": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {},
+          "custom": {},
+          "thresholds": {
+            "mode": "absolute",
+            "steps": []
+          }
+        },
+        "overrides": []
+      },
+      "fontSize": "90%",
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 18,
+        "y": 7
+      },
+      "hideTimeOverride": true,
+      "hoverEnabled": false,
+      "id": 156,
+      "infoEnabled": false,
+      "interval": "4m",
+      "lengthChangeEnabled": false,
+      "links": [],
+      "orderColumnEnabled": false,
+      "pagingTypes": [
+        {
+          "$$hashKey": "object:89",
+          "text": "Page number buttons only",
+          "value": "numbers"
+        },
+        {
+          "$$hashKey": "object:90",
+          "text": "'Previous' and 'Next' buttons only",
+          "value": "simple"
+        },
+        {
+          "$$hashKey": "object:91",
+          "text": "'Previous' and 'Next' buttons, plus page numbers",
+          "value": "simple_numbers"
+        },
+        {
+          "$$hashKey": "object:92",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+          "value": "full"
+        },
+        {
+          "$$hashKey": "object:93",
+          "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+          "value": "full_numbers"
+        },
+        {
+          "$$hashKey": "object:94",
+          "text": "'First' and 'Last' buttons, plus page numbers",
+          "value": "first_last_numbers"
+        }
+      ],
+      "panelHeight": 288,
+      "pluginVersion": "7.4.3",
+      "rowNumbersEnabled": false,
+      "rowsPerPage": 5,
+      "scroll": false,
+      "scrollHeight": "default",
+      "searchEnabled": false,
+      "searchHighlightingEnabled": false,
+      "showCellBorders": false,
+      "showHeader": true,
+      "showRowBorders": false,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "sortByColumns": [],
+      "sortByColumnsData": [
+        [
+          0,
+          "desc"
+        ]
+      ],
+      "stripedRowsEnabled": false,
+      "styles": [
+        {
+          "$$hashKey": "object:21",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "First",
+          "splitPattern": "/ /",
+          "thresholds": [],
+          "type": "string",
+          "unit": "none",
+          "valueMaps": [
+            {
+              "$$hashKey": "object:2844",
+              "text": "Unknown",
+              "value": "1"
+            },
+            {
+              "$$hashKey": "object:2847",
+              "text": "Running",
+              "value": "2"
+            },
+            {
+              "$$hashKey": "object:2860",
+              "text": "Warning",
+              "value": "3"
+            },
+            {
+              "$$hashKey": "object:2863",
+              "text": "Testing",
+              "value": "4"
+            },
+            {
+              "$$hashKey": "object:2866",
+              "text": "Down",
+              "value": "5"
+            }
+          ]
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "host_address: \"[[address]]\"",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "themeOptions": {
+        "dark": "./styles/dark.scss",
+        "light": "./styles/light.scss"
+      },
+      "themes": [
+        {
+          "$$hashKey": "object:64",
+          "disabled": false,
+          "text": "Basic",
+          "value": "basic_theme"
+        },
+        {
+          "$$hashKey": "object:65",
+          "disabled": true,
+          "text": "Bootstrap",
+          "value": "bootstrap_theme"
+        },
+        {
+          "$$hashKey": "object:66",
+          "disabled": true,
+          "text": "Foundation",
+          "value": "foundation_theme"
+        },
+        {
+          "$$hashKey": "object:67",
+          "disabled": true,
+          "text": "ThemeRoller",
+          "value": "themeroller_theme"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Devices Status",
+      "transform": "table",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "system.hrDeviceStatus.*"
+            }
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "system.hrDeviceStatus",
+            "renamePattern": "Device"
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "first"
+            ]
+          }
+        }
+      ],
+      "type": "briangann-datatable-panel"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 9
+      },
+      "hideTimeOverride": true,
+      "id": 6,
+      "interval": "4m",
+      "links": [],
+      "maxDataPoints": null,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": "1",
+                "trimEdges": "0"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "hide": false,
+          "metrics": [
+            {
+              "field": "system.sysUpTimeInstance",
+              "id": "1",
+              "settings": {
+                "script": "_value*10"
+              },
+              "type": "max"
+            }
+          ],
+          "query": "system.sysName: [[hostname]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Uptime",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 4,
+        "y": 11
+      },
+      "hideTimeOverride": true,
+      "id": 157,
+      "interval": "4m",
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "system.sysName",
+              "id": "1",
+              "settings": {
+                "min_doc_count": "0",
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "1"
+              },
+              "type": "terms"
+            }
+          ],
+          "hide": false,
+          "metrics": [
+            {
+              "id": "1",
+              "type": "logs"
+            },
+            {
+              "field": "system.hrSystemProcesses",
+              "id": "2",
+              "type": "max"
+            }
+          ],
+          "query": "host_address: \"[[address]]\"",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "System Processes",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "system.hrSystemProcesses.*"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "MemoryTotal": 1,
+              "MemoryUsage": 0
+            },
+            "renameByName": {
+              "system.hrMemorySize": ""
+            }
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "datasource": "Elasticsearch-SNMP-Store_Easy",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "text": "UP",
+              "to": "",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "from": "",
+              "id": 2,
+              "text": "DOWN",
+              "to": "",
+              "type": 1,
+              "value": "2"
+            },
+            {
+              "from": "",
+              "id": 3,
+              "text": "TESTING",
+              "to": "",
+              "type": 1,
+              "value": "3"
+            },
+            {
+              "from": "",
+              "id": 4,
+              "text": "UNKNOWN",
+              "to": "",
+              "type": 1,
+              "value": "4"
+            },
+            {
+              "from": "",
+              "id": 5,
+              "text": "NotPresent",
+              "to": "",
+              "type": 1,
+              "value": "6"
+            },
+            {
+              "from": "",
+              "id": 6,
+              "text": "LowerLayerDown",
+              "to": "",
+              "type": 1,
+              "value": "7"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "rgb(255, 255, 255)",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "dark-green",
+                      "value": 1
+                    },
+                    {
+                      "color": "dark-red",
+                      "value": 2
+                    },
+                    {
+                      "color": "blue",
+                      "value": 3
+                    },
+                    {
+                      "color": "purple",
+                      "value": 4
+                    },
+                    {
+                      "color": "dark-blue",
+                      "value": 5
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "hideTimeOverride": true,
+      "id": 98,
+      "interval": "4m",
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Status"
+          }
+        ]
+      },
+      "pluginVersion": "7.4.3",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [],
+          "metrics": [
+            {
+              "id": "1",
+              "settings": {
+                "size": "1"
+              },
+              "type": "raw_data"
+            }
+          ],
+          "query": "system.sysName: [[hostname]]",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": "4m",
+      "timeShift": "4m",
+      "title": "Interface Status",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "interface.ifOperStatus.*"
+            }
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "interface.ifOperStatus.",
+            "renamePattern": ""
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "reducers": [
+              "first"
+            ]
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Field": "Interface Name",
+              "First": "Status"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 149,
+      "panels": [
+        {
+          "datasource": null,
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 24,
+            "x": 0,
+            "y": 23
+          },
+          "id": 154,
+          "options": {
+            "content": "\n`Storage Size`= ***StorageSize*** x ***AlocateUnit***\n\n`Storage Used`= ***StorageUsed*** x ***AlocateUnit***\n\n`Storage Available`=  `Storage Size` - `Storage Used`\n\n`Percentage`=  `Storage Used`/`Storage Size`x100",
+            "mode": "markdown"
+          },
+          "pluginVersion": "7.4.3",
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "id": "2",
+                  "settings": {
+                    "interval": "auto"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "metrics": [
+                {
+                  "id": "1",
+                  "type": "count"
+                }
+              ],
+              "query": "",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "title": "How to caculate ?",
+          "type": "text"
+        },
+        {
+          "alignNumbersToRightEnabled": false,
+          "cacheTimeout": null,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:223",
+              "alias": "Index",
+              "name": "Field"
+            },
+            {
+              "$$hashKey": "object:225",
+              "alias": "Desc",
+              "name": "First"
+            }
+          ],
+          "columnFiltersEnabled": false,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": false,
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "80%",
+          "gridPos": {
+            "h": 12,
+            "w": 9,
+            "x": 0,
+            "y": 28
+          },
+          "hideTimeOverride": true,
+          "hoverEnabled": false,
+          "id": 147,
+          "infoEnabled": false,
+          "interval": "4m",
+          "lengthChangeEnabled": false,
+          "links": [],
+          "orderColumnEnabled": false,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:89",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:90",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:91",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:92",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:93",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:94",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 402,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 10,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": false,
+          "searchHighlightingEnabled": false,
+          "showCellBorders": false,
+          "showHeader": true,
+          "showRowBorders": false,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:18",
+              "columnData": 0,
+              "sortMethod": "desc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              0,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": false,
+          "styles": [
+            {
+              "$$hashKey": "object:20",
+              "dateFormat": "YYYY-MM-DD HH:mm:ss",
+              "pattern": "Time",
+              "type": "date"
+            },
+            {
+              "$$hashKey": "object:21",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 2,
+              "pattern": "/.*/",
+              "splitPattern": "/ /",
+              "thresholds": [],
+              "type": "number",
+              "unit": "short"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [],
+              "hide": false,
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "1"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "system.sysName: [[hostname]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:64",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:65",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:66",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:67",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "timeFrom": "4m",
+          "timeShift": "4m",
+          "title": "Storage Desc",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "pattern": "system.hrStorageDescr.*"
+                }
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "system.hrStorageDescr",
+                "renamePattern": "Storage"
+              }
+            },
+            {
+              "id": "reduce",
+              "options": {
+                "reducers": [
+                  "first"
+                ]
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Field": "StorageIndex",
+                  "First": "StorageName"
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        },
+        {
+          "alignNumbersToRightEnabled": false,
+          "cacheTimeout": null,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:402",
+              "alias": "Index",
+              "name": "Field"
+            },
+            {
+              "$$hashKey": "object:404",
+              "alias": "Size (Bytes)",
+              "name": "First"
+            }
+          ],
+          "columnFiltersEnabled": false,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": false,
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 12,
+            "w": 5,
+            "x": 9,
+            "y": 28
+          },
+          "hideTimeOverride": true,
+          "hoverEnabled": false,
+          "id": 150,
+          "infoEnabled": false,
+          "interval": "4m",
+          "lengthChangeEnabled": false,
+          "links": [],
+          "orderColumnEnabled": false,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:89",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:90",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:91",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:92",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:93",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:94",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 402,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 10,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": false,
+          "searchHighlightingEnabled": false,
+          "showCellBorders": false,
+          "showHeader": true,
+          "showRowBorders": false,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:18",
+              "columnData": 0,
+              "sortMethod": "asc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              0,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": false,
+          "styles": [
+            {
+              "$$hashKey": "object:21",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "splitPattern": "/ /",
+              "thresholds": [],
+              "type": "number",
+              "unit": "none"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "Size",
+              "bucketAggs": [],
+              "hide": false,
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "1"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "system.sysName: [[hostname]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:64",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:65",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:66",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:67",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "timeFrom": "4m",
+          "timeShift": "4m",
+          "title": "Storage Size",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "pattern": "system.hrStorageSize.*"
+                }
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "system.hrStorageSize",
+                "renamePattern": "Storage"
+              }
+            },
+            {
+              "id": "reduce",
+              "options": {
+                "reducers": [
+                  "first"
+                ]
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Field": "StorageIndex",
+                  "First": "Size"
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        },
+        {
+          "alignNumbersToRightEnabled": false,
+          "cacheTimeout": null,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:1198",
+              "alias": "Index",
+              "name": "Field"
+            },
+            {
+              "$$hashKey": "object:1200",
+              "alias": "Used  (Bytes)",
+              "name": "First"
+            }
+          ],
+          "columnFiltersEnabled": false,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": false,
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 12,
+            "w": 5,
+            "x": 14,
+            "y": 28
+          },
+          "hideTimeOverride": true,
+          "hoverEnabled": false,
+          "id": 152,
+          "infoEnabled": false,
+          "interval": "4m",
+          "lengthChangeEnabled": false,
+          "links": [],
+          "orderColumnEnabled": false,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:89",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:90",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:91",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:92",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:93",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:94",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 402,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 10,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": false,
+          "searchHighlightingEnabled": false,
+          "showCellBorders": false,
+          "showHeader": true,
+          "showRowBorders": false,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:18",
+              "columnData": 0,
+              "sortMethod": "asc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              0,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": false,
+          "styles": [
+            {
+              "$$hashKey": "object:21",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "splitPattern": "/ /",
+              "thresholds": [],
+              "type": "number",
+              "unit": "none"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "Size",
+              "bucketAggs": [],
+              "hide": false,
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "1"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "system.sysName: [[hostname]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:64",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:65",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:66",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:67",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "timeFrom": "4m",
+          "timeShift": "4m",
+          "title": "Storage Used",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "pattern": "system.hrStorageUsed.*"
+                }
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "system.hrStorageUsed",
+                "renamePattern": "Storage"
+              }
+            },
+            {
+              "id": "reduce",
+              "options": {
+                "reducers": [
+                  "first"
+                ]
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Field": "StorageIndex",
+                  "First": "Used"
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        },
+        {
+          "alignNumbersToRightEnabled": false,
+          "cacheTimeout": null,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:1198",
+              "alias": "Index",
+              "name": "Field"
+            },
+            {
+              "$$hashKey": "object:1200",
+              "alias": "Unit (Bytes)",
+              "name": "First"
+            }
+          ],
+          "columnFiltersEnabled": false,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": false,
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "100%",
+          "gridPos": {
+            "h": 12,
+            "w": 5,
+            "x": 19,
+            "y": 28
+          },
+          "hideTimeOverride": true,
+          "hoverEnabled": false,
+          "id": 151,
+          "infoEnabled": false,
+          "interval": "4m",
+          "lengthChangeEnabled": false,
+          "links": [],
+          "orderColumnEnabled": false,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:89",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:90",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:91",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:92",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:93",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:94",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 402,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 10,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": false,
+          "searchHighlightingEnabled": false,
+          "showCellBorders": false,
+          "showHeader": true,
+          "showRowBorders": false,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [
+            {
+              "$$hashKey": "object:18",
+              "columnData": 0,
+              "sortMethod": "asc"
+            }
+          ],
+          "sortByColumnsData": [
+            [
+              0,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": false,
+          "styles": [
+            {
+              "$$hashKey": "object:21",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "splitPattern": "/ /",
+              "thresholds": [],
+              "type": "number",
+              "unit": "none"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "Size",
+              "bucketAggs": [],
+              "hide": false,
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "1"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "system.sysName: [[hostname]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:64",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:65",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:66",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:67",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "timeFrom": "4m",
+          "timeShift": "4m",
+          "title": "Alocation Unit",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "pattern": "system.hrStorageAllocationUnits.*"
+                }
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "system.hrStorageAllocationUnits",
+                "renamePattern": "Storage"
+              }
+            },
+            {
+              "id": "reduce",
+              "options": {
+                "reducers": [
+                  "first"
+                ]
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "Field": "StorageIndex",
+                  "First": "Unit"
+                }
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        }
+      ],
+      "title": "Storage",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 60,
+      "panels": [
+        {
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 35,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "graph": false,
+                  "legend": false,
+                  "tooltip": false
+                },
+                "lineInterpolation": "smooth",
+                "lineWidth": 1,
+                "pointSize": 7,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "binbps"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Inbits"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Outbits"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 24,
+            "x": 0,
+            "y": 24
+          },
+          "hideTimeOverride": true,
+          "id": 58,
+          "interval": "1m",
+          "options": {
+            "graph": {},
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right"
+            },
+            "tooltipOptions": {
+              "mode": "single"
+            }
+          },
+          "pluginVersion": "7.4.3",
+          "repeat": "interface_name",
+          "repeatDirection": "v",
+          "scopedVars": {
+            "interface_name": {
+              "selected": true,
+              "text": "<ethernet_18>",
+              "value": "<ethernet_18>"
+            }
+          },
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "@timestamp",
+                  "id": "4",
+                  "settings": {
+                    "interval": "auto",
+                    "min_doc_count": "0",
+                    "trimEdges": "0"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "hide": false,
+              "metrics": [
+                {
+                  "field": "interface.ifInOctets.[[interface_name]]",
+                  "hide": true,
+                  "id": "1",
+                  "type": "max"
+                },
+                {
+                  "field": "1",
+                  "hide": false,
+                  "id": "5",
+                  "pipelineAgg": "1",
+                  "type": "derivative"
+                }
+              ],
+              "query": "system.sysName: [[hostname]]",
+              "refId": "A",
+              "timeField": "@timestamp"
+            },
+            {
+              "alias": "",
+              "bucketAggs": [
+                {
+                  "field": "@timestamp",
+                  "id": "4",
+                  "settings": {
+                    "interval": "auto",
+                    "min_doc_count": "0",
+                    "trimEdges": "0"
+                  },
+                  "type": "date_histogram"
+                }
+              ],
+              "hide": false,
+              "metrics": [
+                {
+                  "field": "interface.ifOutOctets.[[interface_name]]",
+                  "hide": true,
+                  "id": "1",
+                  "type": "max"
+                },
+                {
+                  "field": "1",
+                  "hide": false,
+                  "id": "5",
+                  "pipelineAgg": "1",
+                  "type": "derivative"
+                }
+              ],
+              "query": "host_address: \"[[address]]\"",
+              "refId": "B",
+              "timeField": "@timestamp"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Bandwidth $interface_name",
+          "transformations": [],
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "interface_name",
+      "scopedVars": {
+        "interface_name": {
+          "selected": true,
+          "text": "<ethernet_18>",
+          "value": "<ethernet_18>"
+        }
+      },
+      "title": "Interface Bandwidth",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 26
+      },
+      "id": 159,
+      "panels": [
+        {
+          "alignNumbersToRightEnabled": false,
+          "cacheTimeout": null,
+          "columnAliases": [
+            {
+              "$$hashKey": "object:1198",
+              "alias": "Index",
+              "name": "Field"
+            },
+            {
+              "$$hashKey": "object:1200",
+              "alias": "Name",
+              "name": "First"
+            }
+          ],
+          "columnFiltersEnabled": false,
+          "columnWidthHints": [],
+          "columns": [],
+          "compactRowsEnabled": true,
+          "datasource": "Elasticsearch-SNMP-Store_Easy",
+          "datatablePagingType": "simple_numbers",
+          "datatableTheme": "basic_theme",
+          "emptyData": false,
+          "fieldConfig": {
+            "defaults": {
+              "color": {},
+              "custom": {},
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              }
+            },
+            "overrides": []
+          },
+          "fontSize": "90%",
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 24
+          },
+          "hideTimeOverride": true,
+          "hoverEnabled": false,
+          "id": 160,
+          "infoEnabled": false,
+          "interval": "4m",
+          "lengthChangeEnabled": false,
+          "links": [],
+          "orderColumnEnabled": false,
+          "pagingTypes": [
+            {
+              "$$hashKey": "object:89",
+              "text": "Page number buttons only",
+              "value": "numbers"
+            },
+            {
+              "$$hashKey": "object:90",
+              "text": "'Previous' and 'Next' buttons only",
+              "value": "simple"
+            },
+            {
+              "$$hashKey": "object:91",
+              "text": "'Previous' and 'Next' buttons, plus page numbers",
+              "value": "simple_numbers"
+            },
+            {
+              "$$hashKey": "object:92",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons",
+              "value": "full"
+            },
+            {
+              "$$hashKey": "object:93",
+              "text": "'First', 'Previous', 'Next' and 'Last' buttons, plus page numbers",
+              "value": "full_numbers"
+            },
+            {
+              "$$hashKey": "object:94",
+              "text": "'First' and 'Last' buttons, plus page numbers",
+              "value": "first_last_numbers"
+            }
+          ],
+          "panelHeight": 173,
+          "pluginVersion": "7.4.3",
+          "rowNumbersEnabled": false,
+          "rowsPerPage": 10,
+          "scroll": false,
+          "scrollHeight": "default",
+          "searchEnabled": false,
+          "searchHighlightingEnabled": false,
+          "showCellBorders": true,
+          "showHeader": true,
+          "showRowBorders": true,
+          "sort": {
+            "col": 0,
+            "desc": true
+          },
+          "sortByColumns": [],
+          "sortByColumnsData": [
+            [
+              0,
+              "asc"
+            ]
+          ],
+          "stripedRowsEnabled": false,
+          "styles": [
+            {
+              "$$hashKey": "object:21",
+              "colorMode": null,
+              "colors": [
+                "rgba(245, 54, 54, 0.9)",
+                "rgba(237, 129, 40, 0.89)",
+                "rgba(50, 172, 45, 0.97)"
+              ],
+              "decimals": 0,
+              "pattern": "/.*/",
+              "splitPattern": "/ /",
+              "thresholds": [],
+              "type": "string",
+              "unit": "none"
+            }
+          ],
+          "targets": [
+            {
+              "alias": "",
+              "bucketAggs": [],
+              "hide": false,
+              "metrics": [
+                {
+                  "id": "1",
+                  "settings": {
+                    "size": "1"
+                  },
+                  "type": "raw_data"
+                }
+              ],
+              "query": "host_address: \"[[address]]\"",
+              "refId": "A",
+              "timeField": "@timestamp"
+            }
+          ],
+          "themeOptions": {
+            "dark": "./styles/dark.scss",
+            "light": "./styles/light.scss"
+          },
+          "themes": [
+            {
+              "$$hashKey": "object:64",
+              "disabled": false,
+              "text": "Basic",
+              "value": "basic_theme"
+            },
+            {
+              "$$hashKey": "object:65",
+              "disabled": true,
+              "text": "Bootstrap",
+              "value": "bootstrap_theme"
+            },
+            {
+              "$$hashKey": "object:66",
+              "disabled": true,
+              "text": "Foundation",
+              "value": "foundation_theme"
+            },
+            {
+              "$$hashKey": "object:67",
+              "disabled": true,
+              "text": "ThemeRoller",
+              "value": "themeroller_theme"
+            }
+          ],
+          "timeFrom": "4m",
+          "timeShift": "4m",
+          "title": "Installed Sofware",
+          "transform": "table",
+          "transformations": [
+            {
+              "id": "filterFieldsByName",
+              "options": {
+                "include": {
+                  "pattern": "system.hrSWInstalledName.*"
+                }
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "system.hrSWInstalledName",
+                "renamePattern": "SWInstalled"
+              }
+            },
+            {
+              "id": "reduce",
+              "options": {
+                "reducers": [
+                  "first"
+                ]
+              }
+            }
+          ],
+          "type": "briangann-datatable-panel"
+        }
+      ],
+      "title": "Installed Sofwares",
+      "type": "row"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "hardware"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "WIN-BQ2BJOINAVO",
+          "value": "WIN-BQ2BJOINAVO"
+        },
+        "datasource": "Elasticsearch-SNMP-Store_Easy",
+        "definition": "{\"find\": \"terms\", \"field\": \"system.sysName.keyword\", \"query\":\"\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Hostname",
+        "multi": false,
+        "name": "hostname",
+        "options": [
+          {
+            "selected": true,
+            "text": "WIN-BQ2BJOINAVO",
+            "value": "WIN-BQ2BJOINAVO"
+          }
+        ],
+        "query": "{\"find\": \"terms\", \"field\": \"system.sysName.keyword\", \"query\":\"\"}",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "10.205.18.21",
+          "value": "10.205.18.21"
+        },
+        "datasource": "Elasticsearch-SNMP-Store_Easy",
+        "definition": "{\"find\": \"terms\", \"field\": \"host_address.keyword\", \"query\":\"system.sysName.keyword: $hostname\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Address",
+        "multi": false,
+        "name": "address",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"host_address.keyword\", \"query\":\"system.sysName.keyword: $hostname\"}",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": [
+            "<ethernet_18>"
+          ],
+          "value": [
+            "<ethernet_18>"
+          ]
+        },
+        "datasource": "Elasticsearch-SNMP-Store_Easy",
+        "definition": "{\"find\": \"fields\"}",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Interface Name",
+        "multi": true,
+        "name": "interface_name",
+        "options": [],
+        "query": "{\"find\": \"fields\"}",
+        "refresh": 2,
+        "regex": "interface.ifOperStatus.*(<.*>)",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Store Easy",
+  "uid": "store-easy"
+}

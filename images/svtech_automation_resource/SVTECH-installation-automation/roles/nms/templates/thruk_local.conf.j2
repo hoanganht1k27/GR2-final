@@ -1,0 +1,24 @@
+############################################
+# put your own settings into this file
+# settings from this file will override
+# those from the thruk.conf
+############################################
+
+<Component Thruk::Backend>
+  {% for host in groups['all'] %}
+    <peer>
+      name    	= {{ hostvars[host].backend_name }}
+      id      	= {{ hostvars[host].thruk_id }}
+      type    	= livestatus
+      <options>
+         peer 	= {{ hostvars[host].IP }}:6558
+      </options>
+    </peer>
+  {% endfor %}
+</Component>
+
+<configtool>
+  core_type	= icinga2
+  core_conf	= /etc/icinga2/icinga2.conf
+  obj_check_cmd	= /run/icinga2/cmd/icinga2.cmd -v /run/icinga2/cmd/icinga2.cmd
+</configtool>

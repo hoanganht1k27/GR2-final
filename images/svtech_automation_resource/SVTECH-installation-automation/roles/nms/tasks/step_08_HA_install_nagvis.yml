@@ -1,0 +1,133 @@
+---
+# Wrote by Hoang Anh Tu
+  - stat: path=/var/tmp/nagvis-1.9.4
+    register: nagvis_temp_path
+
+  - name: NAGVIS - HA INSTALLATION [Step 01] - Download and Extract Nagvis-Map
+    command: chdir=/var/tmp/ {{ item }}
+    with_items:
+      - wget http://www.nagvis.org/share/nagvis-1.9.4.tar.gz
+      - tar -xvf nagvis-1.9.4.tar.gz
+      - chmod -R 775 nagvis-1.9.4
+    args:
+      warn: false
+    when:
+      - nagvis_temp_path.stat.exists == false
+
+  - name: NAGVIS - HA INSTALLATION [Step 02] - Install Nagvis  (installing new configuration)
+    expect:
+      chdir: /var/tmp/nagvis-1.9.4
+      command: ./install.sh
+      responses:
+        'Do you want to proceed?': 'y'
+        'Please enter the path to the nagios base directory': '/etc/icinga2'
+        'Please enter the path to NagVis base': '/usr/share/nagvis'
+        'Do you want to use backend mklivestatus': 'y'
+        'Do you want to use backend ndo2db': 'n'
+        'Do you want to use backend ido2db': 'n'
+        'Please enter the web path to NagVis': '/nagvis'
+        'Please enter the name of the web-server user': 'apache'
+        'Please enter the name of the web-server group': 'apache'
+        'create Apache config file': 'y'
+        'Do you really want to continue': 'y'
+    when:
+      - nagvis_temp_path.stat.exists == false
+
+  - name: NAGVIS - HA INSTALLATION [Step 02] - Install Nagvis (updating existed configuration)
+    expect:
+      chdir: /var/tmp/nagvis-1.9.4
+      command: ./install.sh
+      responses:
+        'Do you want to proceed?': 'y'
+        'Please enter the path to the nagios base directory': '/etc/icinga2'
+        'Please enter the path to NagVis base': '/usr/share/nagvis'
+        'Do you want to update the backend configuration?': 'y'
+        'Do you want to use backend mklivestatus': 'y'
+        'Do you want to use backend ndo2db': 'n'
+        'Do you want to use backend ido2db': 'n'
+        'Please enter the web path to NagVis': '/nagvis'
+        'Please enter the name of the web-server user': 'apache'
+        'Please enter the name of the web-server group': 'apache'
+        'create Apache config file': 'y'
+        'Do you want the installer to update your config files when possible?': 'y'
+        'Remove backup directory after successful installation?': 'y'
+        'Do you really want to continue': 'y'
+    when:
+      - nagvis_temp_path.stat.exists == true
+
+  - name: NAGVIS - HA INSTALLATION [STEP 03] - Config nagvis.ini.php file
+    template:
+      src: "{{ role_path }}/templates/ha_nagvis.ini.php.j2"
+      dest: "/usr/share/nagvis/etc/nagvis.ini.php"
+      owner: root
+      group: root
+      backup: yes
+    notify:
+      - Restart http
+
+  - meta: flush_handlers
+
+  - name: NAGVIS - HA INSTALLATION [STEP 04] - Add auth.db file to nagvis
+    copy:
+      src: "{{ role_path }}/files/nagvis/auth.db"
+      dest: "/usr/share/nagvis/etc/auth.db"
+      owner: apache
+      group: apache
+      mode: 0775
+
+  - name: NAGVIS - HA INSTALLATION [STEP 05] - Add nagvis-make-admin file
+    copy:
+      src: "/var/tmp/nagvis-1.9.4/nagvis-make-admin"
+      dest: "/usr/share/nagvis/etc/nagvis-make-admin"
+      remote_src: yes
+      owner: apache
+      group: apache
+      mode: 0775
+
+  - name: NAGVIS - HA INSTALLATION [Step 06] - Grant admin's privileges to thrukadmin
+    command: chdir=/usr/share/nagvis/etc/ {{ item }}
+    with_items:
+      - ./nagvis-make-admin thrukadmin
+
+  # - name: NAGVIS - HA INSTALLATION [Step 07] - Grant admin's privileges to thrukadmin
+  #   lineinfile: 
+  #     dest: /etc/httpd/conf.d/nagvis.conf
+  #     regexp: 'Require all granted' 
+  #     line: '#Require all granted'
+
+  - name: NAGVIS - HA INSTALLATION [Step 08] - Change hover default to grafana
+    blockinfile:
+      path: "/usr/share/nagvis/share/userfiles/templates/default.hover.html"
+      mode: 0775
+      state: present
+      marker: ""
+      insertafter: EOF
+      backup: yes
+      block: |
+        </br>
+        <table class="hover_table" id="graphTable">
+                <tr><th><label>24 Hour Graph for interface [service_description]</label></th></tr>
+                <tr><td><iframe src=/grafana/d-solo/thruk/thruk?histou.js%3ForgId=1&orgId=1&panelId=12&width=750&height=400&var-hostname=[pnp_hostname]&var-interfaces=[service_description]&from=now-24h&to=now width="100%" height="300"  frameborder="1"></td></tr>
+        </table>
+
+  - name: NAGVIS - HA INSTALLATION [STEP 09] - Add default images file to nagvis
+    copy:
+      src: "{{ role_path }}/files/nagvis/images"
+      dest: "/usr/share/nagvis/share/userfiles"
+      owner: apache
+      group: apache
+      mode: 0775
+      force: yes
+
+  - name: NAGVIS - HA INSTALLATION [STEP 10] - Replace some js files to nagvis
+    copy:
+      src: "{{ role_path }}/files/nagvis/nagvis-js/{{ item }}"
+      dest: "/usr/share/nagvis/share/frontend/nagvis-js/js"
+      owner: apache
+      group: apache
+      mode: 0775
+      force: yes
+    with_items:
+      - edit.js
+      - ElementLine.js
+      - NagVisCompressed.js

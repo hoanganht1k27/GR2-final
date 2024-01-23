@@ -1,0 +1,167 @@
+# Wrote by Hoang Anh Tu
+---
+  - name: ENV [Step 01] - Set Hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: ENV [Step 02] - Configure /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      line: "{{ hostvars[item].IP }} {{ hostvars[item].inventory_hostname }}"
+      state: present
+    with_items: "{{ groups['all'] }}"
+
+  - name: "ENV [Step 03] - Add {{ admin_user }} user" 
+    user:
+      name={{ admin_user }}
+    register: newuser
+
+  - name: "ENV [Step 04] - Generate random password for {{ admin_user }}"
+    shell: "{{ item }}"
+    with_items:
+      - echo "- SSH" >> /tmp/temp
+      - echo "User:{{ admin_user }}" >> /tmp/temp
+      - echo "Password:" >> /tmp/temp
+      - "echo {{ admin_password }} 2>&1 | tee -a /tmp/temp | passwd --stdin {{ admin_user }}"
+      - sed '3N;s/\n/ /' /tmp/temp > /root/info
+      - rm -rf /tmp/temp
+    args:
+      warn: False
+    when: newuser.changed
+
+  - name: ENV [Step 05] - Create Sudo File
+    file:
+      path: /etc/sudoers.d/users
+      state: touch
+
+  - name: "ENV [Step 06] - Add Sudo Privileges to {{ admin_user }} user"
+    lineinfile:
+      dest: /etc/sudoers.d/users
+      regexp: "^{{ admin_user }} ALL"
+      line: "{{ admin_user }} ALL=(ALL) NOPASSWD: ALL"
+      state: present
+
+#  - name: Disallow root SSH access
+#    lineinfile:
+#      dest=/etc/ssh/sshd_config
+#      regexp="^PermitRootLogin"
+#      line="PermitRootLogin no"
+#      state=present
+#    notify:
+#      - restart sshd
+
+  - name: ENV [Step 07] - Disallow SSH GSS API authentication
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "{{ item.old }}"
+      line: "{{ item.new }}"
+      state: present
+      backup: yes
+    with_items:
+      - { old: "^GSSAPIAuthentication", new: "GSSAPIAuthentication no" }
+      - { old: "  GSSAPIAuthentication yes", new: "  GSSAPIAuthentication no" }
+      - { old: "UseDNS yes", new: "UseDNS no" }
+    notify:
+       - Restart SSH
+
+  - meta: flush_handlers
+
+  - name: ENV [Step 08] - Update OS
+    yum: name=* state=latest
+
+  - name: ENV [Step 09] - Install services
+    yum:
+      name: ['wget', 'ntp', 'unzip', 'rsync', 'net-tools', 'telnet', 'vim', 'screen', 'libselinux-python', 'chrony']
+      state: latest
+
+  - name: ENV [Step 10] - Configure TimeZone
+    timezone:
+      name: "{{timezone}}"
+    notify:
+      - Restart Chrony
+
+  - name: ENV [Step 11] - Create Motd
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+    with_items:
+      - { src: "{{ role_path }}/files/motd/motd.sh", dest: "/etc/profile.d/motd.sh"  }
+      - { src: "{{ role_path }}/files/motd/motd-maint", dest: "/etc/motd-maint"  }
+
+  - name: ENV [Step 12] - Create Enviroment File
+    file:
+      path: /etc/profile.d/env.sh
+      state: touch
+
+  - name: ENV [Step 13] - Create Bash's Log file
+    file:
+      path: /etc/rsyslog.d/bash.conf
+      state: touch
+
+  - name: ENV [Step 14] - Configure Log Terminal 1
+    lineinfile:
+      dest: "{{ item.dest }}"
+      line: "{{ item.line }}"
+      state: present
+    with_items:
+      - { line: "umask 002", dest: /etc/profile.d/env.sh }
+      - { line: "export export HISTTIMEFORMAT='%F %T  '", dest: /etc/profile.d/env.sh }
+      - { line: "local6.notice /var/log/bash_log", dest: /etc/rsyslog.d/bash.conf}
+
+  - name: ENV [Step 15] - Configure Log Terminal 2
+    lineinfile: dest=/etc/profile.d/env.sh line="export PROMPT_COMMAND='RETRN_VAL=$?;logger -p local6.notice \"$(whoami) [$$]:$(history 1 | sed \"s/^[ ]*[0-9]\+[ ]*//\" ) [$RETRN_VAL]\"'" state=present
+
+  - name: ENV [Step 16] - Disable SElinux
+    selinux:
+      state: disabled
+
+  - name: ENV [Step 17] - Disallow SElinux at next reboot
+    replace:
+      dest: /etc/selinux/config
+      regexp: "^SELINUX=enforcing"
+      replace: "SELINUX=disabled"
+      backup: yes
+
+  - name: ENV [Step 18] - Setup Crontab run check-update
+    cron:
+      name: Yum check-update
+      minute: "0"
+      hour: "0"
+      month: "*"
+      user: root
+      job: "yum check-update | tail -n +8 > /tmp/update.log"
+      state: present
+
+  - name: ENV [Step 19] - set permanent max open file 65535
+    lineinfile:
+      dest: "{{ item.dest }}"
+      line: "{{ item.line }}"
+      state: present
+    with_items:
+      - { line: "* hard nofile 65535", dest: /etc/security/limits.conf }
+
+  - name: ENV [Step 20] - set permanent sysctl config
+    lineinfile:
+      dest: "{{ item.dest }}"
+      line: "{{ item.line }}"
+      state: present
+    with_items:
+      - { line: "fs.inotify.max_user_watches = 262144", dest: /etc/sysctl.conf  }
+      - { line: "fs.file-max = 99999999", dest: /etc/sysctl.conf  }
+      - { line: "vm.swappiness = 10", dest: /etc/sysctl.conf  }
+
+  - name: ENV [Step 21] - Apply new sysctl's config and max open file
+    shell: "{{ item }}"
+    with_items:
+      - "ulimit -n 65535"
+      - "sysctl -p"
+
+  - name: ENV [Step 22] - Restart Chronyd
+    service:
+      name: chronyd
+      state: restarted
+      enabled: yes
+
+  - meta: flush_handlers

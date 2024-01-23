@@ -1,0 +1,114 @@
+# Wrote by Hoang Anh Tu
+---
+#- include_vars: "{{ item }}"
+#  with_items:
+#    - "{{ role_path }}/../ansible-elasticsearch/defaults/main.yml"
+#    - "{{ role_path }}/../ansible-elasticsearch/vars/RedHat.yml"
+
+- name: set fact allow_downgrade to no
+  set_fact: allow_downgrade=no
+
+- name: set fact allow_downgrade to yes
+  set_fact: allow_downgrade=yes
+  when: es_allow_downgrades
+
+- name: "HTTP - STEP 01 - Install HTTP Service"
+  yum:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - httpd
+
+- name: "HTTP - STEP 02 - Enable HTTP Service"
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - httpd
+
+- name: "HTTP - STEP 03 - Config proxy.conf file"
+  template:
+    src: "{{ role_path }}/templates/http/proxy.conf.j2"
+    dest: "/etc/httpd/conf.d/proxy.conf"
+    backup: yes
+  notify:
+    - Restart http
+
+- name: "KIBANA - STEP 01 - Install Kibana-{{ es_version }} package"
+  yum:
+    name: 'kibana{% if es_version is defined and es_version != ""  %}-{{ es_version }}{% endif %}'
+    state: present
+    update_cache: yes
+    allow_downgrade: '{{ allow_downgrade }}'
+
+- name: "KIBANA - STEP 02 - Configure Kibana"
+  replace:
+    dest: /etc/kibana/kibana.yml
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  no_log: true
+  with_items:
+    - { old: '#server.port: 5601', new: 'server.port: 5601'}
+    - { old: '#server.host: "localhost"', new: 'server.host: "0.0.0.0"'}
+    - { old: '#server.basePath: ""', new: 'server.basePath: "/kibana"'}
+    - { old: '#server.rewriteBasePath: false', new: 'server.rewriteBasePath: true'}
+    - { old: '#server.name: "your-hostname"', new: 'server.name: "kibana"'}
+    - { old: '#elasticsearch.hosts: \["http://localhost:9200"\]', new: 'elasticsearch.hosts: {{ es_master_http }}'}
+    - { old: '#elasticsearch.username: "kibana_system"', new: 'elasticsearch.username: "kibana_system"'}
+    - { old: '#elasticsearch.password: "pass"', new: 'elasticsearch.password: "{{ kibana_system_password }}"'}
+    - { old: '#elasticsearch.ssl.verificationMode: full', new: 'elasticsearch.ssl.verificationMode: none'}
+    - { old: '#logging.quiet: false', new: 'logging.quiet: true'}
+  notify: Restart Kibana
+
+- meta: flush_handlers
+
+- name: "KIBANA - STEP 03  - check if requested Kibana version lock exists"
+  become: yes
+  shell: 'yum versionlock list | grep {{ item }} | grep -c "{{es_version}}"'
+  register: kibana_requested_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - kibana
+
+- name: "KIBANA - STEP 04 - lock Kibana version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}* ; yum versionlock add {{ item }}-{{ es_version }}
+  args:
+    warn: false
+  with_items:
+    - kibana
+  when:
+    - es_version_lock
+    - kibana_requested_version_locked is defined
+    - kibana_requested_version_locked.results[0].stdout|int == 0
+
+- name: "KIBANA - STEP 05 - check if any Kibana version lock exists"
+  become: yes
+  shell: yum versionlock list | grep -c {{ item }}
+  register: kibana_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - kibana
+
+- name: "KIBANA - STEP 06 - unlock Kibana version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}*
+  args:
+    warn: false
+  with_items:
+    - kibana
+  when:
+    - not es_version_lock
+    - kibana_version_locked is defined
+    - kibana_version_locked.results[0].stdout|int > 0

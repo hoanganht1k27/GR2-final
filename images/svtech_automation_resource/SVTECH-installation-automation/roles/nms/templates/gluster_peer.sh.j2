@@ -1,0 +1,17 @@
+#!/bin/bash
+
+{% for host in groups['all'] %}
+{% if hostvars[host].role == 'backup' %}gluster peer probe {{ hostvars[host].inventory_hostname }}{% endif %}
+{% endfor %}
+
+sleep 5
+
+gluster volume create data replica \
+   {{ groups['all']|length }} transport tcp \
+   {% for host in groups['all'] %}{{ hostvars[host].inventory_hostname }}:/glusterfs {% endfor %} \
+   force
+
+gluster volume start data
+gluster volume set data network.ping-timeout 3
+gluster volume set data features.cache-invalidation off         
+#gluster volume set data cluster.self-heal-daemon enable

@@ -1,0 +1,11 @@
+
+vsphere:
+  host: 10.98.0.7
+  user: tuha@vsphere.local
+  password: ABCD1234
+
+image:
+  repository: pryorda/vmware_exporter
+  tag: latest
+
+replicaCount: 1

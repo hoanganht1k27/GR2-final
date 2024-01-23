@@ -1,0 +1,13 @@
+    - name: NODE EXPORTER [Step 01] - Write host to list
+      lineinfile:
+        path: "{{ node_exporter_list_file_path }}_{{ timestamp }}"
+        line: "{{ hostvars[item].ansible_host }}"
+        create: true
+        state: present
+      delegate_to: localhost
+      run_once: true
+      loop: "{{ ansible_play_batch }}"
+    - name: NODE EXPORTER [Step 02] - Save timestamp
+      shell: "echo {{ node_exporter_list_file_path }}_{{ timestamp }} > {{ node_exporter_list_file_name }}"
+      delegate_to: localhost
+      run_once: true

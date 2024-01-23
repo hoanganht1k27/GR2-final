@@ -1,0 +1,10 @@
+Value PID (\d+)
+Value PR (\w)
+Value State (\w+)
+Value Name (.*?)
+Value StackUse (\d+\/\d+)
+Value Time (\d+\/\d+\/\d+)
+Value CPU_Utilization (\d+\%)
+
+Start
+  ^\s+${PID}\s${PR}\s\s${State}\s{4}${Name}\s{3}${StackUse}\s{3}${Time}\sms\s\s${CPU_Utilization} -> Record

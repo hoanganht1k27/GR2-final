@@ -1,0 +1,3 @@
+---
+  - name: K8S - Config Worker [STEP 01] - Join Worker node
+    shell: "{{ join_command }}"

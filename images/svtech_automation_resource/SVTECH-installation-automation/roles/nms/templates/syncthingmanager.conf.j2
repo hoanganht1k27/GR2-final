@@ -1,0 +1,12 @@
+[DEFAULT]
+{% for host in groups['all'] %}
+{% if hostvars[host].role == 'active' %}name = {{ hostvars[host].inventory_hostname }}{% endif %}
+{% endfor %}
+
+{% for host in groups['all'] %}
+[{{ hostvars[host].inventory_hostname }}]
+apikey = juniper@123
+hostname = {{ hostvars[host].inventory_hostname }}
+port = 8384
+
+{% endfor %}

@@ -1,0 +1,5 @@
+{% for host in groups['all'] %}
+{% for another_host in groups['all'] | difference([host]) %}
+{{ venv }}/bin/stman -d {{ hostvars[host]['inventory_hostname'] }} device add {{ hostvars[another_host]['device_id']['x_syncthing_id'] }} -n {{ hostvars[another_host]['inventory_hostname'] }} -i
+{% endfor %}
+{% endfor %}

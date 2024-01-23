@@ -1,0 +1,61 @@
+---
+- name: DATABASE [Step 01] - Configure /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[item].IP }} {{ hostvars[item].inventory_hostname }}"
+    state: present
+  with_items: "{{ groups['all'] }}"
+
+- name: DATABASE [Step 02] - Checking MariaDB Repo
+  stat: path=/etc/yum.repos.d/MariaDB.repo
+  register: mariadb_repo_file
+
+- name: DATABASE [Step 03] - Create MariaDB REPO file [Step 1]
+  get_url:
+    url: https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+    dest: /tmp/mariadb_repo_setup.sh
+    mode: 775
+
+- name: DATABASE [Step 04] - Create MariaDB REPO file [Step 2]
+  command: "/tmp/mariadb_repo_setup.sh --mariadb-server-version='mariadb-{{ mariadb_version }}'"
+  register: install_mariadB_repo
+  until: install_mariadB_repo.rc == 0
+  retries: 5
+  delay: 20
+
+- name: DATABASE [Step 05] - Install Epel Repository
+  yum:
+    name: epel-release
+    state: latest
+  register: install_epel_release
+  until: install_epel_release.rc == 0
+  retries: 5
+  delay: 20
+
+- name: DATABASE [Step 06] - Install Python, Python3 and PIP
+  yum:
+    name:
+      - python3
+      - python3-pip
+      - python3-setuptools
+      - python-pip
+      - python-setuptools
+    state: latest
+  when:
+    - install_python3 == "true"
+
+- name: DATABASE [Step 07] - Upgrade PIP version and Setuptools
+  pip:
+    name:
+      - pip==19.3.1
+      - setuptools==40.8.0
+    state: present
+  when:
+    - upgrade_pip == "true"
+
+- name: DATABASE [Step 08] - Install pymysql package
+  pip:
+    name:
+      - PyMySQL
+      - cryptography
+    state: present

@@ -1,0 +1,31 @@
+#Start docker compose
+# Wrote by Pham Tan Thanh
+---
+
+- name: Register /opt/SVTECH_Projects_Container Repo Path
+  set_fact:
+    container_repo_path: "/opt/SVTECH_Projects_Container"
+
+- name: NMS-Compose [STEP 01] - Set public REGISTRY
+  lineinfile:
+    path: "{{ container_repo_path }}/compose/.env"
+    regexp: '^REGISTRY='
+    line: "REGISTRY=docker.io"
+  when: use_private_registry != "true"
+
+- name: NMS-Compose [STEP 01] - Set private REGISTRY
+  lineinfile:
+    path: "{{ container_repo_path }}/compose/.env"
+    regexp: '^REGISTRY='
+    line: "REGISTRY={{ private_registry }}"
+  when: use_private_registry == "true"
+
+- name: NMS-Compose [STEP 02] - Docker-compose Pull
+  shell:
+      cmd: "docker-compose pull"
+      chdir: "{{ container_repo_path }}/compose"
+
+- name: NMS-Compose [STEP 03] - Docker-compose up
+  shell:
+      cmd: "docker-compose up -d"
+      chdir: "{{ container_repo_path }}/compose"

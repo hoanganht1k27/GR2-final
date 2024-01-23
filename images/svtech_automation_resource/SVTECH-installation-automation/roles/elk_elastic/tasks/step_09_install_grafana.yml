@@ -1,0 +1,186 @@
+# Wrote by Hoang Anh Tu
+---
+- set_fact:
+    elastic_master_hosts: "{% for host in groups['elastic'] %}{% if (hostvars[host].node_master == true) %}{{ hostvars[host].IP }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - STEP 01 - Install Grafana Repository"
+  yum_repository:
+    name: grafana
+    description: grafana repo
+    baseurl: https://packages.grafana.com/oss/rpm
+    gpgkey: https://packages.grafana.com/gpg.key
+    gpgcheck: yes
+    enabled: yes
+    repo_gpgcheck: yes
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    sslverify: yes
+
+- name: "GRAFANA - STEP 02 - Install Grafana"
+  yum:
+    name: grafana-7.4.3
+    state: present
+
+- name: "GRAFANA - Step 03 - Configure Grafana MariaDB"
+  replace:
+    dest: /etc/grafana/grafana.ini
+    regexp: "{{ item.old }}"
+    replace: "{{ item.new }}"
+    backup: yes
+  no_log: true
+  with_items:
+    - { old: ";root_url = .*", new: 'root_url = %(protocol)s://%(domain)s/grafana/'}
+    - { old: ";type = sqlite3", new: 'type = mysql'}
+    - { old: ";host = 127.0.0.1:3306", new: 'host = {{ ansible_host }}:3306'}
+    - { old: ";name = grafana", new: 'name = {{ grafana_database }}'}
+    - { old: ";user = root", new: 'user = {{ grafana_database_user }}'}
+    - { old: ";password =", new: 'password = {{ grafana_database_password }}'}
+    - { old: ";admin_user = admin", new: 'admin_user = {{ grafana_admin_user }}'}
+    - { old: ";admin_password = admin", new: 'admin_password = {{ grafana_admin_password }}'}
+    - { old: ";header_name = X-WEBAUTH-USER", new: 'header_name = X-WEBAUTH-USER'}
+    - { old: ";header_property = username", new: 'header_property = username'}
+    - { old: ";allow_embedding = false", new: 'allow_embedding = true' }
+    - { old: ";disable_sanitize_html = false", new: 'disable_sanitize_html = true' }
+
+- name: "GRAFANA - Step 04 - Create Database grafana"
+  mysql_db:
+    name: "{{ grafana_database }}"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    login_host: localhost
+    login_user: "root"
+    login_password: "{{ mariadb_root_password }}"
+    state: present
+      #  no_log: true
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - Step 05 - Create Database User for grafana service"
+  mysql_user:
+    name: "{{ grafana_database_user }}"
+    password: "{{ grafana_database_password }}"
+    priv: "{{ grafana_database }}.*:ALL"
+    login_unix_socket: "{{ data_dir }}/mysql.sock"
+    login_host: localhost
+    login_user: "root"
+    login_password: "{{ mariadb_root_password }}"
+    host: "{{ item }}"
+    state: present
+      #  no_log: true
+  with_items:
+    - 127.0.0.1
+    - localhost
+    - "{{ elastic_master_hosts | split(',') }}"
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - STEP 06 - Starting Grafana Service"
+  service:
+    name: grafana-server
+    state: started
+    enabled: yes
+  failed_when: false
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - STEP 07 - Waiting Grafana Service"
+  wait_for:
+    host: "{{ ansible_host }}"
+    port: 3000
+    timeout: 60
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - STEP 08 - Copy default organization into server in MariaDB database"
+  template:
+    src: "{{ role_path }}/templates/mariadb_change_default_org.j2"
+    dest: "/tmp/change_default_org.sql"
+
+- name: "GRAFANA - STEP 09 - Change default organization in MariaDB database"
+  mysql_db:
+    name: "{{ grafana_database }}"
+    login_user: "{{ grafana_database_user  }}"
+    login_password: "{{ grafana_database_password }}"
+    login_host: "{{ ansible_host }}"
+    state: import
+    target: /tmp/change_default_org.sql
+  when:
+    - inventory_hostname == play_hosts[0]
+
+- name: "GRAFANA - STEP 10 - Configure organization for anonymouse access"
+  lineinfile:
+    dest: /etc/grafana/grafana.ini
+    insertafter: '# specify organization name that should be used for unauthenticated users'
+    line: 'org_name = {{ organization }}'
+    state: present
+
+- name: "GRAFANA - STEP 11 - Install Other Grafana Plugin Panel"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0775
+    force: yes
+  with_items:
+    - { src: "{{ role_path }}/files/grafana/briangann-datatable-panel", dest: "/var/lib/grafana/plugins" }
+    - { src: "{{ role_path }}/files/grafana/grafana-piechart-panel", dest: "/var/lib/grafana/plugins" }
+    - { src: "{{ role_path }}/files/grafana/fifemon-graphql-datasource", dest: "/var/lib/grafana/plugins" }
+
+- name: "GRAFANA - STEP 12 - Allow Grafana script tags in text panels"
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: '^;disable_sanitize_html'
+    line: disable_sanitize_html = true
+
+- name: "GRAFANA - STEP 13 - Retart Grafana Service"
+  service:
+    name: grafana-server
+    state: restarted
+    enabled: yes
+
+- name: "GRAFANA - STEP 13  - check if requested Grafana version lock exists"
+  become: yes
+  shell: 'yum versionlock list | grep {{ item }} | grep -c "{{es_version}}"'
+  register: grafana_requested_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - grafana
+
+- name: "GRAFANA - STEP 14 - lock Grafana version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}* ; yum versionlock add {{ item }}-{{ es_version }}
+  args:
+    warn: false
+  with_items:
+    - grafana
+  when:
+    - es_version_lock
+    - grafana_requested_version_locked is defined
+    - grafana_requested_version_locked.results[0].stdout|int == 0
+
+- name: "GRAFANA - STEP 15 - check if any Grafana version lock exists"
+  become: yes
+  shell: yum versionlock list | grep -c {{ item }}
+  register: grafana_version_locked
+  args:
+    warn: false
+  failed_when: False
+  changed_when: False
+  check_mode: False
+  with_items:
+    - grafana
+
+- name: "GRAFANA - STEP 16 - unlock Grafana version"
+  become: yes
+  shell: yum versionlock delete 0:{{ item }}*
+  args:
+    warn: false
+  with_items:
+    - grafana
+  when:
+    - not es_version_lock
+    - grafana_version_locked is defined
+    - grafana_version_locked.results[0].stdout|int > 0

@@ -1,0 +1,8 @@
+
+community: test
+
+image:
+  repository: svtech-lab-monitoring-snmp-exporter
+  tag: 1.0.0
+
+replicaCount: 1
